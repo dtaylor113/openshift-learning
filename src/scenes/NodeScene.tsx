@@ -128,6 +128,7 @@ export function NodeScene({ mode }: SceneProps) {
           ? 'The pool can grow or shrink automatically. Need more capacity? The pool adds another node just like this one.'
           : 'Maps to an AWS Auto Scaling Group. Pool defines instance type, AZ, labels, taints. Autoscaler adjusts count.'}
       </text>
+
     </g>
   );
 }

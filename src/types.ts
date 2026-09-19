@@ -86,9 +86,9 @@ export const ZOOM_LEVELS: ZoomLevel[] = [
       details: [
         'Your app container does the real work; the helper (sidecar) adds security and logging automatically',
         'Both containers share the same network — connected by the dotted lines in the graphic',
-        'The Deployment box keeps 3 identical copies of this pod running at all times',
-        'The Service gives all copies one stable address — it spreads traffic across them (load balancing)',
-        'If a pod crashes, the Deployment notices and creates a replacement',
+        'The Deployment keeps 3 copies running for safety — if one crashes, the other 2 keep serving users',
+        'The Service gives all copies one address — users don\'t know (or care) which copy handles their request',
+        '⚠️ Replicas ≠ more machines. 3 replicas might run on the same machine. Machines are managed separately (see Node level).',
       ],
     },
     expert: {

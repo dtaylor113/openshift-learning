@@ -36,7 +36,7 @@ export function OpenShiftScene({ mode }: SceneProps) {
       <rect x="154" y="128" width="50" height="30" rx="4" fill="#F3E5F5" stroke="#CE93D8" strokeWidth="1" />
       <text x="160" y="147" fontSize="6" fill="#6A1B9A">{b ? 'Machine 3' : 'worker-3'}</text>
 
-      <text x="80" y="185" fontSize="7" fill="#00695C" textAnchor="middle">
+      <text x="42" y="190" fontSize="7" fill="#00695C">
         {b ? '+ pod manager, container engine, networking' : '+ CRI-O, kubelet, kube-proxy'}
       </text>
 
@@ -149,6 +149,7 @@ export function OpenShiftScene({ mode }: SceneProps) {
       <text x={b ? 280 : 240} y="358" fontSize="8" fill="#C62828">
         {b ? 'Nodes patch themselves automatically' : 'Immutable OS — managed by Machine Config Operator'}
       </text>
+
     </g>
   );
 }

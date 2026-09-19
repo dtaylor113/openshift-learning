@@ -89,6 +89,7 @@ export function ContainerScene({ mode }: SceneProps) {
       </g>
 
       <AppMarker x={370} y={140} />
+
     </g>
   );
 }

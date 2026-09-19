@@ -62,10 +62,48 @@ body {
   font-size: 22px;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .subtitle {
   font-size: 13px;
   color: #666;
   font-weight: 400;
+}
+
+/* ---- Track toggle ---- */
+.track-toggle {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+
+.track-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: #777;
+  white-space: nowrap;
+}
+
+.track-btn.active {
+  background: #fff;
+  color: #333;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.track-btn:hover:not(.active) {
+  color: #555;
 }
 
 /* ---- Breadcrumb ---- */
@@ -151,14 +189,82 @@ body {
   filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.08));
 }
 
+/* ---- Minimap column ---- */
+.minimap-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 0 16px 16px;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+/* Analogy legend */
+.analogy-legend {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.analogy-legend-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.analogy-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1.5px solid transparent;
+  background: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  font-family: inherit;
+}
+
+.analogy-badge:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.analogy-badge.active {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.analogy-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.analogy-text {
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.analogy-text strong {
+  font-weight: 700;
+}
+
 /* ---- Minimap ---- */
 .minimap {
-  align-self: end;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(8px);
   border-radius: 14px;
   padding: 10px 12px;
-  margin: 0 0 16px 16px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
 }
@@ -366,6 +472,166 @@ body {
   font-size: 12px;
   color: #aaa;
   min-height: 20px;
+}
+
+/* ---- ROSA Map (Track 2) ---- */
+.rosa-main {
+  display: flex;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+.rosa-map {
+  max-width: 1100px;
+  width: 100%;
+  padding: 24px 32px 48px;
+}
+
+.rosa-controls {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.variant-toggle {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+
+.variant-btn {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: #777;
+}
+
+.variant-btn.active {
+  background: #fff;
+  color: #333;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ROSA SVG diagram */
+.rosa-svg {
+  width: 100%;
+  height: auto;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.06));
+}
+
+/* Variant note */
+.rosa-variant-note {
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+}
+
+.rosa-variant-note p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #444;
+  margin: 0;
+}
+
+/* IAM ↔ RBAC bridge */
+.rosa-bridge {
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+}
+
+.rosa-bridge h4 {
+  font-size: 15px;
+  margin: 0 0 12px;
+  color: #333;
+}
+
+.rosa-bridge-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.rosa-bridge-side {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.rosa-bridge-side strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.rosa-bridge-side p {
+  font-size: 12px;
+  color: #555;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.rosa-bridge-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.rosa-bridge-arrow span {
+  font-size: 10px;
+  font-weight: 600;
+  color: #888;
+  white-space: nowrap;
+}
+
+.rosa-bridge-arrow-line {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(to right, #FF9900, #1565C0);
+  position: relative;
+}
+
+.rosa-bridge-arrow-line::before {
+  content: '◀';
+  position: absolute;
+  left: -10px;
+  top: -8px;
+  font-size: 10px;
+  color: #FF9900;
+}
+
+.rosa-bridge-arrow-line::after {
+  content: '▶';
+  position: absolute;
+  right: -10px;
+  top: -8px;
+  font-size: 10px;
+  color: #1565C0;
+}
+
+.rosa-bridge-note {
+  font-size: 12px;
+  color: #666;
+  margin: 12px 0 0;
+  line-height: 1.6;
+  padding: 10px 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
 }
 
 /* ---- Responsive ---- */

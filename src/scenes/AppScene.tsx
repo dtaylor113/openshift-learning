@@ -70,6 +70,7 @@ export function AppScene({ mode }: SceneProps) {
 
       {/* App marker */}
       <AppMarker x={370} y={140} />
+
     </g>
   );
 }

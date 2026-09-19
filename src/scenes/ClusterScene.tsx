@@ -131,6 +131,7 @@ export function ClusterScene({ mode }: SceneProps) {
       <text x="50" y="372" fontSize="6" fill="#00897B">
         {b ? 'Machine Pools let you add/remove worker nodes as a group. Infra nodes handle cluster services (not your apps).' : 'Machine Pools (MachineSet + ASG). Infra nodes: tainted to only run router, monitoring, logging.'}
       </text>
+
     </g>
   );
 }

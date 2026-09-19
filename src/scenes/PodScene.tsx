@@ -143,6 +143,7 @@ export function PodScene({ mode }: SceneProps) {
       </text>
 
       <AppMarker x={33} y={100} />
+
     </g>
   );
 }
