@@ -1,0 +1,393 @@
+/* ============================================
+   OpenShift: Zoom Out — Kurzgesagt-inspired styles
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+}
+
+.app {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.6s ease;
+  outline: none;
+  overflow: hidden;
+}
+
+/* ---- Header ---- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 32px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.app-header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a2e;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  font-size: 22px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #666;
+  font-weight: 400;
+}
+
+/* ---- Breadcrumb ---- */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.breadcrumb-sep {
+  color: #bbb;
+  font-size: 10px;
+  margin: 0 3px;
+}
+
+.breadcrumb-label {
+  color: #999;
+  font-weight: 500;
+  transition: color 0.3s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.breadcrumb-label:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.breadcrumb-label.active {
+  font-weight: 700;
+  cursor: default;
+}
+
+/* ---- Main layout ---- */
+.app-main {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* Viewer area (minimap column + graphic column) */
+.viewer-area {
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  min-width: 0;
+}
+
+/* ---- Zoom viewer ---- */
+.zoom-viewer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.scene-container {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scene-svg {
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 80px);
+  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.08));
+}
+
+/* ---- Minimap ---- */
+.minimap {
+  align-self: end;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin: 0 0 16px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+}
+
+.minimap-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.minimap-svg {
+  display: block;
+}
+
+/* ---- Mode toggle ---- */
+.mode-toggle {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 3px;
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: #777;
+}
+
+.mode-btn.active {
+  background: #fff;
+  color: #333;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mode-btn:hover:not(.active) {
+  color: #555;
+}
+
+/* ---- Info panel (right side) ---- */
+.info-panel {
+  width: 380px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 28px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  overflow-y: auto;
+}
+
+.info-content {
+  flex: 1;
+}
+
+/* Level stepper */
+.level-stepper {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.step-dot {
+  width: 24px;
+  height: 6px;
+  border-radius: 3px;
+  background-color: #e0e0e0;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.step-dot:hover {
+  background-color: #bbb;
+  transform: scaleY(1.4);
+}
+
+.step-dot.active {
+  width: 32px;
+  cursor: default;
+}
+
+.step-dot.active:hover {
+  transform: none;
+}
+
+.step-dot.visited {
+  background-color: #bdbdbd;
+}
+
+/* Level badge */
+.level-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Level title */
+.level-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 14px;
+  line-height: 1.1;
+}
+
+/* Level description */
+.level-description {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+/* Details list */
+.level-details {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.level-details li {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #555;
+  padding-left: 18px;
+  position: relative;
+}
+
+.level-details li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #aaa;
+  font-weight: bold;
+}
+
+/* ---- Navigation buttons ---- */
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.nav-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.prev-btn {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.prev-btn:hover:not(:disabled) {
+  background: #e8e8e8;
+}
+
+.next-btn {
+  background: #333;
+  color: white;
+}
+
+.next-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+/* Scroll hint */
+.scroll-hint {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 12px;
+  color: #aaa;
+  min-height: 20px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .app-main {
+    flex-direction: column;
+  }
+
+  .info-panel {
+    width: 100%;
+    max-height: 40vh;
+    border-left: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .zoom-viewer {
+    padding: 12px;
+  }
+
+  .minimap {
+    transform: scale(0.75);
+    transform-origin: bottom left;
+    margin: 0 0 8px 8px;
+  }
+}
