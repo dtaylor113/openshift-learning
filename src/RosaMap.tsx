@@ -11,86 +11,91 @@ interface RosaMapProps {
 
 function ClassicDiagram({ b }: { b: boolean }) {
   return (
-    <svg viewBox="0 0 800 420" className="rosa-svg">
+    <svg viewBox="0 0 800 440" className="rosa-svg">
       {/* Red Hat zone */}
-      <rect x="10" y="10" width="780" height="100" rx="14" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
+      <rect x="10" y="10" width="780" height="110" rx="14" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
       <text x="30" y="38" fontSize="14" fill="#CC0000" fontWeight="bold">
         {b ? '🔴 Red Hat Manages' : '🔴 Red Hat (OCM + SRE)'}
       </text>
 
       {/* OCM Console */}
-      <rect x="30" y="50" width="200" height="48" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="45" y="70" fontSize="10" fill="#C62828" fontWeight="bold">🖥️ {b ? 'Your Dashboard' : 'OCM Console'}</text>
-      <text x="45" y="84" fontSize="7" fill="#999" fontFamily="monospace">console.redhat.com/openshift</text>
+      <rect x="30" y="48" width="210" height="64" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="45" y="66" fontSize="10" fill="#C62828" fontWeight="bold">🖥️ {b ? 'Cluster Details' : 'OCM Console'}</text>
+      <text x="45" y="79" fontSize="7" fill="#777" fontFamily="monospace">console.redhat.com/openshift/</text>
+      <text x="45" y="89" fontSize="7" fill="#777" fontFamily="monospace">details/&lt;cluster_id&gt;</text>
+      {/* "Open Console" button */}
+      <rect x="50" y="96" width="100" height="18" rx="9" fill="#0066CC" />
+      <text x="72" y="108" fontSize="7" fill="#fff" fontWeight="bold">Open console</text>
 
       {/* SRE */}
-      <rect x="250" y="50" width="130" height="48" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="265" y="70" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '👷 SRE Team' : '👷 SRE'}</text>
-      <text x="265" y="84" fontSize="7" fill="#999">{b ? '24/7 monitoring' : 'Backplane, PagerDuty'}</text>
+      <rect x="260" y="48" width="140" height="64" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="275" y="66" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '👷 Site Reliability' : '👷 SRE'}</text>
+      <text x="275" y="79" fontSize="8" fill="#777">{b ? 'Red Hat\'s ops team — monitors' : 'Backplane, PagerDuty'}</text>
+      <text x="275" y="91" fontSize="8" fill="#777">{b ? '& fixes your cluster 24/7' : ''}</text>
 
       {/* Upgrades */}
-      <rect x="400" y="50" width="130" height="48" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="415" y="70" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⬆️ Upgrades' : '⬆️ CVO'}</text>
-      <text x="415" y="84" fontSize="7" fill="#999">{b ? 'Managed for you' : 'Upgrade policies'}</text>
+      <rect x="415" y="48" width="130" height="64" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="430" y="70" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⬆️ Upgrades' : '⬆️ CVO'}</text>
+      <text x="430" y="84" fontSize="8" fill="#777">{b ? 'Managed for you' : 'Upgrade policies'}</text>
 
       {/* Operators */}
-      <rect x="550" y="50" width="220" height="48" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="565" y="70" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⚙️ Cluster Software' : '⚙️ Cluster Operators'}</text>
-      <text x="565" y="84" fontSize="7" fill="#999">{b ? 'Monitoring, networking, storage' : 'Ingress, monitoring, DNS, auth'}</text>
-
-      {/* "Open Console" arrow */}
-      <line x1="230" y1="74" x2="265" y2="170" stroke="#CC0000" strokeWidth="1.5" strokeDasharray="4 3" />
-      <text x="220" y="125" fontSize="8" fill="#CC0000" fontWeight="bold" transform="rotate(25, 220, 125)">{b ? '"Open Console"' : 'OCP URL →'}</text>
+      <rect x="560" y="48" width="215" height="64" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="575" y="70" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⚙️ Cluster Software' : '⚙️ Cluster Operators'}</text>
+      <text x="575" y="84" fontSize="8" fill="#777">{b ? 'Monitoring, networking, storage' : 'Ingress, monitoring, DNS, auth'}</text>
 
       {/* Customer AWS Account */}
-      <rect x="10" y="120" width="780" height="290" rx="14" fill="#FFF8E1" stroke="#FF9900" strokeWidth="2" />
-      <text x="30" y="145" fontSize="14" fill="#E65100" fontWeight="bold">
+      <rect x="10" y="130" width="780" height="300" rx="14" fill="#FFF8E1" stroke="#FF9900" strokeWidth="2" />
+      <text x="30" y="155" fontSize="14" fill="#E65100" fontWeight="bold">
         {b ? '🟠 Your AWS Account' : '🟠 Customer AWS Account'}
       </text>
 
       {/* ROSA Cluster boundary */}
-      <rect x="30" y="155" width="740" height="240" rx="12" fill="rgba(255,255,255,0.5)" stroke="#FF9900" strokeWidth="1" strokeDasharray="5 3" />
-      <text x="50" y="175" fontSize="11" fill="#E65100" fontWeight="bold">ROSA Classic Cluster</text>
+      <rect x="30" y="165" width="740" height="250" rx="12" fill="rgba(255,255,255,0.5)" stroke="#FF9900" strokeWidth="1" strokeDasharray="5 3" />
+      <text x="50" y="185" fontSize="11" fill="#E65100" fontWeight="bold">ROSA Classic Cluster</text>
 
       {/* Control Plane — INSIDE customer AWS */}
-      <rect x="50" y="185" width="320" height="70" rx="10" fill="#FFCDD2" stroke="#EF5350" strokeWidth="2" />
-      <text x="65" y="205" fontSize="10" fill="#B71C1C" fontWeight="bold">
+      <rect x="50" y="195" width="320" height="70" rx="10" fill="#FFCDD2" stroke="#EF5350" strokeWidth="2" />
+      <text x="65" y="215" fontSize="10" fill="#B71C1C" fontWeight="bold">
         {b ? '🧠 Control Plane (managed by Red Hat, runs HERE)' : '🧠 Control Plane (3× m5.xlarge, SRE-managed)'}
       </text>
-      <rect x="65" y="215" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="73" y="233" fontSize="7" fill="#C62828">{b ? 'Front Door' : 'API Server'}</text>
-      <rect x="138" y="215" width="50" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="146" y="233" fontSize="7" fill="#C62828">{b ? 'Memory' : 'etcd'}</text>
-      <rect x="196" y="215" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="204" y="233" fontSize="7" fill="#C62828">Scheduler</text>
-      <rect x="269" y="215" width="85" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="277" y="233" fontSize="7" fill="#C62828">{b ? 'Auto-Fixer' : 'Controllers'}</text>
+      <rect x="65" y="225" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+      <text x="73" y="243" fontSize="7" fill="#C62828">{b ? 'Front Door' : 'API Server'}</text>
+      <rect x="138" y="225" width="50" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+      <text x="146" y="243" fontSize="7" fill="#C62828">{b ? 'Memory' : 'etcd'}</text>
+      <rect x="196" y="225" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+      <text x="204" y="243" fontSize="7" fill="#C62828">Scheduler</text>
+      <rect x="269" y="225" width="85" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+      <text x="277" y="243" fontSize="7" fill="#C62828">{b ? 'Auto-Fixer' : 'Controllers'}</text>
 
       {/* OCP Console */}
-      <rect x="400" y="185" width="180" height="70" rx="10" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="2" />
-      <text x="415" y="205" fontSize="10" fill="#00695C" fontWeight="bold">🎛️ {b ? 'Cluster Console' : 'OCP Console'}</text>
-      <text x="415" y="220" fontSize="7" fill="#00897B">console-openshift-console.apps.…</text>
-      <text x="415" y="235" fontSize="7" fill="#00897B">{b ? 'See pods, deployments, logs' : 'Admin + Developer perspectives'}</text>
-      <text x="415" y="248" fontSize="7" fill="#00897B">{b ? 'Manage YOUR apps here' : 'Workloads, Networking, Storage, RBAC'}</text>
+      <rect x="390" y="185" width="190" height="85" rx="10" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="2" />
+      <text x="405" y="208" fontSize="10" fill="#00695C" fontWeight="bold">🎛️ {b ? 'Cluster Console' : 'OCP Console'}</text>
+      <text x="405" y="224" fontSize="8" fill="#00897B">console-openshift-console.apps.…</text>
+      <text x="405" y="240" fontSize="8" fill="#00897B">{b ? 'See pods, deployments, logs' : 'Admin + Developer perspectives'}</text>
+      <text x="405" y="256" fontSize="8" fill="#00897B">{b ? 'Manage YOUR apps here' : 'Workloads, Networking, Storage, RBAC'}</text>
+
+      {/* "Open Console" arrow — rendered last so it's on top of all boxes */}
+      <line x1="100" y1="114" x2="395" y2="190" stroke="#CC0000" strokeWidth="2" strokeDasharray="5 3" />
+      <polygon points="389,187 401,193 393,199" fill="#CC0000" />
 
       {/* Worker nodes */}
-      <rect x="50" y="270" width="530" height="110" rx="10" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1.5" strokeDasharray="5 3" />
-      <text x="65" y="290" fontSize="9" fill="#6A1B9A" fontWeight="bold">{b ? '🏗️ Machine Pool (your worker machines)' : '🏗️ Machine Pool → AWS ASG'}</text>
+      <rect x="50" y="280" width="530" height="120" rx="10" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1.5" strokeDasharray="5 3" />
+      <text x="65" y="300" fontSize="9" fill="#6A1B9A" fontWeight="bold">{b ? '🏗️ Machine Pool (your worker machines)' : '🏗️ Machine Pool → AWS ASG'}</text>
 
       {['Worker 1', 'Worker 2', 'Worker 3'].map((w, i) => (
         <g key={i}>
-          <rect x={70 + i * 165} y={300} width="145" height="65" rx="6" fill="#EDE7F6" stroke="#CE93D8" strokeWidth="1" />
-          <text x={82 + i * 165} y={316} fontSize="8" fill="#6A1B9A" fontWeight="bold">{b ? w : `worker-${i + 1}`}</text>
-          <rect x={80 + i * 165} y={322} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={80 + i * 165} y={340} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={136 + i * 165} y={322} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={136 + i * 165} y={340} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          <rect x={70 + i * 165} y={310} width="145" height="75" rx="6" fill="#EDE7F6" stroke="#CE93D8" strokeWidth="1" />
+          <text x={82 + i * 165} y={326} fontSize="8" fill="#6A1B9A" fontWeight="bold">{b ? w : `worker-${i + 1}`}</text>
+          <rect x={80 + i * 165} y={332} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          <rect x={80 + i * 165} y={350} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          <rect x={136 + i * 165} y={332} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          <rect x={136 + i * 165} y={350} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
         </g>
       ))}
 
       {/* AWS infra */}
-      <rect x="600" y="185" width="155" height="195" rx="10" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1.5" />
-      <text x="612" y="205" fontSize="9" fill="#E65100" fontWeight="bold">{b ? '🔧 AWS Services' : '🔧 AWS Infrastructure'}</text>
+      <rect x="600" y="195" width="155" height="205" rx="10" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1.5" />
+      <text x="612" y="215" fontSize="9" fill="#E65100" fontWeight="bold">{b ? '🔧 AWS Services' : '🔧 AWS Infrastructure'}</text>
 
       {[
         b ? 'Network (VPC)' : 'VPC + Subnets',
@@ -101,8 +106,8 @@ function ClassicDiagram({ b }: { b: boolean }) {
         b ? 'Permissions' : 'IAM Roles (STS)',
       ].map((item, i) => (
         <g key={i}>
-          <rect x={612} y={215 + i * 25} width={130} height={20} rx={4} fill="#fff" stroke="#FFE0B2" strokeWidth="1" />
-          <text x={622} y={229 + i * 25} fontSize="8" fill="#BF360C">{item}</text>
+          <rect x={612} y={225 + i * 28} width={130} height={22} rx={4} fill="#fff" stroke="#FFE0B2" strokeWidth="1" />
+          <text x={622} y={240 + i * 28} fontSize="8" fill="#BF360C">{item}</text>
         </g>
       ))}
     </svg>
@@ -111,91 +116,97 @@ function ClassicDiagram({ b }: { b: boolean }) {
 
 function HcpDiagram({ b }: { b: boolean }) {
   return (
-    <svg viewBox="0 0 800 440" className="rosa-svg">
+    <svg viewBox="0 0 800 480" className="rosa-svg">
       {/* Red Hat zone — bigger, includes control plane */}
-      <rect x="10" y="10" width="780" height="180" rx="14" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
+      <rect x="10" y="10" width="780" height="200" rx="14" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
       <text x="30" y="38" fontSize="14" fill="#CC0000" fontWeight="bold">
         {b ? '🔴 Red Hat Manages (including the cluster brain)' : '🔴 Red Hat (OCM + SRE + Hosted Control Plane)'}
       </text>
 
       {/* OCM Console */}
-      <rect x="30" y="50" width="195" height="48" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="45" y="70" fontSize="10" fill="#C62828" fontWeight="bold">🖥️ {b ? 'Your Dashboard' : 'OCM Console'}</text>
-      <text x="45" y="84" fontSize="7" fill="#999" fontFamily="monospace">console.redhat.com/openshift</text>
+      <rect x="30" y="48" width="210" height="64" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="45" y="66" fontSize="10" fill="#C62828" fontWeight="bold">🖥️ {b ? 'Cluster Details' : 'OCM Console'}</text>
+      <text x="45" y="79" fontSize="7" fill="#777" fontFamily="monospace">console.redhat.com/openshift/</text>
+      <text x="45" y="89" fontSize="7" fill="#777" fontFamily="monospace">details/&lt;cluster_id&gt;</text>
+      {/* "Open Console" button */}
+      <rect x="50" y="96" width="100" height="18" rx="9" fill="#0066CC" />
+      <text x="72" y="108" fontSize="7" fill="#fff" fontWeight="bold">Open console</text>
 
       {/* SRE */}
-      <rect x="240" y="50" width="120" height="48" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="255" y="70" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '👷 SRE Team' : '👷 SRE'}</text>
-      <text x="255" y="84" fontSize="7" fill="#999">{b ? '24/7 monitoring' : 'Backplane, PagerDuty'}</text>
+      <rect x="260" y="48" width="140" height="64" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="275" y="66" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '👷 Site Reliability' : '👷 SRE'}</text>
+      <text x="275" y="79" fontSize="8" fill="#777">{b ? 'Red Hat\'s ops team — monitors' : 'Backplane, PagerDuty'}</text>
+      <text x="275" y="91" fontSize="8" fill="#777">{b ? '& fixes your cluster 24/7' : ''}</text>
 
       {/* Upgrades */}
-      <rect x="375" y="50" width="120" height="48" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="390" y="70" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⬆️ Upgrades' : '⬆️ HyperShift'}</text>
-      <text x="390" y="84" fontSize="7" fill="#999">{b ? 'Managed for you' : 'Hosted control planes'}</text>
+      <rect x="415" y="48" width="120" height="64" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="430" y="70" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⬆️ Upgrades' : '⬆️ HyperShift'}</text>
+      <text x="430" y="84" fontSize="8" fill="#777">{b ? 'Managed for you' : 'Hosted control planes'}</text>
 
       {/* Operators */}
-      <rect x="510" y="50" width="260" height="48" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="525" y="70" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⚙️ Cluster Software' : '⚙️ Cluster Operators'}</text>
-      <text x="525" y="84" fontSize="7" fill="#999">{b ? 'Monitoring, networking, storage' : 'Ingress, monitoring, DNS, auth'}</text>
+      <rect x="550" y="48" width="225" height="64" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="565" y="70" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⚙️ Cluster Software' : '⚙️ Cluster Operators'}</text>
+      <text x="565" y="84" fontSize="8" fill="#777">{b ? 'Monitoring, networking, storage' : 'Ingress, monitoring, DNS, auth'}</text>
 
-      {/* Control Plane — INSIDE Red Hat's zone */}
-      <rect x="30" y="108" width="740" height="70" rx="10" fill="#FFCDD2" stroke="#EF5350" strokeWidth="2" />
-      <text x="50" y="128" fontSize="10" fill="#B71C1C" fontWeight="bold">
-        {b ? '🧠 Control Plane (runs in Red Hat\'s AWS — you never see these machines!)' : '🧠 Hosted Control Plane (Red Hat\'s AWS account, HyperShift-managed)'}
+      {/* OCP Console in Red Hat zone — under "Cluster Details" */}
+      <rect x="30" y="118" width="270" height="80" rx="10" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="2" />
+      <text x="48" y="140" fontSize="10" fill="#00695C" fontWeight="bold">🎛️ {b ? 'Cluster Console' : 'OCP Console'}</text>
+      <text x="48" y="156" fontSize="8" fill="#00897B">console-openshift-console.apps.…</text>
+      <text x="48" y="172" fontSize="8" fill="#00897B">{b ? 'See pods, apps, logs — manage YOUR stuff' : 'Admin + Developer perspectives'}</text>
+      <text x="48" y="186" fontSize="8" fill="#00897B">{b ? '' : 'Workloads, Networking, Storage, RBAC'}</text>
+
+      {/* "Open Console" arrow — rendered after OCP Console so it's on top */}
+      <line x1="100" y1="114" x2="100" y2="118" stroke="#CC0000" strokeWidth="2" strokeDasharray="4 3" />
+      <polygon points="96,114 100,122 104,114" fill="#CC0000" />
+
+      {/* Control Plane — INSIDE Red Hat's zone, on the right */}
+      <rect x="320" y="118" width="450" height="80" rx="10" fill="#FFCDD2" stroke="#EF5350" strokeWidth="2" />
+      <text x="340" y="138" fontSize="10" fill="#B71C1C" fontWeight="bold">
+        {b ? '🧠 Control Plane (in Red Hat\'s AWS — you never see these!)' : '🧠 Hosted Control Plane (Red Hat\'s AWS, HyperShift)'}
       </text>
-      <rect x="50" y="138" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="58" y="156" fontSize="7" fill="#C62828">{b ? 'Front Door' : 'API Server'}</text>
-      <rect x="123" y="138" width="50" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="131" y="156" fontSize="7" fill="#C62828">{b ? 'Memory' : 'etcd'}</text>
-      <rect x="181" y="138" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="189" y="156" fontSize="7" fill="#C62828">Scheduler</text>
-      <rect x="254" y="138" width="85" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="262" y="156" fontSize="7" fill="#C62828">{b ? 'Auto-Fixer' : 'Controllers'}</text>
-
-      {/* OCP Console in Red Hat zone */}
-      <rect x="500" y="108" width="260" height="70" rx="10" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="2" />
-      <text x="515" y="128" fontSize="10" fill="#00695C" fontWeight="bold">🎛️ {b ? 'Cluster Console' : 'OCP Console'}</text>
-      <text x="515" y="143" fontSize="7" fill="#00897B">console-openshift-console.apps.…</text>
-      <text x="515" y="158" fontSize="7" fill="#00897B">{b ? 'See pods, apps, logs — manage YOUR stuff' : 'Admin + Developer perspectives'}</text>
-      <text x="515" y="170" fontSize="7" fill="#00897B">{b ? '' : 'Workloads, Networking, Storage, RBAC'}</text>
-
-      {/* "Open Console" arrow */}
-      <line x1="225" y1="74" x2="500" y2="128" stroke="#CC0000" strokeWidth="1.5" strokeDasharray="4 3" />
-      <text x="340" y="95" fontSize="8" fill="#CC0000" fontWeight="bold">{b ? '"Open Console"' : 'OCP URL →'}</text>
-
-      {/* PrivateLink connection */}
-      <rect x="340" y="190" width="120" height="30" rx="6" fill="#E8EAF6" stroke="#7986CB" strokeWidth="1.5" />
-      <text x="355" y="210" fontSize="9" fill="#283593" fontWeight="bold">{b ? '🔒 Secure link' : '🔒 PrivateLink'}</text>
-      <line x1="400" y1="178" x2="400" y2="190" stroke="#7986CB" strokeWidth="2" />
-      <line x1="400" y1="220" x2="400" y2="240" stroke="#7986CB" strokeWidth="2" />
+      <rect x="340" y="148" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+      <text x="348" y="166" fontSize="7" fill="#C62828">{b ? 'Front Door' : 'API Server'}</text>
+      <rect x="413" y="148" width="50" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+      <text x="421" y="166" fontSize="7" fill="#C62828">{b ? 'Memory' : 'etcd'}</text>
+      <rect x="471" y="148" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+      <text x="479" y="166" fontSize="7" fill="#C62828">Scheduler</text>
+      <rect x="544" y="148" width="85" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+      <text x="552" y="166" fontSize="7" fill="#C62828">{b ? 'Auto-Fixer' : 'Controllers'}</text>
 
       {/* Customer AWS Account — smaller, only workers */}
-      <rect x="10" y="230" width="780" height="200" rx="14" fill="#FFF8E1" stroke="#FF9900" strokeWidth="2" />
-      <text x="30" y="255" fontSize="14" fill="#E65100" fontWeight="bold">
+      <rect x="10" y="260" width="780" height="200" rx="14" fill="#FFF8E1" stroke="#FF9900" strokeWidth="2" />
+      <text x="30" y="285" fontSize="14" fill="#E65100" fontWeight="bold">
         {b ? '🟠 Your AWS Account (only worker machines here!)' : '🟠 Customer AWS Account (workers only)'}
       </text>
 
+      {/* PrivateLink connection — rendered after AWS zone so it's on top */}
+      <rect x="340" y="218" width="120" height="30" rx="6" fill="#E8EAF6" stroke="#7986CB" strokeWidth="1.5" />
+      <text x="355" y="238" fontSize="9" fill="#283593" fontWeight="bold">{b ? '🔒 Secure link' : '🔒 PrivateLink'}</text>
+      <line x1="400" y1="198" x2="400" y2="218" stroke="#7986CB" strokeWidth="2" />
+      <line x1="400" y1="248" x2="400" y2="290" stroke="#7986CB" strokeWidth="2" />
+      <polygon points="396,286 400,294 404,286" fill="#7986CB" />
+
       {/* Worker nodes */}
-      <rect x="30" y="270" width="560" height="145" rx="10" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1.5" strokeDasharray="5 3" />
-      <text x="45" y="290" fontSize="9" fill="#6A1B9A" fontWeight="bold">{b ? '🏗️ Node Pool (your worker machines)' : '🏗️ Node Pool → AWS ASG'}</text>
+      <rect x="30" y="300" width="560" height="145" rx="10" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1.5" strokeDasharray="5 3" />
+      <text x="45" y="320" fontSize="9" fill="#6A1B9A" fontWeight="bold">{b ? '🏗️ Node Pool (your worker machines)' : '🏗️ Node Pool → AWS ASG'}</text>
 
       {['Worker 1', 'Worker 2', 'Worker 3'].map((w, i) => (
         <g key={i}>
-          <rect x={50 + i * 175} y={300} width="155" height="100" rx="6" fill="#EDE7F6" stroke="#CE93D8" strokeWidth="1" />
-          <text x={62 + i * 175} y={316} fontSize="8" fill="#6A1B9A" fontWeight="bold">{b ? w : `worker-${i + 1}`}</text>
-          <rect x={60 + i * 175} y={322} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <text x={65 + i * 175} y={332} fontSize="6" fill="#2E7D32">myapp</text>
-          <rect x={60 + i * 175} y={340} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={120 + i * 175} y={322} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={120 + i * 175} y={340} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={60 + i * 175} y={360} width="55" height="14" rx="3" fill="#E1F5FE" stroke="#81D4FA" strokeWidth="0.8" />
-          <rect x={120 + i * 175} y={360} width="55" height="14" rx="3" fill="#E1F5FE" stroke="#81D4FA" strokeWidth="0.8" />
+          <rect x={50 + i * 175} y={330} width="155" height="100" rx="6" fill="#EDE7F6" stroke="#CE93D8" strokeWidth="1" />
+          <text x={62 + i * 175} y={346} fontSize="8" fill="#6A1B9A" fontWeight="bold">{b ? w : `worker-${i + 1}`}</text>
+          <rect x={60 + i * 175} y={352} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          <text x={65 + i * 175} y={362} fontSize="6" fill="#2E7D32">myapp</text>
+          <rect x={60 + i * 175} y={370} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          <rect x={120 + i * 175} y={352} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          <rect x={120 + i * 175} y={370} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          <rect x={60 + i * 175} y={390} width="55" height="14" rx="3" fill="#E1F5FE" stroke="#81D4FA" strokeWidth="0.8" />
+          <rect x={120 + i * 175} y={390} width="55" height="14" rx="3" fill="#E1F5FE" stroke="#81D4FA" strokeWidth="0.8" />
         </g>
       ))}
 
       {/* AWS infra */}
-      <rect x="610" y="270" width="165" height="145" rx="10" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1.5" />
-      <text x="622" y="290" fontSize="9" fill="#E65100" fontWeight="bold">{b ? '🔧 AWS Services' : '🔧 AWS Infra'}</text>
+      <rect x="610" y="300" width="165" height="145" rx="10" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1.5" />
+      <text x="622" y="320" fontSize="9" fill="#E65100" fontWeight="bold">{b ? '🔧 AWS Services' : '🔧 AWS Infra'}</text>
 
       {[
         b ? 'Network (VPC)' : 'VPC + PrivateLink',
@@ -205,8 +216,8 @@ function HcpDiagram({ b }: { b: boolean }) {
         b ? 'Permissions' : 'IAM Roles (STS)',
       ].map((item, i) => (
         <g key={i}>
-          <rect x={622} y={300 + i * 22} width={140} height={18} rx={4} fill="#fff" stroke="#FFE0B2" strokeWidth="1" />
-          <text x={632} y={313 + i * 22} fontSize="7" fill="#BF360C">{item}</text>
+          <rect x={622} y={330 + i * 22} width={140} height={18} rx={4} fill="#fff" stroke="#FFE0B2" strokeWidth="1" />
+          <text x={632} y={343 + i * 22} fontSize="7" fill="#BF360C">{item}</text>
         </g>
       ))}
     </svg>
@@ -226,7 +237,7 @@ function IamRbacBridge({ b }: { b: boolean }) {
           </p>
         </div>
         <div className="rosa-bridge-arrow">
-          <span>{b ? 'IRSA connects them' : 'IRSA / Pod Identity'}</span>
+          <span>{b ? 'IAM Roles for Service Accounts' : 'IRSA / Pod Identity'}</span>
           <div className="rosa-bridge-arrow-line" />
         </div>
         <div className="rosa-bridge-side">
@@ -239,7 +250,7 @@ function IamRbacBridge({ b }: { b: boolean }) {
       </div>
       <p className="rosa-bridge-note">
         {b
-          ? '💡 A pod (your app) can use IRSA to access AWS services (like S3) without storing credentials — the ServiceAccount gets a temporary AWS token automatically.'
+          ? '💡 A pod (your app) can use "IAM Roles for Service Accounts" (IRSA) to access AWS services (like S3) without storing credentials — it gets a temporary AWS token automatically.'
           : '💡 IRSA: ServiceAccount annotated with IAM role ARN → projected token volume → STS AssumeRoleWithWebIdentity → scoped AWS credentials injected at pod level.'}
       </p>
     </div>

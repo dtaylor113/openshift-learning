@@ -1,4 +1,5 @@
 import { AppMarker } from '../AppMarker';
+import { AnalogyCallout } from '../AnalogyCallout';
 import type { SceneProps } from '../types';
 
 export function AppScene({ mode }: SceneProps) {
@@ -71,6 +72,7 @@ export function AppScene({ mode }: SceneProps) {
       {/* App marker */}
       <AppMarker x={370} y={140} />
 
+      {b && <AnalogyCallout x={120} y={60} width={260} text="Think of it as: a dish on the menu" />}
     </g>
   );
 }

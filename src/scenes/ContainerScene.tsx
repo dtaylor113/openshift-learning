@@ -1,4 +1,5 @@
 import { AppMarker } from '../AppMarker';
+import { AnalogyCallout } from '../AnalogyCallout';
 import type { SceneProps } from '../types';
 
 export function ContainerScene({ mode }: SceneProps) {
@@ -90,6 +91,7 @@ export function ContainerScene({ mode }: SceneProps) {
 
       <AppMarker x={370} y={140} />
 
+      {b && <AnalogyCallout x={80} y={342} width={340} text="Think of it as: a sealed meal kit (recipe + all ingredients)" />}
     </g>
   );
 }

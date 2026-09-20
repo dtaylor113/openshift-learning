@@ -10,7 +10,7 @@ export function OpenShiftScene({ mode }: SceneProps) {
       <rect x="10" y="10" width="480" height="380" rx="22" fill="#FDE8E8" stroke="#EE0000" strokeWidth="3" />
 
       <text x="35" y="40" fontSize="16" fill="#CC0000" fontWeight="bold">
-        {b ? 'OpenShift (Kubernetes with batteries included)' : 'OpenShift Container Platform'}
+        {b ? 'OpenShift Cluster (Kubernetes with batteries included)' : 'OpenShift Cluster (managed by OCP)'}
       </text>
       <text x="35" y="56" fontSize="9" fill="#B71C1C" fontFamily="monospace">
         {b ? 'Everything from the Cluster level, plus enterprise tools and security' : 'Enterprise Kubernetes + operator-managed platform services'}

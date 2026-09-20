@@ -24,7 +24,7 @@ export function NodeScene({ mode }: SceneProps) {
   return (
     <g>
       {/* Machine Pool overlay */}
-      <rect x="12" y="6" width="476" height="390" rx="20" fill="none" stroke="#9575CD" strokeWidth="1.5" strokeDasharray="6 4" />
+      <rect x="12" y="6" width="476" height="400" rx="20" fill="none" stroke="#9575CD" strokeWidth="1.5" strokeDasharray="6 4" />
       <rect x="18" y="10" width="220" height="16" rx="4" fill="#EDE7F6" />
       <text x="26" y="22" fontSize="8" fill="#4527A0" fontWeight="bold">
         {b ? '🏗️ Machine Pool: a group of identical nodes' : '🏗️ Machine Pool: worker-pool-1 (m5.xlarge × 3)'}

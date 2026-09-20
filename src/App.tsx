@@ -140,6 +140,7 @@ function App() {
           <RosaMap mode={mode} onModeChange={setMode} />
         </main>
       )}
+      <footer className="app-footer">by Dave Taylor</footer>
     </div>
   );
 }

@@ -16,7 +16,7 @@ const SCENES: SceneConfig[] = [
   { component: AppScene,       viewBox: '100 40 310 340',  scale: 0.45 },
   { component: ContainerScene, viewBox: '65 30 370 315',   scale: 0.55 },
   { component: PodScene,       viewBox: '5 0 490 385',     scale: 0.85 },
-  { component: NodeScene,      viewBox: '5 0 490 395',     scale: 0.82 },
+  { component: NodeScene,      viewBox: '5 0 490 410',     scale: 0.82 },
   { component: ClusterScene,   viewBox: '8 4 485 390',     scale: 0.92 },
   { component: OpenShiftScene, viewBox: '5 4 490 390',     scale: 1.0 },
 ];

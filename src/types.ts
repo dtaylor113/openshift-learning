@@ -113,10 +113,12 @@ export const ZOOM_LEVELS: ZoomLevel[] = [
       description:
         'Pods need a real computer to run on — that\'s a Node. This graphic shows a worker node with its system services and the pods scheduled onto it. Machine Pools let you manage groups of identical nodes.',
       details: [
-        'The pod manager receives orders from the cluster brain and starts/stops pods on this machine',
+        'This is a worker node — it runs your apps. Control plane nodes are the "manager\'s office": they decide what gets cooked where, but never cook anything themselves',
+        'Worker nodes = muscle (runs your stuff). Control plane nodes = brain (decisions). They\'re different machines!',
+        'The pod manager receives orders from the control plane and starts/stops pods on this machine',
         'The container engine is the software that actually runs containers',
         'The network manager sets up routing so traffic reaches the right pod',
-        'A Machine Pool is a group of identical nodes — you can scale them up or down together',
+        'Machine Pools let you add/remove worker nodes as a group. Infra nodes handle cluster services (not your apps)',
         'Your myapp pods are highlighted, but they share this machine with monitoring, logging, and other system pods',
       ],
     },
@@ -165,11 +167,11 @@ export const ZOOM_LEVELS: ZoomLevel[] = [
   },
   {
     id: 'openshift',
-    label: 'OpenShift',
+    label: 'OpenShift Cluster',
     mapLabel: 'OpenShift',
     beginner: {
       description:
-        'OpenShift wraps Kubernetes with everything a real team needs. The left side shows the Kubernetes core. Everything else — Routes, security, monitoring, the developer UI — is what OpenShift adds on top.',
+        'An OpenShift Cluster wraps Kubernetes with everything a real team needs. The left side shows the Kubernetes core. Everything else — Routes, security, monitoring, the developer UI — is what OpenShift adds on top.',
       details: [
         'Routes give your app a real URL without complicated networking setup',
         'Built-in login connects to your company\'s identity system — no separate auth setup',
@@ -181,7 +183,7 @@ export const ZOOM_LEVELS: ZoomLevel[] = [
     },
     expert: {
       description:
-        'OCP layers enterprise services on Kubernetes: HAProxy-based Router (Routes), OAuth server, OLM-managed operators, cluster monitoring/logging operators, ImageStreams, SCCs, and MCO-managed RHCOS nodes.',
+        'OpenShift Cluster managed by OpenShift Container Platform (OCP). OCP layers enterprise services on Kubernetes: HAProxy-based Router (Routes), OAuth server, OLM-managed operators, cluster monitoring/logging operators, ImageStreams, SCCs, and MCO-managed RHCOS nodes.',
       details: [
         'Routes (HAProxy): TLS edge/passthrough/re-encrypt; weighted traffic splitting for canary deploys',
         'OAuth server: identity brokering (LDAP, OIDC, HTPasswd, GitHub, Google)',

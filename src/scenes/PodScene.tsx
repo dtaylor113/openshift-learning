@@ -91,16 +91,16 @@ export function PodScene({ mode }: SceneProps) {
       <circle cx="233" cy="40" r="4" fill="#66BB6A" />
 
       {/* "identical copies" label */}
-      <text x="320" y="150" fontSize="7" fill="#BF360C" textAnchor="middle" fontStyle="italic">
+      <text x="270" y="145" fontSize="7" fill="#BF360C" fontStyle="italic">
         {b ? '← identical copies, managed by the Deployment' : '← ReplicaSet pods (same spec, unique names)'}
       </text>
 
       {/* ---- Autoscaler overlay ---- */}
-      <rect x="370" y="145" width="115" height="30" rx="6" fill="#FCE4EC" stroke="#F48FB1" strokeWidth="1.5" />
-      <text x="382" y="159" fontSize="7" fill="#AD1457" fontWeight="bold">
+      <rect x="370" y="160" width="115" height="30" rx="6" fill="#FCE4EC" stroke="#F48FB1" strokeWidth="1.5" />
+      <text x="382" y="174" fontSize="7" fill="#AD1457" fontWeight="bold">
         {b ? '📈 Auto-scaler' : 'HPA'}
       </text>
-      <text x="382" y="170" fontSize="6" fill="#C2185B">
+      <text x="382" y="185" fontSize="6" fill="#C2185B">
         {b ? 'Adds copies when busy' : 'min:2 max:10 cpu:70%'}
       </text>
 

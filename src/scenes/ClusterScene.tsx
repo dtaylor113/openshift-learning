@@ -73,62 +73,62 @@ export function ClusterScene({ mode }: SceneProps) {
       </text>
 
       {/* Machine Pool overlay */}
-      <rect x="35" y="175" width="330" height="155" rx="10" fill="none" stroke="#9575CD" strokeWidth="1.2" strokeDasharray="5 3" />
-      <text x="45" y="188" fontSize="7" fill="#4527A0" fontWeight="bold">
+      <rect x="35" y="178" width="340" height="170" rx="10" fill="none" stroke="#9575CD" strokeWidth="1.2" strokeDasharray="5 3" />
+      <text x="48" y="196" fontSize="7" fill="#4527A0" fontWeight="bold">
         {b ? '🏗️ Machine Pool (group of identical workers)' : '🏗️ Machine Pool: worker-pool (m5.xlarge)'}
       </text>
 
-      <MiniNode x={48} y={195} label={b ? 'Worker 1 ★' : 'worker-1'} pods={5} highlighted />
-      <MiniNode x={163} y={195} label={b ? 'Worker 2' : 'worker-2'} pods={4} />
-      <MiniNode x={278} y={195} label={b ? 'Worker 3' : 'worker-3'} pods={6} />
+      <MiniNode x={50} y={204} label={b ? 'Worker 1 ★' : 'worker-1'} pods={5} highlighted />
+      <MiniNode x={168} y={204} label={b ? 'Worker 2' : 'worker-2'} pods={4} />
+      <MiniNode x={256} y={204} label={b ? 'Worker 3' : 'worker-3'} pods={6} />
 
-      <MiniNode x={48} y={268} label={b ? 'Worker 4' : 'worker-4'} pods={3} />
-      <MiniNode x={163} y={268} label={b ? 'Worker 5' : 'worker-5'} pods={5} />
+      <MiniNode x={50} y={278} label={b ? 'Worker 4' : 'worker-4'} pods={3} />
+      <MiniNode x={168} y={278} label={b ? 'Worker 5' : 'worker-5'} pods={5} />
 
       {/* Infra node */}
-      <g transform="translate(378, 175)">
-        <rect x="0" y="0" width="105" height="80" rx="7" fill="#E3F2FD" stroke="#42A5F5" strokeWidth="1.5" />
-        <text x="8" y="15" fontSize="7" fill="#1565C0" fontWeight="bold">
+      <g transform="translate(390, 178)">
+        <rect x="0" y="0" width="105" height="88" rx="7" fill="#E3F2FD" stroke="#42A5F5" strokeWidth="1.5" />
+        <text x="8" y="16" fontSize="7" fill="#1565C0" fontWeight="bold">
           {b ? 'Infra Node' : 'infra-1'}
         </text>
-        <rect x="8" y="22" width="88" height="14" rx="3" fill="#BBDEFB" />
-        <text x="14" y="33" fontSize="6" fill="#0D47A1">
+        <rect x="8" y="25" width="88" height="16" rx="3" fill="#BBDEFB" />
+        <text x="14" y="37" fontSize="6" fill="#0D47A1">
           {b ? 'Internet gateway' : 'Ingress Controller'}
         </text>
-        <rect x="8" y="40" width="88" height="14" rx="3" fill="#BBDEFB" />
-        <text x="14" y="51" fontSize="6" fill="#0D47A1">
+        <rect x="8" y="45" width="88" height="16" rx="3" fill="#BBDEFB" />
+        <text x="14" y="57" fontSize="6" fill="#0D47A1">
           {b ? 'Health dashboards' : 'Monitoring'}
         </text>
-        <rect x="8" y="58" width="88" height="14" rx="3" fill="#BBDEFB" />
-        <text x="14" y="69" fontSize="6" fill="#0D47A1">
+        <rect x="8" y="65" width="88" height="16" rx="3" fill="#BBDEFB" />
+        <text x="14" y="77" fontSize="6" fill="#0D47A1">
           {b ? 'Log collection' : 'Logging'}
         </text>
       </g>
 
-      <AppMarker x={100} y={190} size="small" />
+      <AppMarker x={102} y={200} size="small" />
 
       {/* Arrows from control plane to workers */}
-      <line x1="250" y1="145" x2="100" y2="195" stroke="#26A69A" strokeWidth="1" strokeDasharray="3 2" opacity="0.5" />
-      <line x1="250" y1="145" x2="215" y2="195" stroke="#26A69A" strokeWidth="1" strokeDasharray="3 2" opacity="0.5" />
-      <line x1="250" y1="145" x2="330" y2="195" stroke="#26A69A" strokeWidth="1" strokeDasharray="3 2" opacity="0.5" />
-      <text x="250" y="158" fontSize="6" fill="#26A69A" textAnchor="middle" fontStyle="italic">
+      <line x1="250" y1="145" x2="102" y2="204" stroke="#26A69A" strokeWidth="1" strokeDasharray="3 2" opacity="0.5" />
+      <line x1="250" y1="145" x2="220" y2="204" stroke="#26A69A" strokeWidth="1" strokeDasharray="3 2" opacity="0.5" />
+      <line x1="250" y1="145" x2="310" y2="204" stroke="#26A69A" strokeWidth="1" strokeDasharray="3 2" opacity="0.5" />
+      <text x="250" y="160" fontSize="8" fill="#00695C" textAnchor="middle" fontWeight="bold" fontStyle="italic">
         {b ? 'brain tells workers what to run' : 'API server → kubelet scheduling'}
       </text>
 
       {/* External traffic */}
-      <rect x="378" y="268" width="105" height="25" rx="6" fill="#E8EAF6" stroke="#7986CB" strokeWidth="1.5" />
-      <text x="390" y="284" fontSize="7" fill="#283593" fontWeight="bold">
+      <rect x="390" y="280" width="105" height="25" rx="6" fill="#E8EAF6" stroke="#7986CB" strokeWidth="1.5" />
+      <text x="402" y="296" fontSize="7" fill="#283593" fontWeight="bold">
         {b ? '🌐 Internet in' : '🌐 Ingress'}
       </text>
-      <line x1="430" y1="268" x2="430" y2="258" stroke="#42A5F5" strokeWidth="1.5" />
-      <polygon points="427,261 430,254 433,261" fill="#42A5F5" />
+      <line x1="442" y1="280" x2="442" y2="270" stroke="#42A5F5" strokeWidth="1.5" />
+      <polygon points="439,273 442,266 445,273" fill="#42A5F5" />
 
       {/* Legend at bottom */}
-      <rect x="35" y="345" width="435" height="35" rx="6" fill="rgba(255,255,255,0.6)" stroke="#B2DFDB" strokeWidth="1" />
-      <text x="50" y="360" fontSize="7" fill="#00695C" fontWeight="bold">
+      <rect x="35" y="355" width="435" height="35" rx="6" fill="rgba(255,255,255,0.6)" stroke="#B2DFDB" strokeWidth="1" />
+      <text x="50" y="370" fontSize="7" fill="#00695C" fontWeight="bold">
         {b ? '💡 Control plane nodes = brain (decisions). Worker nodes = muscle (runs your stuff). They\'re different machines!' : '💡 CP nodes: API server, etcd, scheduler, controllers. Workers: kubelet + CRI-O + your pods. Separate failure domains.'}
       </text>
-      <text x="50" y="372" fontSize="6" fill="#00897B">
+      <text x="50" y="382" fontSize="6" fill="#00897B">
         {b ? 'Machine Pools let you add/remove worker nodes as a group. Infra nodes handle cluster services (not your apps).' : 'Machine Pools (MachineSet + ASG). Infra nodes: tainted to only run router, monitoring, logging.'}
       </text>
 
