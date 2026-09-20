@@ -84,7 +84,7 @@ export const ZOOM_LEVELS: ZoomLevel[] = [
     mapLabel: 'Pod',
     beginner: {
       description:
-        'Kubernetes wraps your container in a Pod — a team of containers that share networking and storage. The dotted lines show they communicate directly. A Deployment manages copies of this pod, and a Service routes traffic to them.',
+        'Kubernetes wraps your container in a Pod — one or more containers that share networking and storage. The dotted lines show they communicate directly. A Deployment manages copies of this pod, and a Service routes traffic to them.',
       details: [
         'Your app container does the real work; the helper (sidecar) adds security and logging automatically',
         'Both containers share the same network — connected by the dotted lines in the graphic',

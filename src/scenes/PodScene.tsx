@@ -17,7 +17,7 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
       {/* ---- Pod (primary, detailed) ---- */}
       <rect x="25" y="35" width="220" height="160" rx="14" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="2.5" />
       <text x="42" y="55" fontSize="11" fill="#E65100" fontWeight="bold">
-        {b ? 'Pod (a team of containers)' : 'Pod: myapp-7d4f8b-x2k9p'}
+        {b ? 'Pod (one or more containers)' : 'Pod: myapp-7d4f8b-x2k9p'}
       </text>
 
       {/* App container — clickable to zoom into Container level */}
