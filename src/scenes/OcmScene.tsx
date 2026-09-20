@@ -64,6 +64,14 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
         <ZoomLink x={302} y={188} />
       </g>
 
+      {/* Dashed line from Cluster 5 to Cluster Details */}
+      <defs>
+        <marker id="ocm-detail-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#CC0000" />
+        </marker>
+      </defs>
+      <line x1="100" y1="214" x2="100" y2="243" stroke="#CC0000" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ocm-detail-arrow)" />
+
       {/* Per-cluster details callout */}
       <rect x="25" y="245" width="310" height="90" rx="10" fill="#fff" stroke="#E0E0E0" strokeWidth="1.5" />
       <text x="38" y="263" fontSize="8" fill="#333" fontWeight="bold">
@@ -77,9 +85,9 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
         { label: b ? 'Upgrades' : 'Upgrades', desc: b ? 'OCP versions' : 'Channel, policy' },
       ].map((tab, i) => (
         <g key={i}>
-          <rect x={35 + i * 58} y={272} width="52" height="24" rx="4" fill={i === 0 ? '#EE0000' : '#F5F5F5'} stroke={i === 0 ? '#EE0000' : '#E0E0E0'} strokeWidth="1" />
-          <text x={40 + i * 58} y={284} fontSize="5" fill={i === 0 ? '#fff' : '#555'} fontWeight="bold">{tab.label}</text>
-          <text x={40 + i * 58} y={292} fontSize="4" fill={i === 0 ? '#FFCDD2' : '#999'}>{tab.desc}</text>
+          <rect x={35 + i * 58} y={272} width="52" height="24" rx="4" fill={i === 0 ? '#E3F2FD' : '#F5F5F5'} stroke={i === 0 ? '#42A5F5' : '#E0E0E0'} strokeWidth="1" />
+          <text x={40 + i * 58} y={284} fontSize="5" fill={i === 0 ? '#1565C0' : '#555'} fontWeight="bold">{tab.label}</text>
+          <text x={40 + i * 58} y={292} fontSize="4" fill={i === 0 ? '#42A5F5' : '#999'}>{tab.desc}</text>
         </g>
       ))}
 

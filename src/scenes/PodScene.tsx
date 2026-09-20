@@ -44,7 +44,7 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
       {/* Sidecar container */}
       <rect x="142" y="65" width="95" height="80" rx="8" fill="#E3F2FD" stroke="#64B5F6" strokeWidth="1.5" />
       <text x="152" y="80" fontSize="8" fill="#1565C0" fontWeight="bold">
-        {b ? '📦 Helper' : '📦 envoy-proxy'}
+        {b ? '📦 Helper' : '📦 envoy (sidecar proxy)'}
       </text>
       <text x="152" y="92" fontSize="7" fill="#333">
         {b ? 'Auto-security' : 'mTLS'}
