@@ -1,0 +1,116 @@
+import type { SceneProps } from '../types';
+import { ZoomLink } from '../ZoomLink';
+
+function FeatureCard({ x, y, icon, title, subtitle, w }: {
+  x: number; y: number; icon: string; title: string; subtitle: string; w?: number;
+}) {
+  const width = w || 120;
+  return (
+    <g>
+      <rect x={x} y={y} width={width} height="50" rx="8" fill="#fff" stroke="#E0E0E0" strokeWidth="1.5" />
+      <text x={x + 10} y={y + 18} fontSize="8" fill="#333" fontWeight="bold">{icon} {title}</text>
+      <text x={x + 10} y={y + 32} fontSize="6" fill="#777">{subtitle}</text>
+    </g>
+  );
+}
+
+const CLUSTER_NAMES = [
+  'My OCP Cluster 1',
+  'My OCP Cluster 2',
+  'My OCP Cluster 3',
+  'My OCP Cluster 4',
+  'My OCP Cluster 5',
+];
+
+export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
+  const b = mode === 'beginner';
+
+  return (
+    <g>
+      {/* OCM boundary */}
+      <rect x="10" y="8" width="470" height="385" rx="20" fill="#FFEBEE" stroke="#EE0000" strokeWidth="3" />
+      <text x="35" y="32" fontSize="13" fill="#CC0000" fontWeight="bold">
+        {b ? 'OpenShift Cluster Manager (OCM) — Your Cluster Command Center' : 'OCM'}
+      </text>
+      <text x="35" y="46" fontSize="7" fill="#CC0000" fontFamily="monospace">
+        console.redhat.com/openshift
+      </text>
+
+      {/* Cluster List area */}
+      <rect x="25" y="58" width="310" height="180" rx="12" fill="#FDE8E8" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="38" y="76" fontSize="9" fill="#C62828" fontWeight="bold">
+        {b ? '📋 Your Clusters' : '📋 Cluster List'}
+      </text>
+
+      {/* Named cluster cards — clickable */}
+      {CLUSTER_NAMES.map((name, i) => (
+        <g
+          key={i}
+          style={{ cursor: onNavigate ? 'pointer' : undefined }}
+          onClick={() => onNavigate?.(5)}
+        >
+          <rect x={35 + (i % 2) * 150} y={84 + Math.floor(i / 2) * 46} width="135" height="38" rx="6" fill="#fff" stroke="#E0E0E0" strokeWidth="1.5" />
+          <circle cx={47 + (i % 2) * 150} cy={98 + Math.floor(i / 2) * 46} r="4" fill="#66BB6A" />
+          <text x={55 + (i % 2) * 150} y={100 + Math.floor(i / 2) * 46} fontSize="7" fill="#333" fontWeight="bold">{name}</text>
+          <rect x={55 + (i % 2) * 150} y={105 + Math.floor(i / 2) * 46} width={40 + (i % 2) * 20} height="6" rx="3" fill="#F5F5F5" />
+          <ZoomLink x={160 + (i % 2) * 150} y={98 + Math.floor(i / 2) * 46} />
+        </g>
+      ))}
+
+      {/* Create button — clickable, opens deep dive */}
+      <g style={{ cursor: 'pointer' }} onClick={onDeepDive}>
+        <rect x="175" y="178" width="135" height="34" rx="17" fill="#0066CC" />
+        <text x="205" y="200" fontSize="9" fill="#fff" fontWeight="bold">Create cluster</text>
+        <ZoomLink x={302} y={188} />
+      </g>
+
+      {/* Per-cluster details callout */}
+      <rect x="25" y="245" width="310" height="90" rx="10" fill="#fff" stroke="#E0E0E0" strokeWidth="1.5" />
+      <text x="38" y="263" fontSize="8" fill="#333" fontWeight="bold">
+        {b ? '🔍 Cluster Details' : '🔍 Cluster Details Page'}
+      </text>
+      {[
+        { label: b ? 'Overview' : 'Overview', desc: b ? 'Status & cost' : 'Status, billing' },
+        { label: b ? 'Machine Pools' : 'Machine Pools', desc: b ? 'Add/scale workers' : 'CRUD + autoscaler' },
+        { label: b ? 'Networking' : 'Networking', desc: b ? 'Ingress & VPC' : 'Ingress, VPC' },
+        { label: b ? 'Access' : 'Access Control', desc: b ? 'Login & roles' : 'IDPs, RBAC' },
+        { label: b ? 'Upgrades' : 'Upgrades', desc: b ? 'OCP versions' : 'Channel, policy' },
+      ].map((tab, i) => (
+        <g key={i}>
+          <rect x={35 + i * 58} y={272} width="52" height="24" rx="4" fill={i === 0 ? '#EE0000' : '#F5F5F5'} stroke={i === 0 ? '#EE0000' : '#E0E0E0'} strokeWidth="1" />
+          <text x={40 + i * 58} y={284} fontSize="5" fill={i === 0 ? '#fff' : '#555'} fontWeight="bold">{tab.label}</text>
+          <text x={40 + i * 58} y={292} fontSize="4" fill={i === 0 ? '#FFCDD2' : '#999'}>{tab.desc}</text>
+        </g>
+      ))}
+
+      {/* Open console button in details */}
+      <rect x="35" y="303" width="80" height="18" rx="9" fill="#0066CC" />
+      <text x="50" y="315" fontSize="6" fill="#fff" fontWeight="bold">Open console →</text>
+      <text x="125" y="315" fontSize="6" fill="#888" fontStyle="italic">
+        {b ? 'launches OCP Console for this cluster' : '→ OCP Console (per-cluster UI)'}
+      </text>
+
+      {/* Right sidebar: tools & downloads */}
+      <rect x="345" y="58" width="125" height="278" rx="10" fill="#F5F5F5" stroke="#E0E0E0" strokeWidth="1" />
+      <text x="358" y="76" fontSize="8" fill="#333" fontWeight="bold">
+        {b ? '🧰 Tools' : '🧰 Platform Services'}
+      </text>
+
+      <FeatureCard x={352} y={84} icon="📊" title={b ? 'Dashboard' : 'Dashboard'} subtitle={b ? 'Cluster health, CPU, memory' : 'Fleet overview, utilization'} w={112} />
+      <FeatureCard x={352} y={142} icon="📥" title={b ? 'Downloads' : 'Downloads'} subtitle={b ? 'oc CLI, rosa CLI, pull secret' : 'oc, rosa, pull-secret, RHCOS'} w={112} />
+      <FeatureCard x={352} y={200} icon="🔧" title={b ? 'Assisted Installer' : 'AI Wizard'} subtitle={b ? 'Install on bare metal' : 'Agent-based IPI, bare-metal'} w={112} />
+      <FeatureCard x={352} y={258} icon="📋" title={b ? 'Quota' : 'Quota'} subtitle={b ? 'How many clusters allowed' : 'Subscription entitlements'} w={112} />
+
+      {/* Bottom callout */}
+      <rect x="25" y="345" width="445" height="38" rx="8" fill="rgba(255,255,255,0.8)" stroke="#FFCDD2" strokeWidth="1" />
+      <text x="40" y="362" fontSize="7" fill="#C62828" fontWeight="bold">
+        {b ? '💡 OCM is the "corporate HQ" — it manages all your clusters, no matter what type or where they run'
+           : '💡 OCM SaaS: clusters_mgmt + accounts_mgmt APIs. UI at console.redhat.com/openshift (uhc-portal codebase)'}
+      </text>
+      <text x="40" y="376" fontSize="6" fill="#888">
+        {b ? 'Each cluster type (ROSA, OSD, etc.) is a different "franchise model" — zoom in to explore ↓'
+           : 'Product normalization: ROSA/MOA, ROSA_HYPERSHIFT/MOA_HOSTEDCONTROLPLANE, OSD, ARO, OCP_ASSISTEDINSTALL'}
+      </text>
+    </g>
+  );
+}

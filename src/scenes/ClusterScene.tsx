@@ -1,4 +1,5 @@
 import { AppMarker } from '../AppMarker';
+import { ZoomLink } from '../ZoomLink';
 import type { SceneProps } from '../types';
 
 function MiniNode({ x, y, label, pods, highlighted, variant }: {
@@ -25,19 +26,19 @@ function MiniNode({ x, y, label, pods, highlighted, variant }: {
   );
 }
 
-export function ClusterScene({ mode }: SceneProps) {
+export function ClusterScene({ mode, onNavigate }: SceneProps) {
   const b = mode === 'beginner';
 
   return (
     <g>
       {/* Cluster boundary */}
-      <rect x="15" y="10" width="470" height="380" rx="18" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="3" />
+      <rect x="15" y="10" width="485" height="395" rx="18" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="3" />
       <text x="38" y="34" fontSize="13" fill="#00695C" fontWeight="bold">
-        {b ? 'The Cluster (all machines working together)' : 'Kubernetes Cluster'}
+        {b ? 'Kubernetes Cluster (all machines working together)' : 'Kubernetes Cluster (K8s)'}
       </text>
 
       {/* ---- Control Plane section ---- */}
-      <rect x="35" y="45" width="435" height="100" rx="10" fill="#B2DFDB" stroke="#26A69A" strokeWidth="2" />
+      <rect x="35" y="45" width="450" height="100" rx="10" fill="#B2DFDB" stroke="#26A69A" strokeWidth="2" />
       <text x="52" y="63" fontSize="10" fill="#004D40" fontWeight="bold">
         {b ? '🧠 Control Plane Nodes — the cluster\'s "brain" (don\'t run your apps)' : '🧠 Control Plane Nodes (×3 HA)'}
       </text>
@@ -78,12 +79,17 @@ export function ClusterScene({ mode }: SceneProps) {
         {b ? '🏗️ Machine Pool (group of identical workers)' : '🏗️ Machine Pool: worker-pool (m5.xlarge)'}
       </text>
 
-      <MiniNode x={50} y={204} label={b ? 'Worker 1 ★' : 'worker-1'} pods={5} highlighted />
-      <MiniNode x={168} y={204} label={b ? 'Worker 2' : 'worker-2'} pods={4} />
-      <MiniNode x={256} y={204} label={b ? 'Worker 3' : 'worker-3'} pods={6} />
-
-      <MiniNode x={50} y={278} label={b ? 'Worker 4' : 'worker-4'} pods={3} />
-      <MiniNode x={168} y={278} label={b ? 'Worker 5' : 'worker-5'} pods={5} />
+      {[
+        { x: 50, y: 204, label: b ? 'Worker 1 ★' : 'worker-1', pods: 5, hl: true },
+        { x: 168, y: 204, label: b ? 'Worker 2' : 'worker-2', pods: 4 },
+        { x: 50, y: 278, label: b ? 'Worker 3' : 'worker-3', pods: 3 },
+        { x: 168, y: 278, label: b ? 'Worker 4' : 'worker-4', pods: 5 },
+      ].map((w, i) => (
+        <g key={i} style={{ cursor: onNavigate ? 'pointer' : undefined }} onClick={() => onNavigate?.(3)}>
+          <MiniNode x={w.x} y={w.y} label={w.label} pods={w.pods} highlighted={w.hl} />
+          <ZoomLink x={w.x + 98} y={w.y + 6} />
+        </g>
+      ))}
 
       {/* Infra node */}
       <g transform="translate(390, 178)">
@@ -124,7 +130,7 @@ export function ClusterScene({ mode }: SceneProps) {
       <polygon points="439,273 442,266 445,273" fill="#42A5F5" />
 
       {/* Legend at bottom */}
-      <rect x="35" y="355" width="435" height="35" rx="6" fill="rgba(255,255,255,0.6)" stroke="#B2DFDB" strokeWidth="1" />
+      <rect x="35" y="355" width="450" height="35" rx="6" fill="rgba(255,255,255,0.6)" stroke="#B2DFDB" strokeWidth="1" />
       <text x="50" y="370" fontSize="7" fill="#00695C" fontWeight="bold">
         {b ? '💡 Control plane nodes = brain (decisions). Worker nodes = muscle (runs your stuff). They\'re different machines!' : '💡 CP nodes: API server, etcd, scheduler, controllers. Workers: kubelet + CRI-O + your pods. Separate failure domains.'}
       </text>

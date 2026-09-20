@@ -1,4 +1,5 @@
 import { AppMarker } from '../AppMarker';
+import { ZoomLink } from '../ZoomLink';
 import type { SceneProps } from '../types';
 
 function SmallPod({ x, y, name, color, highlighted }: { x: number; y: number; name: string; color: string; highlighted?: boolean }) {
@@ -18,7 +19,7 @@ function SmallPod({ x, y, name, color, highlighted }: { x: number; y: number; na
   );
 }
 
-export function NodeScene({ mode }: SceneProps) {
+export function NodeScene({ mode, onNavigate }: SceneProps) {
   const b = mode === 'beginner';
 
   return (
@@ -79,10 +80,17 @@ export function NodeScene({ mode }: SceneProps) {
         Pods on this machine:
       </text>
 
-      {/* myapp replicas — same app, multiple copies (same color) */}
-      <SmallPod x={55} y={b ? 162 : 148} name={b ? 'myapp replica 1' : 'myapp-x2k9p'} color="#E57373" highlighted />
-      <SmallPod x={148} y={b ? 162 : 148} name={b ? 'myapp replica 2' : 'myapp-a8m3n'} color="#E57373" />
-      <SmallPod x={241} y={b ? 162 : 148} name={b ? 'myapp replica 3' : 'myapp-q5w7r'} color="#E57373" />
+      {/* myapp replicas — all clickable to zoom into Pod */}
+      {[
+        { x: 55, name: b ? 'myapp replica 1' : 'myapp-x2k9p', hl: true },
+        { x: 148, name: b ? 'myapp replica 2' : 'myapp-a8m3n' },
+        { x: 241, name: b ? 'myapp replica 3' : 'myapp-q5w7r' },
+      ].map((p, i) => (
+        <g key={i} style={{ cursor: onNavigate ? 'pointer' : undefined }} onClick={() => onNavigate?.(2)}>
+          <SmallPod x={p.x} y={b ? 162 : 148} name={p.name} color="#E57373" highlighted={p.hl} />
+          <ZoomLink x={p.x + 78} y={b ? 165 : 151} />
+        </g>
+      ))}
 
       {/* Row label: same app */}
       <text x={430} y={b ? 175 : 161} fontSize="6" fill="#C62828">← same app,</text>

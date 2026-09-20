@@ -4,14 +4,14 @@ import type { ExplainMode } from './types';
 import { ZoomViewer } from './ZoomViewer';
 import { InfoPanel } from './InfoPanel';
 import { Minimap } from './Minimap';
-import { RosaMap } from './RosaMap';
+import { DeepDive } from './DeepDive';
 import './App.css';
 
-type Track = 'explorer' | 'rosa';
+type View = 'explorer' | 'deep-dive';
 
 function App() {
-  const [track, setTrack] = useState<Track>('explorer');
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [view, setView] = useState<View>('explorer');
+  const [currentIndex, setCurrentIndex] = useState(ZOOM_LEVELS.length - 1);
   const [direction, setDirection] = useState(1);
   const [mode, setMode] = useState<ExplainMode>('beginner');
   const isTransitioning = useRef(false);
@@ -32,9 +32,12 @@ function App() {
     }, 700);
   }, [currentIndex]);
 
+  const openDeepDive = useCallback(() => setView('deep-dive'), []);
+  const backToExplorer = useCallback(() => setView('explorer'), []);
+
   const handleWheel = useCallback(
     (e: React.WheelEvent) => {
-      if (track !== 'explorer') return;
+      if (view !== 'explorer') return;
       e.preventDefault();
       if (isTransitioning.current) return;
 
@@ -46,12 +49,12 @@ function App() {
         navigateTo(currentIndex - 1);
       }
     },
-    [track, currentIndex, navigateTo]
+    [view, currentIndex, navigateTo]
   );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (track !== 'explorer') return;
+      if (view !== 'explorer') return;
       if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
         e.preventDefault();
         navigateTo(currentIndex + 1);
@@ -60,11 +63,11 @@ function App() {
         navigateTo(currentIndex - 1);
       }
     },
-    [track, currentIndex, navigateTo]
+    [view, currentIndex, navigateTo]
   );
 
   const currentLevel = ZOOM_LEVELS[currentIndex];
-  const breadcrumb = ZOOM_LEVELS.slice(0, currentIndex + 1);
+  const breadcrumb = [...ZOOM_LEVELS].reverse().slice(0, ZOOM_LEVELS.length - currentIndex);
 
   return (
     <div
@@ -72,7 +75,7 @@ function App() {
       onWheel={handleWheel}
       onKeyDown={handleKeyDown}
       tabIndex={0}
-      style={{ backgroundColor: track === 'explorer' ? currentLevel.bgColor : '#F5F5F5' }}
+      style={{ backgroundColor: view === 'explorer' ? currentLevel.bgColor : '#F5F5F5' }}
     >
       <header className="app-header">
         <div className="header-left">
@@ -80,51 +83,50 @@ function App() {
             <span className="logo-icon">🔭</span>
             OpenShift Explorer
           </h1>
-          {track === 'explorer' && (
+          {view === 'explorer' ? (
             <nav className="breadcrumb" aria-label="Zoom level path">
-              {breadcrumb.map((level, i) => (
-                <span key={level.id} className="breadcrumb-item">
-                  {i > 0 && <span className="breadcrumb-sep">›</span>}
-                  <button
-                    className={`breadcrumb-label ${i === currentIndex ? 'active' : ''}`}
-                    style={{ color: i === currentIndex ? level.color : undefined }}
-                    onClick={() => navigateTo(i)}
-                  >
-                    {level.label}
-                  </button>
+              {breadcrumb.map((level, i) => {
+                const originalIndex = ZOOM_LEVELS.indexOf(level);
+                const isActive = originalIndex === currentIndex;
+                return (
+                  <span key={level.id} className="breadcrumb-item">
+                    {i > 0 && <span className="breadcrumb-sep">›</span>}
+                    <button
+                      className={`breadcrumb-label ${isActive ? 'active' : ''}`}
+                      style={{ color: isActive ? level.color : undefined }}
+                      onClick={() => navigateTo(originalIndex)}
+                    >
+                      {level.label}
+                    </button>
+                  </span>
+                );
+              })}
+            </nav>
+          ) : (
+            <nav className="breadcrumb" aria-label="Deep dive path">
+              <span className="breadcrumb-item">
+                <button className="breadcrumb-label" onClick={backToExplorer}>
+                  ← Explorer
+                </button>
+                <span className="breadcrumb-sep">›</span>
+                <button className="breadcrumb-label" onClick={() => { backToExplorer(); navigateTo(ZOOM_LEVELS.length - 1); }}>
+                  OCM
+                </button>
+                <span className="breadcrumb-sep">›</span>
+                <span className="breadcrumb-label active" style={{ color: '#EE0000' }}>
+                  Cluster Types Deep Dive
                 </span>
-              ))}
+              </span>
             </nav>
           )}
-          {track === 'rosa' && (
-            <span className="breadcrumb" style={{ color: '#888', fontSize: 11 }}>
-              ROSA Cluster Architecture — who manages what
-            </span>
-          )}
-        </div>
-        <div className="header-right">
-          <div className="track-toggle">
-            <button
-              className={`track-btn ${track === 'explorer' ? 'active' : ''}`}
-              onClick={() => setTrack('explorer')}
-            >
-              🔭 Explorer
-            </button>
-            <button
-              className={`track-btn ${track === 'rosa' ? 'active' : ''}`}
-              onClick={() => setTrack('rosa')}
-            >
-              ☁️ ROSA Map
-            </button>
-          </div>
         </div>
       </header>
 
-      {track === 'explorer' ? (
+      {view === 'explorer' ? (
         <main className="app-main">
           <div className="viewer-area">
             <Minimap currentIndex={currentIndex} onNavigate={navigateTo} mode={mode} />
-            <ZoomViewer currentIndex={currentIndex} direction={direction} mode={mode} />
+            <ZoomViewer currentIndex={currentIndex} direction={direction} mode={mode} onDeepDive={currentLevel.id === 'ocm' ? openDeepDive : undefined} onNavigate={navigateTo} />
           </div>
           <InfoPanel
             level={currentLevel}
@@ -137,7 +139,7 @@ function App() {
         </main>
       ) : (
         <main className="app-main rosa-main">
-          <RosaMap mode={mode} onModeChange={setMode} />
+          <DeepDive mode={mode} onModeChange={setMode} />
         </main>
       )}
       <footer className="app-footer">by Dave Taylor</footer>

@@ -2,6 +2,8 @@ export type ExplainMode = 'beginner' | 'expert';
 
 export interface SceneProps {
   mode: ExplainMode;
+  onDeepDive?: () => void;
+  onNavigate?: (levelIndex: number) => void;
 }
 
 export interface ZoomLevel {
@@ -138,8 +140,8 @@ export const ZOOM_LEVELS: ZoomLevel[] = [
   },
   {
     id: 'cluster',
-    label: 'The Cluster',
-    mapLabel: 'Cluster',
+    label: 'Kubernetes Cluster',
+    mapLabel: 'K8s Cluster',
     beginner: {
       description:
         'All nodes together form a Cluster. The control plane nodes are the "brain" — they decide where pods go and keep everything running. Worker nodes do the actual work of running your apps.',
@@ -168,7 +170,7 @@ export const ZOOM_LEVELS: ZoomLevel[] = [
   {
     id: 'openshift',
     label: 'OpenShift Cluster',
-    mapLabel: 'OpenShift',
+    mapLabel: 'OCP Cluster',
     beginner: {
       description:
         'An OpenShift Cluster wraps Kubernetes with everything a real team needs. The left side shows the Kubernetes core. Everything else — Routes, security, monitoring, the developer UI — is what OpenShift adds on top.',
@@ -195,5 +197,38 @@ export const ZOOM_LEVELS: ZoomLevel[] = [
     },
     color: '#EE0000',
     bgColor: '#FDE8E8',
+  },
+  {
+    id: 'ocm',
+    label: 'OCM',
+    mapLabel: 'OCM',
+    beginner: {
+      description:
+        'OpenShift Cluster Manager (OCM) is your dashboard at console.redhat.com/openshift. It\'s where you create, monitor, and manage all your OpenShift clusters — no matter what type or where they run.',
+      details: [
+        'Cluster List: See all your clusters in one place — status, version, cloud provider, region',
+        'Create Cluster: Step-by-step wizards for ROSA (AWS) and OSD (AWS/GCP) clusters',
+        'Cluster Details: Manage machine pools, networking, access control, upgrades, and add-ons per cluster',
+        'Cluster types: ROSA Classic (control plane in your AWS), ROSA HCP (control plane in Red Hat\'s AWS — simpler & cheaper), OSD (AWS or GCP)',
+        'Downloads: Get the oc CLI, rosa CLI, pull secrets, and installer binaries',
+        'Assisted Installer: A guided wizard for installing OpenShift on your own bare-metal hardware',
+        '"Open console" on any cluster launches that cluster\'s own OpenShift Container Platform (OCP) console',
+      ],
+    },
+    expert: {
+      description:
+        'OCM (console.redhat.com/openshift) is the SaaS multi-cluster management plane built on the clusters_mgmt and accounts_mgmt APIs. It provides lifecycle management, quota enforcement, and SRE integration for managed offerings.',
+      details: [
+        'Cluster lifecycle: provision, upgrade (CVO policies), hibernate, archive, delete via clusters_mgmt API',
+        'Products: ROSA Classic (in-cluster CP, STS), ROSA HCP (hosted CP, PrivateLink), OSD AWS/GCP (IAM user), OCP Assisted Install, registered clusters',
+        'Machine Pools / Node Pools: CRUD + autoscaler config, instance type selection, labels, taints',
+        'Access Control: IDP management (LDAP, GitHub, Google, OIDC, HTPasswd), RBAC role grants',
+        'Add-ons: OLM-based managed add-ons installed and upgraded by SRE',
+        'Service Logs: cluster events and SRE actions via service_logs API',
+        'Billing: Subscription management, quota_cost, marketplace entitlements (AWS/GCP/Azure)',
+      ],
+    },
+    color: '#EE0000',
+    bgColor: '#FFEBEE',
   },
 ];

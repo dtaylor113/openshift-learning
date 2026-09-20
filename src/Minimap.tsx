@@ -13,8 +13,9 @@ const ANALOGIES = [
   { icon: '🥡', label: 'Meal kit (recipe + all ingredients)' },
   { icon: '👨‍🍳', label: 'Cook station (kit + helper tools)' },
   { icon: '🍳', label: 'Kitchen (stations, shared ovens)' },
-  { icon: '🏪', label: 'Restaurant (kitchens + front desk)' },
+  { icon: '🏪', label: 'The restaurant (kitchens + front desk)' },
   { icon: '🏢', label: 'Franchise (security, POS, health inspections)' },
+  { icon: '🏛️', label: 'Corporate HQ (oversees all locations)' },
 ];
 
 export function Minimap({ currentIndex, onNavigate, mode }: MinimapProps) {
@@ -33,22 +34,25 @@ export function Minimap({ currentIndex, onNavigate, mode }: MinimapProps) {
       {mode === 'beginner' && (
         <div className="analogy-legend">
           <div className="analogy-legend-title">🍽️ Restaurant Analogy</div>
-          {ZOOM_LEVELS.map((level, i) => (
-            <button
-              key={level.id}
-              className={`analogy-badge ${i === currentIndex ? 'active' : ''}`}
-              style={{
-                borderColor: i === currentIndex ? level.color : 'transparent',
-                color: i === currentIndex ? level.color : '#888',
-              }}
-              onClick={() => onNavigate(i)}
-            >
-              <span className="analogy-icon">{ANALOGIES[i].icon}</span>
-              <span className="analogy-text">
-                <strong>{level.mapLabel}</strong> = {ANALOGIES[i].label}
-              </span>
-            </button>
-          ))}
+          {[...ZOOM_LEVELS].reverse().map((level, ri) => {
+            const i = ZOOM_LEVELS.length - 1 - ri;
+            return (
+              <button
+                key={level.id}
+                className={`analogy-badge ${i === currentIndex ? 'active' : ''}`}
+                style={{
+                  borderColor: i === currentIndex ? level.color : 'transparent',
+                  color: i === currentIndex ? level.color : '#888',
+                }}
+                onClick={() => onNavigate(i)}
+              >
+                <span className="analogy-icon">{ANALOGIES[i].icon}</span>
+                <span className="analogy-text">
+                  <strong>{level.mapLabel}</strong> = {ANALOGIES[i].label}
+                </span>
+              </button>
+            );
+          })}
         </div>
       )}
 

@@ -1,7 +1,8 @@
 import { AppMarker } from '../AppMarker';
+import { ZoomLink } from '../ZoomLink';
 import type { SceneProps } from '../types';
 
-export function PodScene({ mode }: SceneProps) {
+export function PodScene({ mode, onNavigate }: SceneProps) {
   const b = mode === 'beginner';
 
   return (
@@ -19,11 +20,13 @@ export function PodScene({ mode }: SceneProps) {
         {b ? 'Pod (a team of containers)' : 'Pod: myapp-7d4f8b-x2k9p'}
       </text>
 
-      {/* App container */}
+      {/* App container — clickable to zoom into Container level */}
+      <g style={{ cursor: onNavigate ? 'pointer' : undefined }} onClick={() => onNavigate?.(1)}>
       <rect x="38" y="65" width="95" height="80" rx="8" fill="#E8F5E9" stroke="#4FC3F7" strokeWidth="2" />
       <text x="48" y="80" fontSize="8" fill="#2E7D32" fontWeight="bold">
-        {b ? '📦 Your app' : '📦 app'}
+        {b ? '📦 Container' : '📦 Container: app'}
       </text>
+      <ZoomLink x={110} y={125} />
       <text x="48" y="92" fontSize="7" fill="#333" fontWeight="bold">myapp</text>
       <text x="48" y="104" fontSize="6" fill="#666">
         {b ? 'Handles requests' : ':8080'}
@@ -36,6 +39,7 @@ export function PodScene({ mode }: SceneProps) {
       <text x="50" y="136" fontSize="6" fill="#33691E">
         {b ? '💾 Storage' : 'vol: /data'}
       </text>
+      </g>
 
       {/* Sidecar container */}
       <rect x="142" y="65" width="95" height="80" rx="8" fill="#E3F2FD" stroke="#64B5F6" strokeWidth="1.5" />
@@ -74,7 +78,6 @@ export function PodScene({ mode }: SceneProps) {
       <rect x="310" y="58" width="35" height="22" rx="4" fill="#E3F2FD" stroke="#90CAF9" strokeWidth="1" />
       <text x="316" y="72" fontSize="6" fill="#1565C0">{b ? 'helper' : 'envoy'}</text>
       <line x1="305" y1="67" x2="310" y2="67" stroke="#FFB74D" strokeWidth="1" strokeDasharray="2 1" />
-      <circle cx="348" cy="40" r="4" fill="#66BB6A" />
 
       <rect x="375" y="35" width="100" height="100" rx="10" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1.5" opacity="0.8" />
       <text x="387" y="52" fontSize="8" fill="#E65100" fontWeight="bold">
@@ -85,10 +88,7 @@ export function PodScene({ mode }: SceneProps) {
       <rect x="425" y="58" width="35" height="22" rx="4" fill="#E3F2FD" stroke="#90CAF9" strokeWidth="1" />
       <text x="431" y="72" fontSize="6" fill="#1565C0">{b ? 'helper' : 'envoy'}</text>
       <line x1="420" y1="67" x2="425" y2="67" stroke="#FFB74D" strokeWidth="1" strokeDasharray="2 1" />
-      <circle cx="463" cy="40" r="4" fill="#66BB6A" />
 
-      {/* Healthy dot on main pod */}
-      <circle cx="233" cy="40" r="4" fill="#66BB6A" />
 
       {/* "identical copies" label */}
       <text x="270" y="145" fontSize="7" fill="#BF360C" fontStyle="italic">
@@ -142,7 +142,7 @@ export function PodScene({ mode }: SceneProps) {
           : 'Deployment → manages ReplicaSet → owns Pods  |  Service → selects Pods by label  |  HPA → scales replica count'}
       </text>
 
-      <AppMarker x={33} y={100} />
+      <AppMarker x={88} y={85} size="small" />
 
     </g>
   );

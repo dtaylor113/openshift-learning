@@ -75,8 +75,12 @@ function ClassicDiagram({ b }: { b: boolean }) {
       <text x="405" y="256" fontSize="8" fill="#00897B">{b ? 'Manage YOUR apps here' : 'Workloads, Networking, Storage, RBAC'}</text>
 
       {/* "Open Console" arrow — rendered last so it's on top of all boxes */}
-      <line x1="100" y1="114" x2="395" y2="190" stroke="#CC0000" strokeWidth="2" strokeDasharray="5 3" />
-      <polygon points="389,187 401,193 393,199" fill="#CC0000" />
+      <defs>
+        <marker id="rosa-classic-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#CC0000" />
+        </marker>
+      </defs>
+      <line x1="100" y1="114" x2="392" y2="188" stroke="#CC0000" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#rosa-classic-arrow)" />
 
       {/* Worker nodes */}
       <rect x="50" y="280" width="530" height="120" rx="10" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1.5" strokeDasharray="5 3" />
@@ -116,9 +120,9 @@ function ClassicDiagram({ b }: { b: boolean }) {
 
 function HcpDiagram({ b }: { b: boolean }) {
   return (
-    <svg viewBox="0 0 800 480" className="rosa-svg">
+    <svg viewBox="0 0 800 510" className="rosa-svg">
       {/* Red Hat zone — bigger, includes control plane */}
-      <rect x="10" y="10" width="780" height="200" rx="14" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
+      <rect x="10" y="10" width="780" height="230" rx="14" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
       <text x="30" y="38" fontSize="14" fill="#CC0000" fontWeight="bold">
         {b ? '🔴 Red Hat Manages (including the cluster brain)' : '🔴 Red Hat (OCM + SRE + Hosted Control Plane)'}
       </text>
@@ -148,65 +152,69 @@ function HcpDiagram({ b }: { b: boolean }) {
       <text x="565" y="70" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⚙️ Cluster Software' : '⚙️ Cluster Operators'}</text>
       <text x="565" y="84" fontSize="8" fill="#777">{b ? 'Monitoring, networking, storage' : 'Ingress, monitoring, DNS, auth'}</text>
 
-      {/* OCP Console in Red Hat zone — under "Cluster Details" */}
-      <rect x="30" y="118" width="270" height="80" rx="10" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="2" />
-      <text x="48" y="140" fontSize="10" fill="#00695C" fontWeight="bold">🎛️ {b ? 'Cluster Console' : 'OCP Console'}</text>
-      <text x="48" y="156" fontSize="8" fill="#00897B">console-openshift-console.apps.…</text>
-      <text x="48" y="172" fontSize="8" fill="#00897B">{b ? 'See pods, apps, logs — manage YOUR stuff' : 'Admin + Developer perspectives'}</text>
-      <text x="48" y="186" fontSize="8" fill="#00897B">{b ? '' : 'Workloads, Networking, Storage, RBAC'}</text>
+      {/* OCP Console in Red Hat zone — under "Cluster Details" with gap */}
+      <rect x="30" y="140" width="270" height="80" rx="10" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="2" />
+      <text x="48" y="162" fontSize="10" fill="#00695C" fontWeight="bold">🎛️ {b ? 'Cluster Console' : 'OCP Console'}</text>
+      <text x="48" y="178" fontSize="8" fill="#00897B">console-openshift-console.apps.…</text>
+      <text x="48" y="194" fontSize="8" fill="#00897B">{b ? 'See pods, apps, logs — manage YOUR stuff' : 'Admin + Developer perspectives'}</text>
+      <text x="48" y="208" fontSize="8" fill="#00897B">{b ? '' : 'Workloads, Networking, Storage, RBAC'}</text>
 
-      {/* "Open Console" arrow — rendered after OCP Console so it's on top */}
-      <line x1="100" y1="114" x2="100" y2="118" stroke="#CC0000" strokeWidth="2" strokeDasharray="4 3" />
-      <polygon points="96,114 100,122 104,114" fill="#CC0000" />
+      {/* "Open Console" arrow — dashed line with gap between button and console */}
+      <defs>
+        <marker id="rosa-hcp-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#CC0000" />
+        </marker>
+      </defs>
+      <line x1="100" y1="114" x2="100" y2="138" stroke="#CC0000" strokeWidth="2" strokeDasharray="4 3" markerEnd="url(#rosa-hcp-arrow)" />
 
       {/* Control Plane — INSIDE Red Hat's zone, on the right */}
-      <rect x="320" y="118" width="450" height="80" rx="10" fill="#FFCDD2" stroke="#EF5350" strokeWidth="2" />
-      <text x="340" y="138" fontSize="10" fill="#B71C1C" fontWeight="bold">
+      <rect x="320" y="140" width="450" height="80" rx="10" fill="#FFCDD2" stroke="#EF5350" strokeWidth="2" />
+      <text x="340" y="160" fontSize="10" fill="#B71C1C" fontWeight="bold">
         {b ? '🧠 Control Plane (in Red Hat\'s AWS — you never see these!)' : '🧠 Hosted Control Plane (Red Hat\'s AWS, HyperShift)'}
       </text>
-      <rect x="340" y="148" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="348" y="166" fontSize="7" fill="#C62828">{b ? 'Front Door' : 'API Server'}</text>
-      <rect x="413" y="148" width="50" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="421" y="166" fontSize="7" fill="#C62828">{b ? 'Memory' : 'etcd'}</text>
-      <rect x="471" y="148" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="479" y="166" fontSize="7" fill="#C62828">Scheduler</text>
-      <rect x="544" y="148" width="85" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="552" y="166" fontSize="7" fill="#C62828">{b ? 'Auto-Fixer' : 'Controllers'}</text>
+      <rect x="340" y="170" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+      <text x="348" y="188" fontSize="7" fill="#C62828">{b ? 'Front Door' : 'API Server'}</text>
+      <rect x="413" y="170" width="50" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+      <text x="421" y="188" fontSize="7" fill="#C62828">{b ? 'Memory' : 'etcd'}</text>
+      <rect x="471" y="170" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+      <text x="479" y="188" fontSize="7" fill="#C62828">Scheduler</text>
+      <rect x="544" y="170" width="85" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+      <text x="552" y="188" fontSize="7" fill="#C62828">{b ? 'Auto-Fixer' : 'Controllers'}</text>
 
       {/* Customer AWS Account — smaller, only workers */}
-      <rect x="10" y="260" width="780" height="200" rx="14" fill="#FFF8E1" stroke="#FF9900" strokeWidth="2" />
-      <text x="30" y="285" fontSize="14" fill="#E65100" fontWeight="bold">
+      <rect x="10" y="290" width="780" height="200" rx="14" fill="#FFF8E1" stroke="#FF9900" strokeWidth="2" />
+      <text x="30" y="315" fontSize="14" fill="#E65100" fontWeight="bold">
         {b ? '🟠 Your AWS Account (only worker machines here!)' : '🟠 Customer AWS Account (workers only)'}
       </text>
 
       {/* PrivateLink connection — rendered after AWS zone so it's on top */}
-      <rect x="340" y="218" width="120" height="30" rx="6" fill="#E8EAF6" stroke="#7986CB" strokeWidth="1.5" />
-      <text x="355" y="238" fontSize="9" fill="#283593" fontWeight="bold">{b ? '🔒 Secure link' : '🔒 PrivateLink'}</text>
-      <line x1="400" y1="198" x2="400" y2="218" stroke="#7986CB" strokeWidth="2" />
-      <line x1="400" y1="248" x2="400" y2="290" stroke="#7986CB" strokeWidth="2" />
-      <polygon points="396,286 400,294 404,286" fill="#7986CB" />
+      <rect x="340" y="248" width="120" height="30" rx="6" fill="#E8EAF6" stroke="#7986CB" strokeWidth="1.5" />
+      <text x="355" y="268" fontSize="9" fill="#283593" fontWeight="bold">{b ? '🔒 Secure link' : '🔒 PrivateLink'}</text>
+      <line x1="400" y1="220" x2="400" y2="248" stroke="#7986CB" strokeWidth="2" />
+      <line x1="400" y1="278" x2="400" y2="320" stroke="#7986CB" strokeWidth="2" />
+      <polygon points="396,316 400,324 404,316" fill="#7986CB" />
 
       {/* Worker nodes */}
-      <rect x="30" y="300" width="560" height="145" rx="10" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1.5" strokeDasharray="5 3" />
-      <text x="45" y="320" fontSize="9" fill="#6A1B9A" fontWeight="bold">{b ? '🏗️ Node Pool (your worker machines)' : '🏗️ Node Pool → AWS ASG'}</text>
+      <rect x="30" y="330" width="560" height="145" rx="10" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1.5" strokeDasharray="5 3" />
+      <text x="45" y="350" fontSize="9" fill="#6A1B9A" fontWeight="bold">{b ? '🏗️ Node Pool (your worker machines)' : '🏗️ Node Pool → AWS ASG'}</text>
 
       {['Worker 1', 'Worker 2', 'Worker 3'].map((w, i) => (
         <g key={i}>
-          <rect x={50 + i * 175} y={330} width="155" height="100" rx="6" fill="#EDE7F6" stroke="#CE93D8" strokeWidth="1" />
-          <text x={62 + i * 175} y={346} fontSize="8" fill="#6A1B9A" fontWeight="bold">{b ? w : `worker-${i + 1}`}</text>
-          <rect x={60 + i * 175} y={352} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <text x={65 + i * 175} y={362} fontSize="6" fill="#2E7D32">myapp</text>
-          <rect x={60 + i * 175} y={370} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={120 + i * 175} y={352} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={120 + i * 175} y={370} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={60 + i * 175} y={390} width="55" height="14" rx="3" fill="#E1F5FE" stroke="#81D4FA" strokeWidth="0.8" />
-          <rect x={120 + i * 175} y={390} width="55" height="14" rx="3" fill="#E1F5FE" stroke="#81D4FA" strokeWidth="0.8" />
+          <rect x={50 + i * 175} y={360} width="155" height="100" rx="6" fill="#EDE7F6" stroke="#CE93D8" strokeWidth="1" />
+          <text x={62 + i * 175} y={376} fontSize="8" fill="#6A1B9A" fontWeight="bold">{b ? w : `worker-${i + 1}`}</text>
+          <rect x={60 + i * 175} y={382} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          <text x={65 + i * 175} y={392} fontSize="6" fill="#2E7D32">myapp</text>
+          <rect x={60 + i * 175} y={400} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          <rect x={120 + i * 175} y={382} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          <rect x={120 + i * 175} y={400} width="55" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          <rect x={60 + i * 175} y={420} width="55" height="14" rx="3" fill="#E1F5FE" stroke="#81D4FA" strokeWidth="0.8" />
+          <rect x={120 + i * 175} y={420} width="55" height="14" rx="3" fill="#E1F5FE" stroke="#81D4FA" strokeWidth="0.8" />
         </g>
       ))}
 
       {/* AWS infra */}
-      <rect x="610" y="300" width="165" height="145" rx="10" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1.5" />
-      <text x="622" y="320" fontSize="9" fill="#E65100" fontWeight="bold">{b ? '🔧 AWS Services' : '🔧 AWS Infra'}</text>
+      <rect x="610" y="330" width="165" height="145" rx="10" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1.5" />
+      <text x="622" y="350" fontSize="9" fill="#E65100" fontWeight="bold">{b ? '🔧 AWS Services' : '🔧 AWS Infra'}</text>
 
       {[
         b ? 'Network (VPC)' : 'VPC + PrivateLink',
@@ -216,8 +224,8 @@ function HcpDiagram({ b }: { b: boolean }) {
         b ? 'Permissions' : 'IAM Roles (STS)',
       ].map((item, i) => (
         <g key={i}>
-          <rect x={622} y={330 + i * 22} width={140} height={18} rx={4} fill="#fff" stroke="#FFE0B2" strokeWidth="1" />
-          <text x={632} y={343 + i * 22} fontSize="7" fill="#BF360C">{item}</text>
+          <rect x={622} y={360 + i * 22} width={140} height={18} rx={4} fill="#fff" stroke="#FFE0B2" strokeWidth="1" />
+          <text x={632} y={373 + i * 22} fontSize="7" fill="#BF360C">{item}</text>
         </g>
       ))}
     </svg>
@@ -264,14 +272,6 @@ export function RosaMap({ mode, onModeChange }: RosaMapProps) {
   return (
     <div className="rosa-map">
       <div className="rosa-controls">
-        <div className="mode-toggle">
-          <button className={`mode-btn ${mode === 'beginner' ? 'active' : ''}`} onClick={() => onModeChange('beginner')}>
-            🌱 Beginner
-          </button>
-          <button className={`mode-btn ${mode === 'expert' ? 'active' : ''}`} onClick={() => onModeChange('expert')}>
-            ⚡ Expert
-          </button>
-        </div>
         <div className="variant-toggle">
           <button className={`variant-btn ${variant === 'classic' ? 'active' : ''}`} onClick={() => setVariant('classic')}>
             ROSA Classic
@@ -280,19 +280,17 @@ export function RosaMap({ mode, onModeChange }: RosaMapProps) {
             ROSA HCP
           </button>
         </div>
+        <div className="mode-toggle">
+          <button className={`mode-btn ${mode === 'beginner' ? 'active' : ''}`} onClick={() => onModeChange('beginner')}>
+            🌱 Beginner
+          </button>
+          <button className={`mode-btn ${mode === 'expert' ? 'active' : ''}`} onClick={() => onModeChange('expert')}>
+            ⚡ Expert
+          </button>
+        </div>
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={variant}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          {variant === 'classic' ? <ClassicDiagram b={b} /> : <HcpDiagram b={b} />}
-        </motion.div>
-      </AnimatePresence>
+      <h2 className="dd-page-title">🌹 ROSA — <em>Red Hat OpenShift Service on AWS</em></h2>
 
       <div className="rosa-variant-note">
         {variant === 'classic' ? (
@@ -307,6 +305,18 @@ export function RosaMap({ mode, onModeChange }: RosaMapProps) {
           </p>
         )}
       </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={variant}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          {variant === 'classic' ? <ClassicDiagram b={b} /> : <HcpDiagram b={b} />}
+        </motion.div>
+      </AnimatePresence>
 
       <IamRbacBridge b={b} />
     </div>

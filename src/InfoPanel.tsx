@@ -41,19 +41,22 @@ export function InfoPanel({ level, currentIndex, totalLevels, mode, onModeChange
           transition={{ duration: 0.3 }}
           className="info-content"
         >
-          {/* Clickable level stepper */}
+          {/* Clickable level stepper — reversed to match top-down order */}
           <div className="level-stepper">
-            {Array.from({ length: totalLevels }).map((_, i) => (
-              <button
-                key={i}
-                className={`step-dot ${i === currentIndex ? 'active' : ''} ${i < currentIndex ? 'visited' : ''}`}
-                style={{
-                  backgroundColor: i === currentIndex ? level.color : undefined,
-                }}
-                onClick={() => onNavigate(i)}
-                title={ZOOM_LEVELS[i].label}
-              />
-            ))}
+            {[...Array.from({ length: totalLevels })].map((_, ri) => {
+              const i = totalLevels - 1 - ri;
+              return (
+                <button
+                  key={i}
+                  className={`step-dot ${i === currentIndex ? 'active' : ''} ${i > currentIndex ? 'visited' : ''}`}
+                  style={{
+                    backgroundColor: i === currentIndex ? level.color : undefined,
+                  }}
+                  onClick={() => onNavigate(i)}
+                  title={ZOOM_LEVELS[i].label}
+                />
+              );
+            })}
           </div>
 
           <div className="level-badge" style={{ backgroundColor: level.color }}>

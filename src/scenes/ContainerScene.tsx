@@ -1,8 +1,9 @@
 import { AppMarker } from '../AppMarker';
 import { AnalogyCallout } from '../AnalogyCallout';
+import { ZoomLink } from '../ZoomLink';
 import type { SceneProps } from '../types';
 
-export function ContainerScene({ mode }: SceneProps) {
+export function ContainerScene({ mode, onNavigate }: SceneProps) {
   const b = mode === 'beginner';
 
   return (
@@ -29,12 +30,14 @@ export function ContainerScene({ mode }: SceneProps) {
         </g>
       )}
 
-      {/* App process inside */}
+      {/* App process inside — clickable to zoom into App level */}
+      <g style={{ cursor: onNavigate ? 'pointer' : undefined }} onClick={() => onNavigate?.(0)}>
       <rect x="140" y="120" width="220" height="120" rx="10" fill="#fff" stroke="#4FC3F7" strokeWidth="2.5" />
       <rect x="136" y="116" width="228" height="128" rx="12" fill="none" stroke="#4FC3F7" strokeWidth="1" strokeOpacity="0.3" />
       <text x="160" y="145" fontSize="11" fill="#333" fontWeight="bold">
         {b ? 'Your App (myapp)' : 'App Process — PID 1'}
       </text>
+      <ZoomLink x={330} y={215} />
       <text x="160" y="162" fontSize="9" fill="#666" fontFamily="monospace">
         {b ? 'Running and listening for requests' : 'node server.js → :8080'}
       </text>
@@ -52,6 +55,7 @@ export function ContainerScene({ mode }: SceneProps) {
       <text x="255" y="200" fontSize="7" fill="#90CAF9" fontStyle="italic">
         {b ? '← what users see' : '← served content'}
       </text>
+      </g>
 
       {/* Dependencies */}
       <rect x="110" y="253" width="110" height="24" rx="5" fill="#DCEDC8" />
@@ -89,7 +93,7 @@ export function ContainerScene({ mode }: SceneProps) {
         </text>
       </g>
 
-      <AppMarker x={370} y={140} />
+      <AppMarker x={330} y={155} size="small" />
 
       {b && <AnalogyCallout x={80} y={342} width={340} text="Think of it as: a sealed meal kit (recipe + all ingredients)" />}
     </g>

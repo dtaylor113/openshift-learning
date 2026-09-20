@@ -1,7 +1,8 @@
 import { AppMarker } from '../AppMarker';
+import { ZoomLink } from '../ZoomLink';
 import type { SceneProps } from '../types';
 
-export function OpenShiftScene({ mode }: SceneProps) {
+export function OpenShiftScene({ mode, onNavigate }: SceneProps) {
   const b = mode === 'beginner';
 
   return (
@@ -16,10 +17,11 @@ export function OpenShiftScene({ mode }: SceneProps) {
         {b ? 'Everything from the Cluster level, plus enterprise tools and security' : 'Enterprise Kubernetes + operator-managed platform services'}
       </text>
 
-      {/* Inner K8s cluster */}
+      {/* Inner K8s cluster — clickable to zoom into Cluster level */}
+      <g style={{ cursor: onNavigate ? 'pointer' : undefined }} onClick={() => onNavigate?.(4)}>
       <rect x="30" y="68" width="210" height="130" rx="12" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="2" />
       <text x="45" y="88" fontSize="10" fill="#00695C" fontWeight="bold">
-        {b ? 'Kubernetes (from before)' : 'Kubernetes Core'}
+        {b ? 'Kubernetes (K8s Cluster)' : 'Kubernetes Core'}
       </text>
       <rect x="42" y="96" width="60" height="25" rx="4" fill="#B2DFDB" />
       <text x="48" y="112" fontSize="7" fill="#004D40">{b ? 'Front Door' : 'API Server'}</text>
@@ -39,6 +41,8 @@ export function OpenShiftScene({ mode }: SceneProps) {
       <text x="42" y="190" fontSize="7" fill="#00695C">
         {b ? '+ pod manager, container engine, networking' : '+ CRI-O, kubelet, kube-proxy'}
       </text>
+      <ZoomLink x={215} y={180} />
+      </g>
 
       <AppMarker x={67} y={162} size="small" />
 
