@@ -26,7 +26,7 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
       <text x="48" y="80" fontSize="8" fill="#2E7D32" fontWeight="bold">
         {b ? '📦 Container' : '📦 Container: app'}
       </text>
-      <ZoomLink x={110} y={125} />
+      <ZoomLink x={115} y={68} />
       <text x="48" y="92" fontSize="7" fill="#333" fontWeight="bold">myapp</text>
       <text x="48" y="104" fontSize="6" fill="#666">
         {b ? 'Handles requests' : ':8080'}
