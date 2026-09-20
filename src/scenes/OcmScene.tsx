@@ -1,4 +1,5 @@
 import type { SceneProps } from '../types';
+import { AppMarker } from '../AppMarker';
 import { ZoomLink } from '../ZoomLink';
 
 function FeatureCard({ x, y, icon, title, subtitle, w }: {
@@ -63,6 +64,8 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
         <text x="205" y="200" fontSize="9" fill="#fff" fontWeight="bold">Create cluster</text>
         <ZoomLink x={302} y={188} />
       </g>
+
+      <AppMarker x={155} y={98} size="small" />
 
       {/* Dashed line from Cluster 5 to Cluster Details */}
       <defs>

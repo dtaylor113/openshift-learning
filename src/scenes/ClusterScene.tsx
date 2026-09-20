@@ -111,7 +111,7 @@ export function ClusterScene({ mode, onNavigate }: SceneProps) {
         </text>
       </g>
 
-      <AppMarker x={102} y={200} size="small" />
+      <AppMarker x={102} y={230} size="small" />
 
       {/* Arrows from control plane to workers */}
       <line x1="250" y1="145" x2="102" y2="204" stroke="#26A69A" strokeWidth="1" strokeDasharray="3 2" opacity="0.5" />

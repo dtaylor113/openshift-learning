@@ -111,7 +111,7 @@ export function NodeScene({ mode, onNavigate }: SceneProps) {
       <text x={430} y={b ? 219 : 204} fontSize="6" fill="#555">apps sharing</text>
       <text x={430} y={b ? 227 : 212} fontSize="6" fill="#555">this node</text>
 
-      <AppMarker x={98} y={b ? 162 : 148} size="small" />
+      <AppMarker x={98} y={b ? 172 : 158} size="small" />
 
       {/* Resource bars */}
       <rect x="45" y="290" width="420" height="32" rx="6" fill="#EDE7F6" stroke="#B39DDB" strokeWidth="1" />
