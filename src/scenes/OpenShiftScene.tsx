@@ -44,7 +44,7 @@ export function OpenShiftScene({ mode, onNavigate }: SceneProps) {
       <ZoomLink x={215} y={180} />
       </g>
 
-      <AppMarker x={67} y={162} size="small" />
+      <AppMarker x={67} y={142} size="small" />
 
       {/* OpenShift additions */}
       <text x="260" y="82" fontSize="10" fill="#CC0000" fontWeight="bold">

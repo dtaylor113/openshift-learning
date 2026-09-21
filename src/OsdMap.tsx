@@ -290,9 +290,21 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
             ? '📌 OSD on AWS uses the CCS (Customer Cloud Subscription) model — the cluster runs in YOUR AWS account. Red Hat manages it, but you own the cloud resources and pay AWS directly.'
             : '📌 OSD AWS (CCS): Cluster runs in customer AWS account. Customer pays AWS directly for EC2, EBS, etc. Red Hat charges OSD subscription separately. MachineSet-based Machine Pools.')
           : (b
-            ? '📌 OSD on GCP uses the CCS model — the cluster runs in YOUR Google Cloud project. Same management as AWS, just on Google\'s cloud.'
-            : '📌 OSD GCP (CCS): Cluster in customer GCP project. n1-standard instances. GCE Managed Instance Groups for MachineSets. Persistent Disks for storage. Cloud DNS for cluster DNS.')
+            ? '📌 OSD on GCP offers two infrastructure models — CCS runs in YOUR Google Cloud project, or Red Hat cloud account where Red Hat owns and pays for the infrastructure.'
+            : '📌 OSD GCP: CCS (customer GCP project, customer pays) or Red Hat cloud account (RH-owned project, included in subscription). n1-standard instances. GCE MIGs for MachineSets.')
         }
+        </p>
+      </div>
+
+      <div className="rosa-variant-note" style={{ borderLeft: '4px solid #7B1FA2' }}>
+        <p><strong>🏢 {b ? 'Two ways to pay for the cloud infrastructure' : 'Infrastructure Models: CCS vs Red Hat Account'}</strong></p>
+        <p>{b
+          ? '• CCS (Customer Cloud Subscription): The cluster runs in YOUR cloud account. You pay the cloud provider (AWS/GCP) directly for compute, storage, and networking. Red Hat charges a separate OSD subscription fee. You have full visibility into your cloud bill.'
+          : '• CCS: Cluster in customer-owned cloud account. Customer pays cloud provider directly. Full billing visibility. Customer provides cloud credentials to Red Hat for provisioning.'}
+        </p>
+        <p style={{ marginTop: '8px' }}>{b
+          ? '• Red Hat cloud account: The cluster runs in a cloud account owned by Red Hat. You don\'t need your own AWS/GCP account! Infrastructure costs are bundled into your Red Hat subscription — simpler billing, but less cloud-level visibility.'
+          : '• Red Hat cloud account: Cluster in RH-owned cloud project. Infrastructure costs bundled in OSD subscription. No customer cloud credentials needed. Less granular cost attribution. Available for GCP (and historically AWS).'}
         </p>
       </div>
 

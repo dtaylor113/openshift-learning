@@ -26,7 +26,7 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
       <text x="48" y="80" fontSize="8" fill="#2E7D32" fontWeight="bold">
         {b ? '📦 Container' : '📦 Container: app'}
       </text>
-      <ZoomLink x={115} y={68} />
+      <ZoomLink x={112} y={130} />
       <text x="48" y="92" fontSize="7" fill="#333" fontWeight="bold">myapp</text>
       <text x="48" y="104" fontSize="6" fill="#666">
         {b ? 'Handles requests' : ':8080'}
@@ -68,6 +68,11 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
         {b ? '🌐 Connected via shared network (localhost)' : '🌐 Shared net namespace (localhost)'}
       </text>
 
+      {/* "identical copies" label — above copies */}
+      <text x="270" y="28" fontSize="7" fill="#BF360C" fontStyle="italic">
+        {b ? '← identical copies, managed by the Deployment' : '← ReplicaSet pods (same spec, unique names)'}
+      </text>
+
       {/* ---- Replica pods (smaller, show the "3 copies" concept) ---- */}
       <rect x="260" y="35" width="100" height="100" rx="10" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1.5" opacity="0.8" />
       <text x="272" y="52" fontSize="8" fill="#E65100" fontWeight="bold">
@@ -89,11 +94,6 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
       <text x="431" y="72" fontSize="6" fill="#1565C0">{b ? 'helper' : 'envoy'}</text>
       <line x1="420" y1="67" x2="425" y2="67" stroke="#FFB74D" strokeWidth="1" strokeDasharray="2 1" />
 
-
-      {/* "identical copies" label */}
-      <text x="270" y="145" fontSize="7" fill="#BF360C" fontStyle="italic">
-        {b ? '← identical copies, managed by the Deployment' : '← ReplicaSet pods (same spec, unique names)'}
-      </text>
 
       {/* ---- Autoscaler overlay ---- */}
       <rect x="370" y="160" width="115" height="30" rx="6" fill="#FCE4EC" stroke="#F48FB1" strokeWidth="1.5" />

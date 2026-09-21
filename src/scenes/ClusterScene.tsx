@@ -80,10 +80,10 @@ export function ClusterScene({ mode, onNavigate }: SceneProps) {
       </text>
 
       {[
-        { x: 50, y: 204, label: b ? 'Worker 1 ★' : 'worker-1', pods: 5, hl: true },
-        { x: 168, y: 204, label: b ? 'Worker 2' : 'worker-2', pods: 4 },
-        { x: 50, y: 278, label: b ? 'Worker 3' : 'worker-3', pods: 3 },
-        { x: 168, y: 278, label: b ? 'Worker 4' : 'worker-4', pods: 5 },
+        { x: 50, y: 204, label: b ? 'Worker Node 1 ★' : 'worker-1', pods: 5, hl: true },
+        { x: 168, y: 204, label: b ? 'Worker Node 2' : 'worker-2', pods: 4 },
+        { x: 50, y: 278, label: b ? 'Worker Node 3' : 'worker-3', pods: 3 },
+        { x: 168, y: 278, label: b ? 'Worker Node 4' : 'worker-4', pods: 5 },
       ].map((w, i) => (
         <g key={i} style={{ cursor: onNavigate ? 'pointer' : undefined }} onClick={() => onNavigate?.(3)}>
           <MiniNode x={w.x} y={w.y} label={w.label} pods={w.pods} highlighted={w.hl} />
