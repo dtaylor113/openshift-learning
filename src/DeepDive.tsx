@@ -41,7 +41,7 @@ function OverviewFlowchart({ b, onNavigate }: { b: boolean; onNavigate: (tab: De
   return (
     <svg viewBox="0 0 800 430" className="rosa-svg" style={{ maxWidth: 1100, minHeight: 500 }}>
       {/* Start node */}
-      <rect x="300" y="10" width="200" height="40" rx="20" fill="#333" />
+      <rect x="300" y="10" width="200" height="40" rx="20" fill="#0D47A1" />
       <text x="400" y="35" textAnchor="middle" fontSize="11" fill="#fff" fontWeight="bold">
         {b ? 'Where do you want to run?' : 'Choose deployment target'}
       </text>
@@ -93,8 +93,8 @@ function OverviewFlowchart({ b, onNavigate }: { b: boolean; onNavigate: (tab: De
         <text x="130" y="290" fontSize="7" fill="#fff" fontWeight="bold">ROSA HCP</text>
         <ZoomLink x={258} y={282} />
         <text x="122" y="310" fontSize="8" fill="#C62828" fontWeight="bold">{b ? 'Most managed' : 'Hosted Control Plane'}</text>
-        <text x="122" y="323" fontSize="7" fill="#777">{b ? 'Red Hat runs the brain' : 'CP in RH AWS, STS'}</text>
-        <text x="122" y="336" fontSize="7" fill="#777">{b ? 'SRE team included' : 'SRE + PrivateLink'}</text>
+        <text x="122" y="323" fontSize="7" fill="#777">{b ? 'RH runs the "brains" (CP)' : 'CP in RH AWS, STS'}</text>
+        <text x="122" y="336" fontSize="7" fill="#777">{b ? 'SRE team + STS roles' : 'SRE + PrivateLink + STS'}</text>
         <text x="122" y="355" fontSize="7" fill="#CC0000" fontWeight="bold">✅ {b ? 'Best for most teams' : 'Recommended (new AWS)'}</text>
       </g>
 
@@ -105,8 +105,8 @@ function OverviewFlowchart({ b, onNavigate }: { b: boolean; onNavigate: (tab: De
         <text x="330" y="290" fontSize="7" fill="#fff" fontWeight="bold">ROSA Classic</text>
         <ZoomLink x={458} y={282} />
         <text x="322" y="310" fontSize="8" fill="#C62828" fontWeight="bold">{b ? 'Managed + SRE' : 'In-cluster CP'}</text>
-        <text x="322" y="323" fontSize="7" fill="#777">{b ? 'CP in YOUR account' : 'CP in customer AWS'}</text>
-        <text x="322" y="336" fontSize="7" fill="#777">{b ? 'SRE team included' : 'SRE, MachineSet, STS'}</text>
+        <text x="322" y="323" fontSize="7" fill="#777">{b ? 'Control Plane ("brains") in YOUR acct' : 'CP in customer AWS'}</text>
+        <text x="322" y="336" fontSize="7" fill="#777">{b ? 'SRE team + STS roles' : 'SRE, MachineSet, STS'}</text>
         <text x="322" y="349" fontSize="7" fill="#777">{b ? 'You pay for CP machines' : 'Customer pays CP EC2'}</text>
       </g>
 
@@ -117,9 +117,9 @@ function OverviewFlowchart({ b, onNavigate }: { b: boolean; onNavigate: (tab: De
         <text x="528" y="290" fontSize="7" fill="#fff" fontWeight="bold">OSD</text>
         <ZoomLink x={658} y={282} />
         <text x="522" y="310" fontSize="8" fill="#C62828" fontWeight="bold">{b ? 'Managed + Dedicated SRE' : 'Dedicated SRE per cluster'}</text>
-        <text x="522" y="323" fontSize="7" fill="#777">{b ? 'AWS or GCP' : 'AWS / GCP'}</text>
-        <text x="522" y="336" fontSize="7" fill="#777">{b ? 'Your account or RH\'s' : 'CCS or RH cloud account'}</text>
-        <text x="522" y="349" fontSize="7" fill="#777">{b ? 'Static credentials' : 'Static IAM keys / SA'}</text>
+        <text x="522" y="323" fontSize="7" fill="#777">{b ? 'Runs on AWS or GCP clouds' : 'AWS / GCP'}</text>
+        <text x="522" y="336" fontSize="7" fill="#777">{b ? 'Your cloud bill or RH pays' : 'CCS or RH cloud account'}</text>
+        <text x="522" y="349" fontSize="7" fill="#777">{b ? 'Static keys (not roles)' : 'Static IAM keys / SA'}</text>
       </g>
 
       {/* ---- Laptop branch (right) ---- */}

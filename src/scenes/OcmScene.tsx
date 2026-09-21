@@ -45,7 +45,7 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
       {/* OCM boundary */}
       <rect x="10" y="8" width="470" height="405" rx="20" fill="#FFEBEE" stroke="#EE0000" strokeWidth="3" />
       <text x="35" y="32" fontSize="13" fill="#CC0000" fontWeight="bold">
-        {b ? 'OpenShift Cluster Manager (OCM) — Your Cluster Command Center' : 'OCM'}
+        {b ? 'OpenShift Cluster Manager (OCM) — Your Fleet Command Center' : 'OCM'}
       </text>
       <text x="35" y="46" fontSize="7" fill="#CC0000" fontFamily="monospace">
         console.redhat.com/openshift
