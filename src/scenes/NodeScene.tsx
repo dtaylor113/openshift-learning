@@ -6,14 +6,12 @@ function SmallPod({ x, y, name, color, highlighted }: { x: number; y: number; na
   return (
     <g transform={`translate(${x}, ${y})`}>
       <rect x="0" y="0" width="85" height="30" rx="5"
-        fill={highlighted ? '#E1F5FE' : undefined}
-        fillOpacity={highlighted ? 1 : 0.15}
+        fill={highlighted ? '#E1F5FE' : '#fff'}
         stroke={highlighted ? '#4FC3F7' : color}
         strokeWidth={highlighted ? 2 : 1.5}
       />
-      {!highlighted && <rect x="0" y="0" width="85" height="30" rx="5" fill={color} fillOpacity="0.15" />}
-      <text x="8" y="13" fontSize="7" fill={highlighted ? '#0277BD' : color} fontWeight="bold">{name}</text>
-      <rect x="6" y="17" width="26" height="9" rx="2" fill={highlighted ? '#4FC3F7' : color} fillOpacity="0.25" />
+      <text x="8" y="13" fontSize="7" fill={highlighted ? '#0277BD' : '#333'} fontWeight="bold">{name}</text>
+      <rect x="6" y="17" width="26" height="9" rx="2" fill={color} fillOpacity="0.3" />
       <rect x="36" y="17" width="26" height="9" rx="2" fill={color} fillOpacity="0.15" />
     </g>
   );
