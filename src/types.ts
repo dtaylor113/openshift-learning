@@ -2,7 +2,7 @@ export type ExplainMode = 'beginner' | 'expert';
 
 export interface SceneProps {
   mode: ExplainMode;
-  onDeepDive?: () => void;
+  onDeepDive?: (tab?: string) => void;
   onNavigate?: (levelIndex: number) => void;
 }
 
@@ -207,9 +207,9 @@ export const ZOOM_LEVELS: ZoomLevel[] = [
         'OpenShift Cluster Manager (OCM) is your dashboard at console.redhat.com/openshift. It\'s where you create, monitor, and manage all your OpenShift clusters — no matter what type or where they run.',
       details: [
         'Cluster List: See all your clusters in one place — status, version, cloud provider, region',
-        'Create Cluster: Step-by-step wizards for ROSA (AWS) and OSD (AWS/GCP) clusters',
+        'Create Cluster: Step-by-step wizards for ROSA (AWS), OSD (AWS/GCP), and Assisted Installer (bare metal) clusters',
         'Cluster Details: Manage machine pools, networking, access control, upgrades, and add-ons per cluster',
-        'Cluster types: ROSA Classic (control plane in your AWS), ROSA HCP (control plane in Red Hat\'s AWS — simpler & cheaper), OSD (AWS or GCP)',
+        'Cluster types: ROSA Classic (control plane in your AWS), ROSA HCP (control plane in Red Hat\'s AWS — simpler & cheaper), OSD (AWS or GCP, your account or Red Hat\'s)',
         'Downloads: Get the oc CLI, rosa CLI, pull secrets, and installer binaries',
         'Assisted Installer: A guided wizard for installing OpenShift on your own bare-metal hardware',
         '"Open console" on any cluster launches that cluster\'s own OpenShift Container Platform (OCP) console',
@@ -220,7 +220,7 @@ export const ZOOM_LEVELS: ZoomLevel[] = [
         'OCM (console.redhat.com/openshift) is the SaaS multi-cluster management plane built on the clusters_mgmt and accounts_mgmt APIs. It provides lifecycle management, quota enforcement, and SRE integration for managed offerings.',
       details: [
         'Cluster lifecycle: provision, upgrade (CVO policies), hibernate, archive, delete via clusters_mgmt API',
-        'Products: ROSA Classic (in-cluster CP, STS), ROSA HCP (hosted CP, PrivateLink), OSD AWS/GCP (IAM user), OCP Assisted Install, registered clusters',
+        'Products: ROSA Classic (in-cluster CP, STS), ROSA HCP (hosted CP, PrivateLink), OSD AWS (static IAM keys) / GCP (service account), OCP Assisted Install',
         'Machine Pools / Node Pools: CRUD + autoscaler config, instance type selection, labels, taints',
         'Access Control: IDP management (LDAP, GitHub, Google, OIDC, HTPasswd), RBAC role grants',
         'Add-ons: OLM-based managed add-ons installed and upgraded by SRE',

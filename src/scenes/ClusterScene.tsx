@@ -135,7 +135,7 @@ export function ClusterScene({ mode, onNavigate }: SceneProps) {
         {b ? '💡 Control plane nodes = brain (decisions). Worker nodes = muscle (runs your stuff). They\'re different machines!' : '💡 CP nodes: API server, etcd, scheduler, controllers. Workers: kubelet + CRI-O + your pods. Separate failure domains.'}
       </text>
       <text x="50" y="382" fontSize="6" fill="#00897B">
-        {b ? 'Machine Pools let you add/remove worker nodes as a group. Infra nodes handle cluster services (not your apps).' : 'Machine Pools (MachineSet + ASG). Infra nodes: tainted to only run router, monitoring, logging.'}
+        {b ? 'Machine Pools let you add/remove worker nodes as a group. Infra nodes handle cluster services (not your apps).' : 'Machine Pools (MachineSet → cloud auto-scaling group). Infra nodes: tainted to only run router, monitoring, logging.'}
       </text>
 
     </g>

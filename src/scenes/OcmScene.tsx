@@ -29,7 +29,7 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
   return (
     <g>
       {/* OCM boundary */}
-      <rect x="10" y="8" width="470" height="385" rx="20" fill="#FFEBEE" stroke="#EE0000" strokeWidth="3" />
+      <rect x="10" y="8" width="470" height="405" rx="20" fill="#FFEBEE" stroke="#EE0000" strokeWidth="3" />
       <text x="35" y="32" fontSize="13" fill="#CC0000" fontWeight="bold">
         {b ? 'OpenShift Cluster Manager (OCM) — Your Cluster Command Center' : 'OCM'}
       </text>
@@ -54,18 +54,18 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
           <circle cx={47 + (i % 2) * 150} cy={98 + Math.floor(i / 2) * 46} r="4" fill="#66BB6A" />
           <text x={55 + (i % 2) * 150} y={100 + Math.floor(i / 2) * 46} fontSize="7" fill="#333" fontWeight="bold">{name}</text>
           <rect x={55 + (i % 2) * 150} y={105 + Math.floor(i / 2) * 46} width={40 + (i % 2) * 20} height="6" rx="3" fill="#F5F5F5" />
-          <ZoomLink x={160 + (i % 2) * 150} y={98 + Math.floor(i / 2) * 46} />
+          <ZoomLink parentX={35 + (i % 2) * 150} parentY={84 + Math.floor(i / 2) * 46} parentW={135} parentH={38} />
         </g>
       ))}
 
-      {/* Create button — clickable, opens deep dive */}
-      <g style={{ cursor: 'pointer' }} onClick={onDeepDive}>
+      {/* Create button — clickable, opens deep dive overview */}
+      <g style={{ cursor: 'pointer' }} onClick={() => onDeepDive?.()}>
         <rect x="175" y="178" width="135" height="34" rx="17" fill="#0066CC" />
         <text x="205" y="200" fontSize="9" fill="#fff" fontWeight="bold">Create cluster</text>
-        <ZoomLink x={302} y={188} />
+        <ZoomLink parentX={175} parentY={178} parentW={135} parentH={34} />
       </g>
 
-      <AppMarker x={155} y={98} size="small" />
+      <AppMarker x={135} y={98} size="small" />
 
       {/* Dashed line from Cluster 5 to Cluster Details */}
       <defs>
@@ -76,8 +76,8 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
       <line x1="100" y1="214" x2="100" y2="243" stroke="#CC0000" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ocm-detail-arrow)" />
 
       {/* Per-cluster details callout */}
-      <rect x="25" y="245" width="310" height="90" rx="10" fill="#fff" stroke="#E0E0E0" strokeWidth="1.5" />
-      <text x="38" y="263" fontSize="8" fill="#333" fontWeight="bold">
+      <rect x="25" y="245" width="310" height="110" rx="10" fill="#fff" stroke="#E0E0E0" strokeWidth="1.5" />
+      <text x="38" y="266" fontSize="9" fill="#333" fontWeight="bold">
         {b ? '🔍 Cluster Details' : '🔍 Cluster Details Page'}
       </text>
       {[
@@ -88,21 +88,24 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
         { label: b ? 'Upgrades' : 'Upgrades', desc: b ? 'OCP versions' : 'Channel, policy' },
       ].map((tab, i) => (
         <g key={i}>
-          <rect x={35 + i * 58} y={272} width="52" height="24" rx="4" fill={i === 0 ? '#E3F2FD' : '#F5F5F5'} stroke={i === 0 ? '#42A5F5' : '#E0E0E0'} strokeWidth="1" />
-          <text x={40 + i * 58} y={284} fontSize="5" fill={i === 0 ? '#1565C0' : '#555'} fontWeight="bold">{tab.label}</text>
-          <text x={40 + i * 58} y={292} fontSize="4" fill={i === 0 ? '#42A5F5' : '#999'}>{tab.desc}</text>
+          <rect x={35 + i * 58} y={276} width="52" height="28" rx="4" fill={i === 0 ? '#E3F2FD' : '#F5F5F5'} stroke={i === 0 ? '#42A5F5' : '#E0E0E0'} strokeWidth="1" />
+          <text x={40 + i * 58} y={290} fontSize="6" fill={i === 0 ? '#1565C0' : '#555'} fontWeight="bold">{tab.label}</text>
+          <text x={40 + i * 58} y={300} fontSize="5" fill={i === 0 ? '#42A5F5' : '#999'}>{tab.desc}</text>
         </g>
       ))}
 
-      {/* Open console button in details */}
-      <rect x="35" y="303" width="80" height="18" rx="9" fill="#0066CC" />
-      <text x="50" y="315" fontSize="6" fill="#fff" fontWeight="bold">Open console →</text>
-      <text x="125" y="315" fontSize="6" fill="#888" fontStyle="italic">
+      {/* Open console button in details — clickable, opens OCP Console deep dive */}
+      <g style={{ cursor: 'pointer' }} onClick={() => onDeepDive?.('ocp-console')}>
+        <rect x="35" y="314" width="90" height="22" rx="11" fill="#0066CC" />
+        <text x="48" y="329" fontSize="7" fill="#fff" fontWeight="bold">Open console</text>
+        <ZoomLink parentX={35} parentY={314} parentW={90} parentH={22} />
+      </g>
+      <text x="135" y="329" fontSize="7" fill="#888" fontStyle="italic">
         {b ? 'launches OCP Console for this cluster' : '→ OCP Console (per-cluster UI)'}
       </text>
 
       {/* Right sidebar: tools & downloads */}
-      <rect x="345" y="58" width="125" height="278" rx="10" fill="#F5F5F5" stroke="#E0E0E0" strokeWidth="1" />
+      <rect x="345" y="58" width="125" height="300" rx="10" fill="#F5F5F5" stroke="#E0E0E0" strokeWidth="1" />
       <text x="358" y="76" fontSize="8" fill="#333" fontWeight="bold">
         {b ? '🧰 Tools' : '🧰 Platform Services'}
       </text>
@@ -113,14 +116,14 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
       <FeatureCard x={352} y={258} icon="📋" title={b ? 'Quota' : 'Quota'} subtitle={b ? 'How many clusters allowed' : 'Subscription entitlements'} w={112} />
 
       {/* Bottom callout */}
-      <rect x="25" y="345" width="445" height="38" rx="8" fill="rgba(255,255,255,0.8)" stroke="#FFCDD2" strokeWidth="1" />
-      <text x="40" y="362" fontSize="7" fill="#C62828" fontWeight="bold">
+      <rect x="25" y="365" width="445" height="38" rx="8" fill="rgba(255,255,255,0.8)" stroke="#FFCDD2" strokeWidth="1" />
+      <text x="40" y="382" fontSize="7" fill="#C62828" fontWeight="bold">
         {b ? '💡 OCM is the "corporate HQ" — it manages all your clusters, no matter what type or where they run'
            : '💡 OCM SaaS: clusters_mgmt + accounts_mgmt APIs. UI at console.redhat.com/openshift (uhc-portal codebase)'}
       </text>
-      <text x="40" y="376" fontSize="6" fill="#888">
+      <text x="40" y="396" fontSize="6" fill="#888">
         {b ? 'Each cluster type (ROSA, OSD, etc.) is a different "franchise model" — zoom in to explore ↓'
-           : 'Product normalization: ROSA/MOA, ROSA_HYPERSHIFT/MOA_HOSTEDCONTROLPLANE, OSD, ARO, OCP_ASSISTEDINSTALL'}
+           : 'Internal product IDs: ROSA (MOA), ROSA HCP (MOA_HOSTEDCONTROLPLANE), OSD, OCP_ASSISTEDINSTALL'}
       </text>
     </g>
   );

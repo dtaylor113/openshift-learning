@@ -98,7 +98,7 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
       {/* ---- Autoscaler overlay ---- */}
       <rect x="370" y="160" width="115" height="30" rx="6" fill="#FCE4EC" stroke="#F48FB1" strokeWidth="1.5" />
       <text x="382" y="174" fontSize="7" fill="#AD1457" fontWeight="bold">
-        {b ? '📈 Auto-scaler' : 'HPA'}
+        {b ? '📈 Auto-scaler' : 'HPA (Horiz. Pod Autoscaler)'}
       </text>
       <text x="382" y="185" fontSize="6" fill="#C2185B">
         {b ? 'Adds copies when busy' : 'min:2 max:10 cpu:70%'}

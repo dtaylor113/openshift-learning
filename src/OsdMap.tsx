@@ -1,297 +1,359 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ExplainMode } from './types';
+import { ApiCallChain } from './ApiCallChain';
+import { ModeToggle } from './ModeToggle';
 
-type OsdVariant = 'aws' | 'gcp';
+type InfraModel = 'ccs' | 'rh-account';
+type CloudProvider = 'aws' | 'gcp';
 
 interface OsdMapProps {
   mode: ExplainMode;
   onModeChange: (mode: ExplainMode) => void;
 }
 
-function OsdAwsDiagram({ b }: { b: boolean }) {
-  return (
-    <svg viewBox="0 0 800 460" className="rosa-svg">
-      {/* Red Hat zone */}
-      <rect x="10" y="10" width="780" height="120" rx="14" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
-      <text x="30" y="38" fontSize="14" fill="#CC0000" fontWeight="bold">
-        🔴 {b ? 'Red Hat Manages (dedicated SRE team for YOUR cluster)' : 'Red Hat (OCM + Dedicated SRE)'}
-      </text>
+interface DiagramProps {
+  b: boolean;
+  cloud: CloudProvider;
+  infraModel: InfraModel;
+}
 
-      {/* OCM Console */}
-      <rect x="30" y="50" width="210" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="45" y="68" fontSize="10" fill="#C62828" fontWeight="bold">🖥️ {b ? 'Your Dashboard' : 'OCM Console'}</text>
-      <text x="45" y="81" fontSize="7" fill="#777" fontFamily="monospace">console.redhat.com/openshift/</text>
-      <text x="45" y="93" fontSize="7" fill="#777" fontFamily="monospace">details/&lt;cluster_id&gt;</text>
-      <rect x="50" y="101" width="100" height="18" rx="9" fill="#0066CC" />
-      <text x="72" y="113" fontSize="7" fill="#fff" fontWeight="bold">Open console</text>
+function OsdDiagram({ b, cloud, infraModel }: DiagramProps) {
+  const isRh = infraModel === 'rh-account';
+  const isAws = cloud === 'aws';
 
-      {/* SRE */}
-      <rect x="260" y="50" width="165" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="275" y="68" fontSize="10" fill="#C62828" fontWeight="bold">
-        {b ? '👷 Dedicated SRE Team' : '👷 SRE (Dedicated)'}
-      </text>
-      <text x="275" y="82" fontSize="8" fill="#777">{b ? 'A team assigned to YOUR cluster' : 'Backplane, PagerDuty, 24/7'}</text>
-      <text x="275" y="94" fontSize="8" fill="#777">{b ? 'Monitoring & fixing 24/7' : 'Cluster-specific team assignment'}</text>
-      <text x="275" y="106" fontSize="7" fill="#C62828" fontStyle="italic">
-        {b ? '← This is what "Dedicated" means!' : ''}
-      </text>
+  // Cloud-specific colors and labels
+  const cloudColor = isAws ? '#FF9900' : '#4285F4';
+  const cloudBg = isAws ? '#FFF8E1' : '#E8F0FE';
+  const cloudStroke = isAws ? '#FF9900' : '#4285F4';
+  const cloudTextColor = isAws ? '#E65100' : '#1A73E8';
+  const cloudIcon = isAws ? '☁️' : '☁️';
+  const cloudName = isAws ? 'AWS' : 'GCP';
+  const infraBorderColor = isAws ? '#FFE0B2' : '#C2D9FC';
+  const infraBg = isAws ? '#FFF3E0' : '#E8F0FE';
+  const infraStroke = isAws ? '#FFB74D' : '#A8C7FA';
+  const infraTextColor = isAws ? '#E65100' : '#1A73E8';
 
-      {/* Upgrades */}
-      <rect x="440" y="50" width="130" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="455" y="72" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⬆️ Upgrades' : '⬆️ Upgrade Policies'}</text>
-      <text x="455" y="86" fontSize="8" fill="#777">{b ? 'Managed for you' : 'Scheduled, SRE-managed'}</text>
+  // Cloud zone label
+  const cloudZoneLabel = isRh
+    ? (b
+      ? `${cloudIcon} ${cloudName} (Red Hat's account — you don't touch this)`
+      : `${cloudIcon} RH-owned ${isAws ? 'AWS Account' : 'GCP Project'}`)
+    : (b
+      ? `${cloudIcon} Your ${isAws ? 'AWS Account' : 'Google Cloud Project'} (CCS — Customer Cloud Subscription)`
+      : `${cloudIcon} Customer ${isAws ? 'AWS Account' : 'GCP Project'} (CCS Model)`);
 
-      {/* Operators */}
-      <rect x="585" y="50" width="190" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="600" y="72" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⚙️ Cluster Software' : '⚙️ Cluster Operators'}</text>
-      <text x="600" y="86" fontSize="8" fill="#777">{b ? 'Monitoring, networking, etc.' : 'Ingress, monitoring, DNS, auth'}</text>
+  // Instance types
+  const cpInstanceType = isAws ? '3× m5.xlarge' : '3× n1-standard-4';
+  const poolBackend = isAws ? 'AWS ASG' : 'GCE MIG';
 
-      {/* Customer AWS Account */}
-      <rect x="10" y="140" width="780" height="310" rx="14" fill="#FFF8E1" stroke="#FF9900" strokeWidth="2" />
-      <text x="30" y="165" fontSize="14" fill="#E65100" fontWeight="bold">
-        🟠 {b ? 'Your AWS Account (CCS — Customer Cloud Subscription)' : '🟠 Customer AWS Account (CCS Model)'}
-      </text>
-
-      {/* OSD Cluster boundary */}
-      <rect x="30" y="175" width="740" height="260" rx="12" fill="rgba(255,255,255,0.5)" stroke="#FF9900" strokeWidth="1" strokeDasharray="5 3" />
-      <text x="50" y="195" fontSize="11" fill="#E65100" fontWeight="bold">OSD Cluster (AWS)</text>
-
-      {/* Control Plane */}
-      <rect x="50" y="205" width="320" height="70" rx="10" fill="#FFCDD2" stroke="#EF5350" strokeWidth="2" />
-      <text x="65" y="225" fontSize="10" fill="#B71C1C" fontWeight="bold">
-        {b ? '🧠 Control Plane (managed by Red Hat, in your account)' : '🧠 Control Plane (3× m5.xlarge, SRE-managed)'}
-      </text>
-      <rect x="65" y="235" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="73" y="253" fontSize="7" fill="#C62828">{b ? 'Front Door' : 'API Server'}</text>
-      <rect x="138" y="235" width="50" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="146" y="253" fontSize="7" fill="#C62828">{b ? 'Memory' : 'etcd'}</text>
-      <rect x="196" y="235" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="204" y="253" fontSize="7" fill="#C62828">Scheduler</text>
-      <rect x="269" y="235" width="85" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="277" y="253" fontSize="7" fill="#C62828">{b ? 'Auto-Fixer' : 'Controllers'}</text>
-
-      {/* OCP Console */}
-      <rect x="390" y="195" width="190" height="85" rx="10" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="2" />
-      <text x="405" y="218" fontSize="10" fill="#00695C" fontWeight="bold">🎛️ {b ? 'Cluster Console' : 'OCP Console'}</text>
-      <text x="405" y="234" fontSize="8" fill="#00897B">console-openshift-console.apps.…</text>
-      <text x="405" y="250" fontSize="8" fill="#00897B">{b ? 'See pods, deployments, logs' : 'Admin + Developer perspectives'}</text>
-      <text x="405" y="266" fontSize="8" fill="#00897B">{b ? 'Manage YOUR apps here' : 'Workloads, Networking, Storage'}</text>
-
-      {/* Open Console arrow — rendered last for z-order */}
-      <defs>
-        <marker id="osd-aws-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-          <path d="M 0 0 L 10 5 L 0 10 z" fill="#CC0000" />
-        </marker>
-      </defs>
-      <line x1="100" y1="119" x2="392" y2="198" stroke="#CC0000" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#osd-aws-arrow)" />
-
-      {/* Worker nodes */}
-      <rect x="50" y="290" width="530" height="130" rx="10" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1.5" strokeDasharray="5 3" />
-      <text x="65" y="310" fontSize="9" fill="#6A1B9A" fontWeight="bold">{b ? '🏗️ Machine Pool (your worker machines)' : '🏗️ Machine Pool → AWS ASG'}</text>
-
-      {['Worker 1', 'Worker 2', 'Worker 3'].map((w, i) => (
-        <g key={i}>
-          <rect x={70 + i * 165} y={320} width="145" height="85" rx="6" fill="#EDE7F6" stroke="#CE93D8" strokeWidth="1" />
-          <text x={82 + i * 165} y={336} fontSize="8" fill="#6A1B9A" fontWeight="bold">{b ? w : `worker-${i + 1}`}</text>
-          <rect x={80 + i * 165} y={342} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={80 + i * 165} y={360} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={136 + i * 165} y={342} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={136 + i * 165} y={360} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-        </g>
-      ))}
-
-      {/* AWS infra */}
-      <rect x="600" y="195" width="155" height="225" rx="10" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1.5" />
-      <text x="612" y="215" fontSize="9" fill="#E65100" fontWeight="bold">{b ? '🔧 AWS Services' : '🔧 AWS Infrastructure'}</text>
-
-      {[
+  // Cloud infra items
+  const infraItems = isAws
+    ? [
         b ? 'Network (VPC)' : 'VPC + Subnets',
         b ? 'Storage disks' : 'EBS Volumes',
         b ? 'Load balancers' : 'ELB / NLB',
         b ? 'DNS' : 'Route53',
         b ? 'Image storage' : 'S3 Registry',
-      ].map((item, i) => (
-        <g key={i}>
-          <rect x={612} y={225 + i * 28} width={130} height={22} rx={4} fill="#fff" stroke="#FFE0B2" strokeWidth="1" />
-          <text x={622} y={240 + i * 28} fontSize="8" fill="#BF360C">{item}</text>
-        </g>
-      ))}
-
-      {/* Credential model callout — visually distinct */}
-      <rect x={612} y={225 + 5 * 28} width={130} height={22} rx={4} fill="#FFF9C4" stroke="#F9A825" strokeWidth="1.5" />
-      <text x={622} y={240 + 5 * 28} fontSize="8" fill="#E65100" fontWeight="bold">
-        {b ? '🔑 Access Key + Secret' : '🔑 IAM User (static keys)'}
-      </text>
-    </svg>
-  );
-}
-
-function OsdGcpDiagram({ b }: { b: boolean }) {
-  return (
-    <svg viewBox="0 0 800 460" className="rosa-svg">
-      {/* Red Hat zone */}
-      <rect x="10" y="10" width="780" height="120" rx="14" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
-      <text x="30" y="38" fontSize="14" fill="#CC0000" fontWeight="bold">
-        🔴 {b ? 'Red Hat Manages (dedicated SRE team for YOUR cluster)' : 'Red Hat (OCM + Dedicated SRE)'}
-      </text>
-
-      {/* OCM Console */}
-      <rect x="30" y="50" width="210" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="45" y="68" fontSize="10" fill="#C62828" fontWeight="bold">🖥️ {b ? 'Your Dashboard' : 'OCM Console'}</text>
-      <text x="45" y="81" fontSize="7" fill="#777" fontFamily="monospace">console.redhat.com/openshift/</text>
-      <text x="45" y="93" fontSize="7" fill="#777" fontFamily="monospace">details/&lt;cluster_id&gt;</text>
-      <rect x="50" y="101" width="100" height="18" rx="9" fill="#0066CC" />
-      <text x="72" y="113" fontSize="7" fill="#fff" fontWeight="bold">Open console</text>
-
-      {/* SRE */}
-      <rect x="260" y="50" width="165" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="275" y="68" fontSize="10" fill="#C62828" fontWeight="bold">
-        {b ? '👷 Dedicated SRE Team' : '👷 SRE (Dedicated)'}
-      </text>
-      <text x="275" y="82" fontSize="8" fill="#777">{b ? 'A team assigned to YOUR cluster' : 'Backplane, PagerDuty, 24/7'}</text>
-      <text x="275" y="94" fontSize="8" fill="#777">{b ? 'Monitoring & fixing 24/7' : ''}</text>
-      <text x="275" y="106" fontSize="7" fill="#C62828" fontStyle="italic">
-        {b ? '← "Dedicated" = dedicated to YOU' : ''}
-      </text>
-
-      {/* Upgrades */}
-      <rect x="440" y="50" width="130" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="455" y="72" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⬆️ Upgrades' : '⬆️ Upgrade Policies'}</text>
-      <text x="455" y="86" fontSize="8" fill="#777">{b ? 'Managed for you' : 'Scheduled, SRE-managed'}</text>
-
-      {/* Operators */}
-      <rect x="585" y="50" width="190" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="600" y="72" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⚙️ Cluster Software' : '⚙️ Cluster Operators'}</text>
-      <text x="600" y="86" fontSize="8" fill="#777">{b ? 'Monitoring, networking, etc.' : 'Ingress, monitoring, DNS, auth'}</text>
-
-      {/* Customer GCP Account */}
-      <rect x="10" y="140" width="780" height="310" rx="14" fill="#E8F0FE" stroke="#4285F4" strokeWidth="2" />
-      <text x="30" y="165" fontSize="14" fill="#1A73E8" fontWeight="bold">
-        🔵 {b ? 'Your Google Cloud Project' : 'Customer GCP Project (CCS Model)'}
-      </text>
-
-      {/* OSD Cluster boundary */}
-      <rect x="30" y="175" width="740" height="260" rx="12" fill="rgba(255,255,255,0.5)" stroke="#4285F4" strokeWidth="1" strokeDasharray="5 3" />
-      <text x="50" y="195" fontSize="11" fill="#1A73E8" fontWeight="bold">OSD Cluster (GCP)</text>
-
-      {/* Control Plane */}
-      <rect x="50" y="205" width="320" height="70" rx="10" fill="#FFCDD2" stroke="#EF5350" strokeWidth="2" />
-      <text x="65" y="225" fontSize="10" fill="#B71C1C" fontWeight="bold">
-        {b ? '🧠 Control Plane (managed by Red Hat)' : '🧠 Control Plane (3× n1-standard-4, SRE-managed)'}
-      </text>
-      <rect x="65" y="235" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="73" y="253" fontSize="7" fill="#C62828">{b ? 'Front Door' : 'API Server'}</text>
-      <rect x="138" y="235" width="50" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="146" y="253" fontSize="7" fill="#C62828">{b ? 'Memory' : 'etcd'}</text>
-      <rect x="196" y="235" width="65" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="204" y="253" fontSize="7" fill="#C62828">Scheduler</text>
-      <rect x="269" y="235" width="85" height="28" rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-      <text x="277" y="253" fontSize="7" fill="#C62828">{b ? 'Auto-Fixer' : 'Controllers'}</text>
-
-      {/* OCP Console */}
-      <rect x="390" y="195" width="190" height="85" rx="10" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="2" />
-      <text x="405" y="218" fontSize="10" fill="#00695C" fontWeight="bold">🎛️ {b ? 'Cluster Console' : 'OCP Console'}</text>
-      <text x="405" y="234" fontSize="8" fill="#00897B">console-openshift-console.apps.…</text>
-      <text x="405" y="250" fontSize="8" fill="#00897B">{b ? 'See pods, deployments, logs' : 'Admin + Developer perspectives'}</text>
-      <text x="405" y="266" fontSize="8" fill="#00897B">{b ? 'Manage YOUR apps here' : 'Workloads, Networking, Storage'}</text>
-
-      {/* Open Console arrow */}
-      <line x1="100" y1="119" x2="395" y2="200" stroke="#CC0000" strokeWidth="2" strokeDasharray="5 3" />
-      <polygon points="389,197 401,203 393,209" fill="#CC0000" />
-
-      {/* Worker nodes */}
-      <rect x="50" y="290" width="530" height="130" rx="10" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1.5" strokeDasharray="5 3" />
-      <text x="65" y="310" fontSize="9" fill="#6A1B9A" fontWeight="bold">{b ? '🏗️ Machine Pool (your worker machines)' : '🏗️ Machine Pool → GCE MIG'}</text>
-
-      {['Worker 1', 'Worker 2', 'Worker 3'].map((w, i) => (
-        <g key={i}>
-          <rect x={70 + i * 165} y={320} width="145" height="85" rx="6" fill="#EDE7F6" stroke="#CE93D8" strokeWidth="1" />
-          <text x={82 + i * 165} y={336} fontSize="8" fill="#6A1B9A" fontWeight="bold">{b ? w : `worker-${i + 1}`}</text>
-          <rect x={80 + i * 165} y={342} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={80 + i * 165} y={360} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={136 + i * 165} y={342} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-          <rect x={136 + i * 165} y={360} width="50" height="14" rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
-        </g>
-      ))}
-
-      {/* GCP infra */}
-      <rect x="600" y="195" width="155" height="225" rx="10" fill="#E8F0FE" stroke="#A8C7FA" strokeWidth="1.5" />
-      <text x="612" y="215" fontSize="9" fill="#1A73E8" fontWeight="bold">{b ? '🔧 Google Cloud Services' : '🔧 GCP Infrastructure'}</text>
-
-      {[
+      ]
+    : [
         b ? 'Network (VPC)' : 'VPC + Subnets',
         b ? 'Storage disks' : 'Persistent Disks',
         b ? 'Load balancers' : 'Cloud Load Balancing',
         b ? 'DNS' : 'Cloud DNS',
         b ? 'Image storage' : 'GCS Registry',
         b ? 'Permissions' : 'IAM + Service Accounts',
-      ].map((item, i) => (
+      ];
+
+  // Credential callout (AWS CCS only — static keys)
+  const showCredentialCallout = isAws && !isRh;
+
+  // Layout: RH Account wraps everything in red zone; CCS has separate red + cloud zones
+  const redZoneHeight = isRh ? 440 : 120;
+  const cloudZoneY = isRh ? 145 : 140;
+  const cloudZoneHeight = isRh ? 290 : 310;
+  const cloudZoneFill = isRh ? `rgba(${isAws ? '255,248,225' : '232,240,254'},0.5)` : cloudBg;
+  const cloudZoneStrokeWidth = isRh ? 1.5 : 2;
+  const cloudZoneStrokeDash = isRh ? '5 3' : undefined;
+
+  const markerId = `osd-${cloud}-${infraModel}-arrow`;
+
+  return (
+    <svg viewBox="0 0 800 460" className="rosa-svg">
+      {/* Red Hat zone */}
+      <rect x="10" y="10" width="780" height={redZoneHeight} rx="14" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
+      <text x="30" y="38" fontSize="14" fill="#CC0000" fontWeight="bold">
+        🔴 {isRh
+          ? (b ? `Red Hat Manages EVERYTHING (including the ${cloudName} account!)` : `Red Hat (OCM + SRE + ${cloudName} Account)`)
+          : (b ? 'Red Hat Manages (dedicated SRE team for YOUR cluster)' : 'Red Hat (OCM + Dedicated SRE)')
+        }
+      </text>
+      {isRh && (
+        <text x="30" y="55" fontSize="9" fill="#C62828">
+          {b ? `You don't need your own ${cloudName} account — Red Hat provides it all` : `Infrastructure in RH-owned ${isAws ? 'AWS account' : 'GCP project'}. Costs bundled in OSD subscription.`}
+        </text>
+      )}
+
+      {/* OCM Console */}
+      <rect x="30" y={isRh ? 65 : 50} width="210" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="45" y={isRh ? 83 : 68} fontSize="10" fill="#C62828" fontWeight="bold">🖥️ {b ? 'Your Dashboard' : 'OCM Console'}</text>
+      <text x="45" y={isRh ? 96 : 81} fontSize="7" fill="#777" fontFamily="monospace">console.redhat.com/openshift/</text>
+      <text x="45" y={isRh ? 108 : 93} fontSize="7" fill="#777" fontFamily="monospace">details/&lt;cluster_id&gt;</text>
+      <rect x="50" y={isRh ? 116 : 101} width="100" height="18" rx="9" fill="#0066CC" />
+      <text x="72" y={isRh ? 128 : 113} fontSize="7" fill="#fff" fontWeight="bold">Open console</text>
+
+      {/* SRE */}
+      <rect x="260" y={isRh ? 65 : 50} width="165" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="275" y={isRh ? 83 : 68} fontSize="10" fill="#C62828" fontWeight="bold">
+        {b ? '👷 Dedicated SRE Team' : '👷 SRE (Dedicated)'}
+      </text>
+      <text x="275" y={isRh ? 97 : 82} fontSize="8" fill="#777">{b ? 'A team assigned to YOUR cluster' : 'Backplane, PagerDuty, 24/7'}</text>
+      <text x="275" y={isRh ? 109 : 94} fontSize="8" fill="#777">{b ? 'Monitoring & fixing 24/7' : ''}</text>
+      {!isRh && (
+        <text x="275" y="106" fontSize="7" fill="#C62828" fontStyle="italic">
+          {b ? '← This is what "Dedicated" means!' : ''}
+        </text>
+      )}
+
+      {/* Upgrades */}
+      <rect x="440" y={isRh ? 65 : 50} width="130" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="455" y={isRh ? 87 : 72} fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⬆️ Upgrades' : '⬆️ Upgrade Policies'}</text>
+      <text x="455" y={isRh ? 101 : 86} fontSize="8" fill="#777">{b ? 'Managed for you' : 'Scheduled, SRE-managed'}</text>
+
+      {/* Operators */}
+      <rect x="585" y={isRh ? 65 : 50} width="190" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
+      <text x="600" y={isRh ? 87 : 72} fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⚙️ Cluster Software' : '⚙️ Cluster Operators'}</text>
+      <text x="600" y={isRh ? 101 : 86} fontSize="8" fill="#777">{b ? 'Monitoring, networking, etc.' : 'Ingress, monitoring, DNS, auth'}</text>
+
+      {/* Cloud Account zone */}
+      <rect
+        x={isRh ? 30 : 10}
+        y={cloudZoneY}
+        width={isRh ? 740 : 780}
+        height={cloudZoneHeight}
+        rx={isRh ? 12 : 14}
+        fill={cloudZoneFill}
+        stroke={cloudStroke}
+        strokeWidth={cloudZoneStrokeWidth}
+        strokeDasharray={cloudZoneStrokeDash}
+      />
+      <text x={isRh ? 50 : 30} y={cloudZoneY + 25} fontSize={isRh ? 11 : 14} fill={cloudTextColor} fontWeight="bold">
+        {cloudZoneLabel}
+      </text>
+
+      {/* OSD Cluster boundary */}
+      <rect
+        x={isRh ? 50 : 30}
+        y={cloudZoneY + 35}
+        width={isRh ? 500 : 740}
+        height={isRh ? 240 : 260}
+        rx={isRh ? 10 : 12}
+        fill="rgba(255,255,255,0.5)"
+        stroke={cloudColor}
+        strokeWidth="1"
+        strokeDasharray="5 3"
+      />
+      <text x={isRh ? 70 : 50} y={cloudZoneY + 55} fontSize="11" fill={cloudTextColor} fontWeight="bold">
+        OSD Cluster ({cloudName})
+      </text>
+
+      {/* Control Plane */}
+      <rect x={isRh ? 70 : 50} y={cloudZoneY + 65} width="320" height={isRh ? 60 : 70} rx="10" fill="#FFCDD2" stroke="#EF5350" strokeWidth="2" />
+      <text x={isRh ? 85 : 65} y={cloudZoneY + 85} fontSize="10" fill="#B71C1C" fontWeight="bold">
+        {b
+          ? (isRh ? '🧠 Control Plane (managed by Red Hat)' : '🧠 Control Plane (managed by Red Hat, in your account)')
+          : `🧠 Control Plane (${cpInstanceType}, SRE-managed)`
+        }
+      </text>
+      {['Front Door|API Server', 'Memory|etcd', 'Scheduler|Scheduler', 'Auto-Fixer|Controllers'].map((pair, i) => {
+        const [begLabel, expLabel] = pair.split('|');
+        const widths = [65, 50, 65, 85];
+        const xOffset = [0, 73, 131, 204];
+        const baseX = isRh ? 85 : 65;
+        return (
+          <g key={i}>
+            <rect x={baseX + xOffset[i]} y={cloudZoneY + 95} width={widths[i]} height={isRh ? 22 : 28} rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
+            <text x={baseX + xOffset[i] + 8} y={cloudZoneY + (isRh ? 110 : 113)} fontSize="7" fill="#C62828">{b ? begLabel : expLabel}</text>
+          </g>
+        );
+      })}
+
+      {/* OCP Console */}
+      <rect x={isRh ? 400 : 390} y={cloudZoneY + (isRh ? 60 : 55)} width={isRh ? 140 : 190} height={isRh ? 70 : 85} rx="10" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="2" />
+      <text x={isRh ? 412 : 405} y={cloudZoneY + (isRh ? 80 : 78)} fontSize="10" fill="#00695C" fontWeight="bold">🎛️ {b ? 'Cluster Console' : 'OCP Console'}</text>
+      <text x={isRh ? 412 : 405} y={cloudZoneY + (isRh ? 96 : 94)} fontSize={isRh ? 7 : 8} fill="#00897B">console-openshift-console.apps.…</text>
+      <text x={isRh ? 412 : 405} y={cloudZoneY + (isRh ? 110 : 110)} fontSize={isRh ? 7 : 8} fill="#00897B">{b ? 'See pods, deployments, logs' : 'Admin + Developer perspectives'}</text>
+      {!isRh && (
+        <text x="405" y={cloudZoneY + 126} fontSize="8" fill="#00897B">{b ? 'Manage YOUR apps here' : 'Workloads, Networking, Storage'}</text>
+      )}
+
+      {/* Open Console dashed arrow */}
+      <defs>
+        <marker id={markerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#CC0000" />
+        </marker>
+      </defs>
+      <line
+        x1="100"
+        y1={isRh ? 134 : 119}
+        x2={isRh ? 402 : 392}
+        y2={cloudZoneY + (isRh ? 62 : 58)}
+        stroke="#CC0000"
+        strokeWidth="2"
+        strokeDasharray="5 3"
+        markerEnd={`url(#${markerId})`}
+      />
+
+      {/* Worker nodes */}
+      <rect x={isRh ? 70 : 50} y={cloudZoneY + (isRh ? 140 : 150)} width={isRh ? 470 : 530} height={isRh ? 120 : 130} rx="10" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1.5" strokeDasharray="5 3" />
+      <text x={isRh ? 85 : 65} y={cloudZoneY + (isRh ? 160 : 170)} fontSize="9" fill="#6A1B9A" fontWeight="bold">
+        {b ? '🏗️ Machine Pool (your worker machines)' : `🏗️ Machine Pool → ${poolBackend}`}
+      </text>
+
+      {['Worker 1', 'Worker 2', 'Worker 3'].map((w, i) => {
+        const baseX = isRh ? 90 : 70;
+        const spacing = isRh ? 145 : 165;
+        const boxW = isRh ? 125 : 145;
+        const boxH = isRh ? 75 : 85;
+        const wY = cloudZoneY + (isRh ? 170 : 180);
+        return (
+          <g key={i}>
+            <rect x={baseX + i * spacing} y={wY} width={boxW} height={boxH} rx="6" fill="#EDE7F6" stroke="#CE93D8" strokeWidth="1" />
+            <text x={baseX + 12 + i * spacing} y={wY + 16} fontSize="8" fill="#6A1B9A" fontWeight="bold">{b ? w : `worker-${i + 1}`}</text>
+            <rect x={baseX + 10 + i * spacing} y={wY + 22} width="45" height={isRh ? 12 : 14} rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+            <rect x={baseX + 10 + i * spacing} y={wY + (isRh ? 38 : 40)} width="45" height={isRh ? 12 : 14} rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+            <rect x={baseX + 60 + i * spacing} y={wY + 22} width="45" height={isRh ? 12 : 14} rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+            <rect x={baseX + 60 + i * spacing} y={wY + (isRh ? 38 : 40)} width="45" height={isRh ? 12 : 14} rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.8" />
+          </g>
+        );
+      })}
+
+      {/* Cloud infra sidebar */}
+      <rect
+        x={isRh ? 560 : 600}
+        y={cloudZoneY + (isRh ? 38 : 55)}
+        width={isRh ? 195 : 155}
+        height={isRh ? 240 : 225}
+        rx="10"
+        fill={infraBg}
+        stroke={infraStroke}
+        strokeWidth="1.5"
+      />
+      <text x={isRh ? 572 : 612} y={cloudZoneY + (isRh ? 58 : 75)} fontSize="9" fill={infraTextColor} fontWeight="bold">
+        {b ? `🔧 ${cloudName} Services` : `🔧 ${cloudName} Infrastructure`}
+      </text>
+
+      {infraItems.map((item, i) => (
         <g key={i}>
-          <rect x={612} y={225 + i * 28} width={130} height={22} rx={4} fill="#fff" stroke="#C2D9FC" strokeWidth="1" />
-          <text x={622} y={240 + i * 28} fontSize="8" fill="#1565C0">{item}</text>
+          <rect
+            x={isRh ? 572 : 612}
+            y={cloudZoneY + (isRh ? 68 : 85) + i * 28}
+            width={isRh ? 170 : 130}
+            height={22}
+            rx={4}
+            fill="#fff"
+            stroke={infraBorderColor}
+            strokeWidth="1"
+          />
+          <text
+            x={isRh ? 582 : 622}
+            y={cloudZoneY + (isRh ? 83 : 100) + i * 28}
+            fontSize="8"
+            fill={isAws ? '#BF360C' : '#1565C0'}
+          >
+            {item}
+          </text>
         </g>
       ))}
+
+      {/* Credential callout for AWS CCS */}
+      {showCredentialCallout && (
+        <g>
+          <rect x={612} y={cloudZoneY + 85 + infraItems.length * 28} width={130} height={22} rx={4} fill="#FFF9C4" stroke="#F9A825" strokeWidth="1.5" />
+          <text x={622} y={cloudZoneY + 100 + infraItems.length * 28} fontSize="8" fill="#E65100" fontWeight="bold">
+            {b ? '🔑 Access Key + Secret' : '🔑 IAM User (static keys)'}
+          </text>
+        </g>
+      )}
+
+      {/* RH Account cost callout */}
+      {isRh && (
+        <g>
+          <text x={isRh ? 572 : 612} y={cloudZoneY + 68 + infraItems.length * 28 + 14} fontSize="8" fill="#C62828" fontWeight="bold">
+            {b ? '💰 All costs bundled in your' : '💰 Infra costs included in'}
+          </text>
+          <text x={isRh ? 572 : 612} y={cloudZoneY + 68 + infraItems.length * 28 + 26} fontSize="8" fill="#C62828" fontWeight="bold">
+            {b ? 'Red Hat subscription!' : 'OSD subscription'}
+          </text>
+        </g>
+      )}
     </svg>
   );
 }
 
 export function OsdMap({ mode, onModeChange }: OsdMapProps) {
-  const [variant, setVariant] = useState<OsdVariant>('aws');
+  const [infraModel, setInfraModel] = useState<InfraModel>('ccs');
+  const [cloud, setCloud] = useState<CloudProvider>('aws');
   const b = mode === 'beginner';
 
   return (
     <div className="rosa-map">
       <div className="rosa-controls">
         <div className="variant-toggle">
-          <button className={`variant-btn ${variant === 'aws' ? 'active' : ''}`} onClick={() => setVariant('aws')}>
-            OSD on AWS
+          <button className={`variant-btn ${infraModel === 'ccs' ? 'active' : ''}`} onClick={() => setInfraModel('ccs')}>
+            {b ? '🔑 Your Cloud Account (CCS)' : 'CCS (Customer Cloud Sub)'}
           </button>
-          <button className={`variant-btn ${variant === 'gcp' ? 'active' : ''}`} onClick={() => setVariant('gcp')}>
-            OSD on GCP
-          </button>
-        </div>
-        <div className="mode-toggle">
-          <button className={`mode-btn ${mode === 'beginner' ? 'active' : ''}`} onClick={() => onModeChange('beginner')}>
-            🌱 Beginner
-          </button>
-          <button className={`mode-btn ${mode === 'expert' ? 'active' : ''}`} onClick={() => onModeChange('expert')}>
-            ⚡ Expert
+          <button className={`variant-btn ${infraModel === 'rh-account' ? 'active' : ''}`} onClick={() => setInfraModel('rh-account')}>
+            {b ? '🔴 Red Hat\'s Cloud Account' : 'Red Hat Cloud Account'}
           </button>
         </div>
+        <ModeToggle mode={mode} onModeChange={onModeChange} />
       </div>
 
-      <h2 className="dd-page-title">🛡️ OSD — <em>OpenShift Dedicated</em></h2>
+      <h2 className="dd-page-title">
+        <img src={import.meta.env.BASE_URL + 'logos/redhat.svg'} alt="Red Hat" className="dd-title-logo" />
+        OSD — <em>OpenShift Dedicated</em>
+      </h2>
 
       {/* What "Dedicated" means callout — above the SVG */}
       <div className="rosa-variant-note" style={{ borderLeft: '4px solid #CC0000' }}>
         <p><strong>🛡️ {b ? 'What does "Dedicated" mean?' : 'OSD "Dedicated" Model'}</strong></p>
         <p>{b
           ? '"Dedicated" means Red Hat assigns a dedicated SRE (Site Reliability Engineering) team to manage and operate your cluster around the clock. They handle upgrades, monitoring, patching, and incident response — so your team can focus entirely on building and deploying apps. It\'s like having a dedicated building superintendent for your apartment building.'
-          : 'OSD provides a dedicated SRE team per customer cluster. The SRE team manages the control plane, cluster operators, upgrades, and incident response via backplane access. Cluster-specific PagerDuty escalation. SLA-backed uptime guarantees. Available on AWS (CCS) and GCP (CCS).'}
+          : 'OSD provides a dedicated SRE team per customer cluster. The SRE team manages the control plane, cluster operators, upgrades, and incident response via backplane access. Cluster-specific PagerDuty escalation. SLA-backed uptime guarantees. Available on AWS and GCP, CCS or Red Hat cloud account models.'}
         </p>
+      </div>
+
+      {/* Cloud provider sub-toggle */}
+      <div className="variant-toggle" style={{ marginBottom: 12, justifyContent: 'center', display: 'flex' }}>
+        <button className={`variant-btn ${cloud === 'aws' ? 'active' : ''}`} onClick={() => setCloud('aws')}>
+          <img src={import.meta.env.BASE_URL + 'logos/aws.svg'} alt="AWS" className="variant-logo" /> AWS
+        </button>
+        <button className={`variant-btn ${cloud === 'gcp' ? 'active' : ''}`} onClick={() => setCloud('gcp')}>
+          <img src={import.meta.env.BASE_URL + 'logos/gcp.svg'} alt="GCP" className="variant-logo" /> GCP
+        </button>
       </div>
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={variant}
+          key={`${infraModel}-${cloud}`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
-          {variant === 'aws' ? <OsdAwsDiagram b={b} /> : <OsdGcpDiagram b={b} />}
+          <OsdDiagram b={b} cloud={cloud} infraModel={infraModel} />
         </motion.div>
       </AnimatePresence>
 
       <div className="rosa-variant-note">
-        <p>{variant === 'aws'
+        <p>{infraModel === 'ccs'
           ? (b
-            ? '📌 OSD on AWS uses the CCS (Customer Cloud Subscription) model — the cluster runs in YOUR AWS account. Red Hat manages it, but you own the cloud resources and pay AWS directly.'
-            : '📌 OSD AWS (CCS): Cluster runs in customer AWS account. Customer pays AWS directly for EC2, EBS, etc. Red Hat charges OSD subscription separately. MachineSet-based Machine Pools.')
+            ? `📌 CCS Model: The cluster runs in YOUR ${cloud === 'aws' ? 'AWS account' : 'Google Cloud project'}. You pay ${cloud === 'aws' ? 'AWS' : 'Google'} directly for compute, storage, and networking. Red Hat manages the cluster but you own the cloud resources.`
+            : `📌 OSD ${cloud.toUpperCase()} (CCS): Cluster in customer ${cloud === 'aws' ? 'AWS account' : 'GCP project'}. Customer pays ${cloud === 'aws' ? 'AWS' : 'GCP'} directly. Customer provides ${cloud === 'aws' ? 'IAM credentials' : 'service account credentials'}. ${cloud === 'aws' ? 'm5.xlarge instances. ASG-based' : 'n1-standard instances. GCE MIG-based'} Machine Pools.`)
           : (b
-            ? '📌 OSD on GCP offers two infrastructure models — CCS runs in YOUR Google Cloud project, or Red Hat cloud account where Red Hat owns and pays for the infrastructure.'
-            : '📌 OSD GCP: CCS (customer GCP project, customer pays) or Red Hat cloud account (RH-owned project, included in subscription). n1-standard instances. GCE MIGs for MachineSets.')
+            ? `📌 Red Hat Account Model: The cluster runs in a ${cloud === 'aws' ? 'AWS account' : 'Google Cloud project'} owned by Red Hat. You don't need your own ${cloud === 'aws' ? 'AWS' : 'GCP'} account! All infrastructure costs are bundled into your OSD subscription.`
+            : `📌 OSD ${cloud.toUpperCase()} (RH Account): Cluster in RH-owned ${cloud === 'aws' ? 'AWS account' : 'GCP project'}. Infrastructure costs bundled in OSD subscription. No customer cloud credentials needed. Simplified billing.`)
         }
         </p>
       </div>
@@ -304,9 +366,11 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
         </p>
         <p style={{ marginTop: '8px' }}>{b
           ? '• Red Hat cloud account: The cluster runs in a cloud account owned by Red Hat. You don\'t need your own AWS/GCP account! Infrastructure costs are bundled into your Red Hat subscription — simpler billing, but less cloud-level visibility.'
-          : '• Red Hat cloud account: Cluster in RH-owned cloud project. Infrastructure costs bundled in OSD subscription. No customer cloud credentials needed. Less granular cost attribution. Available for GCP (and historically AWS).'}
+          : '• Red Hat cloud account: Cluster in RH-owned cloud project. Infrastructure costs bundled in OSD subscription. No customer cloud credentials needed. Less granular cost attribution.'}
         </p>
       </div>
+
+      <ApiCallChain mode={mode} variant={cloud === 'aws' ? 'osd-aws' : 'osd-gcp'} />
 
       {/* AWS credential model — the KEY difference */}
       <div className="rosa-variant-note" style={{ borderLeft: '4px solid #FF9900' }}>

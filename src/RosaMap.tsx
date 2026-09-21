@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ExplainMode } from './types';
+import { ApiCallChain } from './ApiCallChain';
+import { ModeToggle } from './ModeToggle';
 
 type RosaVariant = 'classic' | 'hcp';
 
@@ -280,22 +282,19 @@ export function RosaMap({ mode, onModeChange }: RosaMapProps) {
             ROSA HCP
           </button>
         </div>
-        <div className="mode-toggle">
-          <button className={`mode-btn ${mode === 'beginner' ? 'active' : ''}`} onClick={() => onModeChange('beginner')}>
-            🌱 Beginner
-          </button>
-          <button className={`mode-btn ${mode === 'expert' ? 'active' : ''}`} onClick={() => onModeChange('expert')}>
-            ⚡ Expert
-          </button>
-        </div>
+        <ModeToggle mode={mode} onModeChange={onModeChange} />
       </div>
 
-      <h2 className="dd-page-title">🌹 ROSA — <em>Red Hat OpenShift Service on AWS</em></h2>
+      <h2 className="dd-page-title">
+        <img src={import.meta.env.BASE_URL + 'logos/redhat.svg'} alt="Red Hat" className="dd-title-logo" />
+        <img src={import.meta.env.BASE_URL + 'logos/aws.svg'} alt="AWS" className="dd-title-logo" />
+        ROSA — <em>Red Hat OpenShift Service on AWS</em>
+      </h2>
 
       <div className="rosa-variant-note">
         {variant === 'classic' ? (
           <p>{b
-            ? '📌 In ROSA Classic, the control plane runs on machines in YOUR AWS account. Red Hat manages it, but you pay for those EC2 instances. Machine Pools use MachineSets.'
+            ? '📌 In ROSA Classic, the control plane runs on machines in YOUR AWS account. Red Hat manages it, but you pay for those cloud machines. Machine Pools let you add or remove groups of worker machines.'
             : '📌 Classic: 3 control plane nodes (m5.xlarge) in-cluster. Customer pays for CP EC2. MachineSet-based Machine Pools → ASGs. SRE access via backplane.'}
           </p>
         ) : (
@@ -317,6 +316,8 @@ export function RosaMap({ mode, onModeChange }: RosaMapProps) {
           {variant === 'classic' ? <ClassicDiagram b={b} /> : <HcpDiagram b={b} />}
         </motion.div>
       </AnimatePresence>
+
+      <ApiCallChain mode={mode} variant={variant === 'classic' ? 'rosa-classic' : 'rosa-hcp'} />
 
       <IamRbacBridge b={b} />
     </div>

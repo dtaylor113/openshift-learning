@@ -20,14 +20,14 @@ const SCENES: SceneConfig[] = [
   { component: NodeScene,      viewBox: '5 0 490 410',     scale: 0.82 },
   { component: ClusterScene,   viewBox: '8 4 500 405',     scale: 0.92 },
   { component: OpenShiftScene, viewBox: '5 4 490 390',     scale: 1.0 },
-  { component: OcmScene,       viewBox: '5 2 480 395',     scale: 1.0 },
+  { component: OcmScene,       viewBox: '5 2 480 415',     scale: 1.0 },
 ];
 
 interface ZoomViewerProps {
   currentIndex: number;
   direction: number;
   mode: ExplainMode;
-  onDeepDive?: () => void;
+  onDeepDive?: (tab?: string) => void;
   onNavigate?: (levelIndex: number) => void;
 }
 

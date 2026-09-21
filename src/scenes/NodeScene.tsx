@@ -28,7 +28,7 @@ export function NodeScene({ mode, onNavigate }: SceneProps) {
       <rect x="12" y="6" width="476" height="400" rx="20" fill="none" stroke="#9575CD" strokeWidth="1.5" strokeDasharray="6 4" />
       <rect x="18" y="10" width="220" height="16" rx="4" fill="#EDE7F6" />
       <text x="26" y="22" fontSize="8" fill="#4527A0" fontWeight="bold">
-        {b ? '🏗️ Machine Pool: a group of identical nodes' : '🏗️ Machine Pool: worker-pool-1 (m5.xlarge × 3)'}
+        {b ? '🏗️ Machine Pool: a group of identical nodes' : '🏗️ Machine Pool: worker-pool-1 (e.g. m5.xlarge × 3)'}
       </text>
 
       {/* Node boundary */}
@@ -37,7 +37,7 @@ export function NodeScene({ mode, onNavigate }: SceneProps) {
         {b ? 'Worker Node (runs your app pods)' : 'Worker Node: ip-10-0-1-42'}
       </text>
       <text x="45" y="72" fontSize="9" fill="#7B1FA2" fontFamily="monospace">
-        {b ? 'One machine in the pool — the cluster can add more if needed' : 'RHCOS 4.14 • m5.xlarge • 4 vCPU • 16Gi RAM'}
+        {b ? 'One machine in the pool — the cluster can add more if needed' : 'RHCOS • e.g. m5.xlarge • 4 vCPU • 16 GiB RAM'}
       </text>
 
       {/* System services */}

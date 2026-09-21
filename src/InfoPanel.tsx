@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ZOOM_LEVELS } from './types';
 import type { ZoomLevel, ExplainMode } from './types';
+import { ModeToggle } from './ModeToggle';
 
 interface InfoPanelProps {
   level: ZoomLevel;
@@ -16,21 +17,7 @@ export function InfoPanel({ level, currentIndex, totalLevels, mode, onModeChange
 
   return (
     <div className="info-panel">
-      {/* Mode toggle */}
-      <div className="mode-toggle">
-        <button
-          className={`mode-btn ${mode === 'beginner' ? 'active' : ''}`}
-          onClick={() => onModeChange('beginner')}
-        >
-          🌱 Beginner
-        </button>
-        <button
-          className={`mode-btn ${mode === 'expert' ? 'active' : ''}`}
-          onClick={() => onModeChange('expert')}
-        >
-          ⚡ Expert
-        </button>
-      </div>
+      <ModeToggle mode={mode} onModeChange={onModeChange} />
 
       <AnimatePresence mode="wait">
         <motion.div

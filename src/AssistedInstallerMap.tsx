@@ -1,4 +1,5 @@
 import type { ExplainMode } from './types';
+import { ModeToggle } from './ModeToggle';
 
 interface AssistedInstallerMapProps {
   mode: ExplainMode;
@@ -140,14 +141,7 @@ export function AssistedInstallerMap({ mode, onModeChange }: AssistedInstallerMa
     <div className="rosa-map">
       <div className="rosa-controls">
         <div />
-        <div className="mode-toggle">
-          <button className={`mode-btn ${mode === 'beginner' ? 'active' : ''}`} onClick={() => onModeChange('beginner')}>
-            🌱 Beginner
-          </button>
-          <button className={`mode-btn ${mode === 'expert' ? 'active' : ''}`} onClick={() => onModeChange('expert')}>
-            ⚡ Expert
-          </button>
-        </div>
+        <ModeToggle mode={mode} onModeChange={onModeChange} />
       </div>
 
       <h2 className="dd-page-title">🏗️ OCP Assisted Installer — <em>OpenShift Container Platform on Your Hardware</em></h2>

@@ -1,13 +1,15 @@
 import { useState, useCallback, useRef } from 'react';
+import { Telescope } from 'lucide-react';
 import { ZOOM_LEVELS } from './types';
 import type { ExplainMode } from './types';
 import { ZoomViewer } from './ZoomViewer';
 import { InfoPanel } from './InfoPanel';
 import { Minimap } from './Minimap';
 import { DeepDive } from './DeepDive';
+import type { DeepDiveTab } from './DeepDive';
 import './App.css';
 
-type View = 'explorer' | 'deep-dive';
+    type View = 'explorer' | 'deep-dive';
 
 function App() {
   const [view, setView] = useState<View>('explorer');
@@ -32,7 +34,11 @@ function App() {
     }, 700);
   }, [currentIndex]);
 
-  const openDeepDive = useCallback(() => setView('deep-dive'), []);
+  const [deepDiveTab, setDeepDiveTab] = useState<DeepDiveTab>('overview');
+  const openDeepDive = useCallback((tab?: string) => {
+    setDeepDiveTab((tab as DeepDiveTab) || 'overview');
+    setView('deep-dive');
+  }, []);
   const backToExplorer = useCallback(() => setView('explorer'), []);
 
   const handleWheel = useCallback(
@@ -80,7 +86,7 @@ function App() {
       <header className="app-header">
         <div className="header-left">
           <h1>
-            <span className="logo-icon">🔭</span>
+            <Telescope size={22} className="logo-icon" />
             OpenShift Explorer
           </h1>
           {view === 'explorer' ? (
@@ -139,7 +145,7 @@ function App() {
         </main>
       ) : (
         <main className="app-main rosa-main">
-          <DeepDive mode={mode} onModeChange={setMode} />
+          <DeepDive mode={mode} onModeChange={setMode} initialTab={deepDiveTab} />
         </main>
       )}
       <footer className="app-footer">by Dave Taylor</footer>

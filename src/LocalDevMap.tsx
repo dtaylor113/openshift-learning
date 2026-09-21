@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ExplainMode } from './types';
+import { ModeToggle } from './ModeToggle';
 
 type LocalVariant = 'crc' | 'microshift';
 
@@ -21,7 +22,7 @@ function CrcDiagram({ b }: { b: boolean }) {
 
       {/* CRC binary */}
       <rect x="30" y="70" width="200" height="85" rx="10" fill="#fff" stroke="#1565C0" strokeWidth="1.5" />
-      <text x="45" y="90" fontSize="10" fill="#1565C0" fontWeight="bold">⚡ {b ? 'CRC Tool' : 'crc binary'}</text>
+      <text x="45" y="90" fontSize="10" fill="#1565C0" fontWeight="bold">⚡ {b ? 'OpenShift Local' : 'crc binary'}</text>
       <text x="45" y="106" fontSize="8" fill="#777">{b ? 'A command you run in terminal:' : 'CLI commands:'}</text>
       <text x="45" y="120" fontSize="7" fill="#333" fontFamily="monospace">$ crc setup</text>
       <text x="45" y="132" fontSize="7" fill="#333" fontFamily="monospace">$ crc start</text>
@@ -197,23 +198,16 @@ export function LocalDevMap({ mode, onModeChange }: LocalDevMapProps) {
       <div className="rosa-controls">
         <div className="variant-toggle">
           <button className={`variant-btn ${variant === 'crc' ? 'active' : ''}`} onClick={() => setVariant('crc')}>
-            CRC (CodeReady Containers)
+            OpenShift Local (crc)
           </button>
           <button className={`variant-btn ${variant === 'microshift' ? 'active' : ''}`} onClick={() => setVariant('microshift')}>
             MicroShift
           </button>
         </div>
-        <div className="mode-toggle">
-          <button className={`mode-btn ${mode === 'beginner' ? 'active' : ''}`} onClick={() => onModeChange('beginner')}>
-            🌱 Beginner
-          </button>
-          <button className={`mode-btn ${mode === 'expert' ? 'active' : ''}`} onClick={() => onModeChange('expert')}>
-            ⚡ Expert
-          </button>
-        </div>
+        <ModeToggle mode={mode} onModeChange={onModeChange} />
       </div>
 
-      <h2 className="dd-page-title">💻 Local Dev — <em>CRC (CodeReady Containers) &amp; MicroShift</em></h2>
+      <h2 className="dd-page-title">💻 Local Dev — <em>Red Hat OpenShift Local (crc) &amp; MicroShift</em></h2>
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -230,8 +224,8 @@ export function LocalDevMap({ mode, onModeChange }: LocalDevMapProps) {
       <div className="rosa-variant-note">
         <p>{variant === 'crc'
           ? (b
-            ? '📌 CRC gives you a real OpenShift cluster on your laptop. It\'s the exact same OpenShift as production — just shrunk down to one machine. Perfect for learning, developing, and testing before deploying to a real cluster.'
-            : '📌 CRC runs a single-node OCP 4 cluster in a VM. Full OCP API surface (Routes, SCCs, OperatorHub, Dev Console). Uses libvirt (Linux), HyperKit (macOS Intel), or Hyper-V (Windows). Apple Silicon via vfkit. Not for production workloads.')
+            ? '📌 OpenShift Local gives you a real OpenShift cluster on your laptop. It\'s the exact same OpenShift as production — just shrunk down to one machine. Perfect for learning, developing, and testing before deploying to a real cluster.'
+            : '📌 Red Hat OpenShift Local (crc) runs a single-node OCP 4 cluster in a VM. Full OCP API surface (Routes, SCCs, OperatorHub, Dev Console). Uses libvirt (Linux), HyperKit (macOS Intel), or Hyper-V (Windows). Apple Silicon via vfkit. Not for production workloads.')
           : (b
             ? '📌 MicroShift is a tiny version of OpenShift for edge devices — think factory sensors, retail kiosks, or remote equipment. It runs directly on RHEL (no VM needed) and uses very little resources. It has most OpenShift features but skips the big management console.'
             : '📌 MicroShift: OpenShift APIs (Routes, Services, PVCs, SCCs) on a minimal footprint. Single binary, systemd-managed, ~700 MiB RAM. No console UI, no OLM, no full monitoring stack. Designed for RHEL-based edge deployments. Managed at scale via RHEL Image Builder + OSTree.')
@@ -243,7 +237,7 @@ export function LocalDevMap({ mode, onModeChange }: LocalDevMapProps) {
         <h4>{b ? '🤔 CRC vs MicroShift — Which one?' : '🤔 CRC vs MicroShift'}</h4>
         <div className="rosa-bridge-content">
           <div className="rosa-bridge-side">
-            <strong style={{ color: '#1565C0' }}>CRC</strong>
+            <strong style={{ color: '#1565C0' }}>OpenShift Local (crc)</strong>
             <p>{b
               ? 'Full OpenShift on your laptop. Has everything — console, operators, the works. Needs ~9 GB RAM. For developers who want the real experience.'
               : 'Full OCP in a VM. Complete API surface + console + OLM. 9+ GiB RAM, 4+ vCPU. Dev/test parity with production clusters.'}
