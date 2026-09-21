@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ExplainMode } from './types';
 import { ModeToggle } from './ModeToggle';
+import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
 
 type LocalVariant = 'crc' | 'microshift';
 
@@ -255,6 +256,8 @@ export function LocalDevMap({ mode, onModeChange }: LocalDevMapProps) {
           </div>
         </div>
       </div>
+
+      <ExploreMore links={DEEP_DIVE_LINKS.local} />
     </div>
   );
 }

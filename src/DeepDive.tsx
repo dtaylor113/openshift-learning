@@ -8,6 +8,7 @@ import { AssistedInstallerMap } from './AssistedInstallerMap';
 import { LocalDevMap } from './LocalDevMap';
 import { OcpConsoleMap } from './OcpConsoleMap';
 import { ZoomLink } from './ZoomLink';
+import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
 
 export type DeepDiveTab = 'overview' | 'ocp-console' | 'rosa' | 'osd' | 'assisted' | 'local';
 
@@ -221,6 +222,8 @@ function OverviewPage({ b, onNavigate }: { b: boolean; onNavigate: (tab: DeepDiv
           </tbody>
         </table>
       </div>
+
+      <ExploreMore links={DEEP_DIVE_LINKS.overview} />
     </div>
   );
 }

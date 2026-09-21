@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { ExplainMode } from './types';
 import { ApiCallChain } from './ApiCallChain';
 import { ModeToggle } from './ModeToggle';
+import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
 
 type InfraModel = 'ccs' | 'rh-account';
 type CloudProvider = 'aws' | 'gcp';
@@ -412,6 +413,8 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
           </div>
         </div>
       </div>
+
+      <ExploreMore links={DEEP_DIVE_LINKS.osd} />
     </div>
   );
 }

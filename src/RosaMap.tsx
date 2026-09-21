@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { ExplainMode } from './types';
 import { ApiCallChain } from './ApiCallChain';
 import { ModeToggle } from './ModeToggle';
+import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
 
 type RosaVariant = 'classic' | 'hcp';
 
@@ -320,6 +321,8 @@ export function RosaMap({ mode, onModeChange }: RosaMapProps) {
       <ApiCallChain mode={mode} variant={variant === 'classic' ? 'rosa-classic' : 'rosa-hcp'} />
 
       <IamRbacBridge b={b} />
+
+      <ExploreMore links={DEEP_DIVE_LINKS.rosa} />
     </div>
   );
 }

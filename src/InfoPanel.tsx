@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ZOOM_LEVELS } from './types';
 import type { ZoomLevel, ExplainMode } from './types';
 import { ModeToggle } from './ModeToggle';
+import { ExploreMore, EXPLORER_LINKS } from './ExploreMore';
 
 interface InfoPanelProps {
   level: ZoomLevel;
@@ -68,6 +69,10 @@ export function InfoPanel({ level, currentIndex, totalLevels, mode, onModeChange
               </motion.li>
             ))}
           </ul>
+
+          {EXPLORER_LINKS[level.id] && (
+            <ExploreMore links={EXPLORER_LINKS[level.id]} />
+          )}
         </motion.div>
       </AnimatePresence>
 

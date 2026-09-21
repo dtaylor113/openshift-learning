@@ -1,5 +1,6 @@
 import type { ExplainMode } from './types';
 import { ModeToggle } from './ModeToggle';
+import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
 
 interface AssistedInstallerMapProps {
   mode: ExplainMode;
@@ -185,6 +186,8 @@ export function AssistedInstallerMap({ mode, onModeChange }: AssistedInstallerMa
           </div>
         </div>
       </div>
+
+      <ExploreMore links={DEEP_DIVE_LINKS.assisted} />
     </div>
   );
 }

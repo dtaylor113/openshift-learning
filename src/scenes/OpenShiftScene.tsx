@@ -11,7 +11,7 @@ export function OpenShiftScene({ mode, onNavigate }: SceneProps) {
       <rect x="10" y="10" width="480" height="380" rx="22" fill="#FDE8E8" stroke="#EE0000" strokeWidth="3" />
 
       <text x="35" y="40" fontSize="16" fill="#CC0000" fontWeight="bold">
-        {b ? 'OpenShift Cluster' : 'OpenShift Container Platform (OCP)'}
+        OpenShift Container Platform (OCP) Cluster
       </text>
       <text x="35" y="56" fontSize="9" fill="#B71C1C" fontFamily="monospace">
         {b ? 'Kubernetes is the engine — OpenShift is the full vehicle' : 'Enterprise Kubernetes + operator-managed platform services'}

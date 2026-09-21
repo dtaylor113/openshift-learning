@@ -1,5 +1,6 @@
 import { Home, Boxes, Globe, HardDrive, Puzzle, Users, BarChart3, Settings, Hammer, LayoutDashboard, Network, Search, PlusCircle, Eye, Lightbulb } from 'lucide-react';
 import { ModeToggle } from './ModeToggle';
+import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
 import type { ExplainMode } from './types';
 
 interface OcpConsoleMapProps {
@@ -257,6 +258,8 @@ export function OcpConsoleMap({ mode, onModeChange }: OcpConsoleMapProps) {
           </div>
         </div>
       </div>
+
+      <ExploreMore links={DEEP_DIVE_LINKS['ocp-console']} />
     </div>
   );
 }
