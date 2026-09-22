@@ -4,6 +4,8 @@ import { Globe } from 'lucide-react';
 import type { ExplainMode } from './types';
 import { ModeToggle } from './ModeToggle';
 import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
+import { useGlossary } from './GlossaryContext';
+import { GLOSSARY, createGlossarizer } from './Glossary';
 
 type ArchView = 'today' | 'hyperfleet';
 
@@ -13,6 +15,14 @@ interface HyperfleetMapProps {
 }
 
 function TodayDiagram({ b }: { b: boolean }) {
+  const { show, hide } = useGlossary();
+  const tip = (term: string, label?: string) => (
+    <tspan fill="#78909C" className="svg-glossary-term"
+      onMouseEnter={() => show(term, GLOSSARY[term])}
+      onMouseLeave={hide}
+    >{label || term}</tspan>
+  );
+
   return (
     <svg viewBox="0 0 800 420" className="rosa-svg">
       {/* Red Hat centralized zone */}
@@ -23,30 +33,30 @@ function TodayDiagram({ b }: { b: boolean }) {
 
       {/* OCM */}
       <rect x="170" y="55" width="200" height="55" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="185" y="75" fontSize="10" fill="#C62828" fontWeight="bold">🖥️ {b ? 'OCM (Your Dashboard)' : 'OCM Console'}</text>
+      <text x="185" y="75" fontSize="10" fill="#C62828" fontWeight="bold">🖥️ {b ? 'OCM (Your Dashboard)' : <>{tip('OCM')} Console</>}</text>
       <text x="185" y="90" fontSize="7" fill="#777" fontFamily="monospace">console.redhat.com/openshift</text>
       <text x="185" y="100" fontSize="7" fill="#777">{b ? 'Manages ALL clusters worldwide' : 'Single global endpoint'}</text>
 
       {/* Clusters Service API */}
       <rect x="400" y="55" width="230" height="55" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="415" y="75" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⚙️ Cluster Management API' : '⚙️ clusters_mgmt API'}</text>
+      <text x="415" y="75" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⚙️ Cluster Management API' : <>{tip('clusters_mgmt')} API</>}</text>
       <text x="415" y="90" fontSize="7" fill="#777" fontFamily="monospace">api.openshift.com</text>
       <text x="415" y="100" fontSize="7" fill="#777">{b ? 'One API for everything' : 'V1 — single regional instance'}</text>
 
       {/* Auth */}
       <rect x="170" y="120" width="140" height="45" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="185" y="140" fontSize="9" fill="#C62828" fontWeight="bold">{b ? '🔑 Red Hat Login' : '🔑 RH SSO (Bearer)'}</text>
-      <text x="185" y="153" fontSize="7" fill="#777">{b ? 'Username + password' : 'OAuth2, offline_access token'}</text>
+      <text x="185" y="140" fontSize="9" fill="#C62828" fontWeight="bold">{b ? '🔑 Red Hat Login' : <>🔑 RH {tip('SSO')} (Bearer)</>}</text>
+      <text x="185" y="153" fontSize="7" fill="#777">{b ? 'Username + password' : <>{tip('OAuth')}2, offline_access token</>}</text>
 
       {/* SRE */}
       <rect x="330" y="120" width="120" height="45" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="345" y="140" fontSize="9" fill="#C62828" fontWeight="bold">👷 {b ? 'SRE Team' : 'SRE'}</text>
+      <text x="345" y="140" fontSize="9" fill="#C62828" fontWeight="bold">👷 {b ? 'SRE Team' : tip('SRE')}</text>
       <text x="345" y="153" fontSize="7" fill="#777">{b ? 'Monitors 24/7' : 'Backplane, PagerDuty'}</text>
 
       {/* RBAC */}
       <rect x="470" y="120" width="160" height="45" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="485" y="140" fontSize="9" fill="#C62828" fontWeight="bold">{b ? '👥 Permissions' : '👥 RBAC (AMS)'}</text>
-      <text x="485" y="153" fontSize="7" fill="#777">{b ? 'Org Admin, roles' : 'Role assignments via AMS'}</text>
+      <text x="485" y="140" fontSize="9" fill="#C62828" fontWeight="bold">{b ? '👥 Permissions' : <>{tip('RBAC')} ({tip('AMS')})</>}</text>
+      <text x="485" y="153" fontSize="7" fill="#777">{b ? 'Org Admin, roles' : <>Role assignments via {tip('AMS')}</>}</text>
 
       {/* Lines from Red Hat to clusters worldwide */}
       <line x1="300" y1="180" x2="120" y2="260" stroke="#999" strokeWidth="1.5" strokeDasharray="5 3" />
@@ -85,6 +95,14 @@ function TodayDiagram({ b }: { b: boolean }) {
 }
 
 function HyperfleetDiagram({ b }: { b: boolean }) {
+  const { show, hide } = useGlossary();
+  const tip = (term: string, label?: string) => (
+    <tspan fill="#78909C" className="svg-glossary-term"
+      onMouseEnter={() => show(term, GLOSSARY[term])}
+      onMouseLeave={hide}
+    >{label || term}</tspan>
+  );
+
   return (
     <svg viewBox="0 0 800 430" className="rosa-svg">
       {/* Three regional Platform API zones */}
@@ -102,23 +120,23 @@ function HyperfleetDiagram({ b }: { b: boolean }) {
           <rect x={r.x + 12} y="42" width="226" height="48" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
           <text x={r.x + 22} y="60" fontSize="9" fill="#C62828" fontWeight="bold">{b ? '⚙️ Regional API' : '⚙️ Platform API'}</text>
           <text x={r.x + 22} y="78" fontSize="7" fill="#777">
-            {b ? 'Manages clusters in THIS region only' : 'SigV4 auth, Cedar authz, regional scope'}
+            {b ? 'Manages clusters in THIS region only' : <>{tip('SigV4')} auth, {tip('Cedar')} authz, regional scope</>}
           </text>
 
           {/* EKS MC */}
           <rect x={r.x + 12} y="98" width="110" height="45" rx="6" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.2" />
-          <text x={r.x + 22} y="115" fontSize="8" fill="#B71C1C" fontWeight="bold">{b ? '🧠 Brains (EKS)' : '🧠 EKS MC'}</text>
-          <text x={r.x + 22} y="132" fontSize="7" fill="#777">{b ? 'Runs control planes' : 'HyperShift + CPs'}</text>
+          <text x={r.x + 22} y="115" fontSize="8" fill="#B71C1C" fontWeight="bold">{b ? '🧠 Brains (EKS)' : <>{tip('EKS')} MC</>}</text>
+          <text x={r.x + 22} y="132" fontSize="7" fill="#777">{b ? 'Runs control planes' : <>{tip('HyperShift')} + CPs</>}</text>
 
           {/* SRE */}
           <rect x={r.x + 130} y="98" width="108" height="45" rx="6" fill="#fff" stroke="#EF5350" strokeWidth="1.2" />
-          <text x={r.x + 140} y="115" fontSize="8" fill="#C62828" fontWeight="bold">👷 {b ? 'SRE' : 'SRE'}</text>
-          <text x={r.x + 140} y="132" fontSize="7" fill="#777">{b ? 'Regional ops team' : 'RHOBS, alerts'}</text>
+          <text x={r.x + 140} y="115" fontSize="8" fill="#C62828" fontWeight="bold">👷 {tip('SRE')}</text>
+          <text x={r.x + 140} y="132" fontSize="7" fill="#777">{b ? 'Regional ops team' : <>{tip('RHOBS')}, alerts</>}</text>
 
           {/* Auth */}
           <rect x={r.x + 12} y="152" width="110" height="40" rx="6" fill="#E8EAF6" stroke="#7986CB" strokeWidth="1.2" />
-          <text x={r.x + 22} y="168" fontSize="8" fill="#283593" fontWeight="bold">{b ? '🔑 AWS Login' : '🔑 SigV4 + Cedar'}</text>
-          <text x={r.x + 22} y="182" fontSize="7" fill="#777">{b ? 'Your AWS credentials' : 'IAM auth, policy eval'}</text>
+          <text x={r.x + 22} y="168" fontSize="8" fill="#283593" fontWeight="bold">{b ? '🔑 AWS Login' : <>{tip('SigV4')} + {tip('Cedar')}</>}</text>
+          <text x={r.x + 22} y="182" fontSize="7" fill="#777">{b ? 'Your AWS credentials' : <>{tip('IAM')} auth, policy eval</>}</text>
 
           {/* Data badge */}
           <rect x={r.x + 130} y="152" width="108" height="40" rx="6" fill="#E8F5E9" stroke="#66BB6A" strokeWidth="1.2" />
@@ -137,7 +155,7 @@ function HyperfleetDiagram({ b }: { b: boolean }) {
 
           {/* Workers */}
           <rect x={r.x + 12} y="288" width="140" height="72" rx="6" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1" strokeDasharray="4 2" />
-          <text x={r.x + 20} y="303" fontSize="8" fill="#6A1B9A" fontWeight="bold">{b ? 'Node Pool' : 'NodePool → ASG'}</text>
+          <text x={r.x + 20} y="303" fontSize="8" fill="#6A1B9A" fontWeight="bold">{b ? <>{tip('Node Pool')}</> : <>{tip('Node Pool', 'NodePool')} → {tip('ASG')}</>}</text>
           {[0, 1].map(j => (
             <g key={j}>
               <rect x={r.x + 20 + j * 65} y={310} width="58" height="20" rx="3" fill="#EDE7F6" stroke="#CE93D8" strokeWidth="0.8" />
@@ -150,7 +168,7 @@ function HyperfleetDiagram({ b }: { b: boolean }) {
           {/* AWS infra */}
           <rect x={r.x + 162} y="288" width="76" height="72" rx="6" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1" />
           <text x={r.x + 170} y="303" fontSize="7" fill="#E65100" fontWeight="bold">{b ? 'AWS' : 'Infra'}</text>
-          {[b ? 'VPC' : 'VPC', b ? 'Storage' : 'EBS', b ? 'DNS' : 'R53', b ? 'Roles' : 'STS'].map((s, j) => (
+          {(b ? ['VPC', 'Storage', 'DNS', 'Roles'] : [tip('VPC'), tip('EBS'), 'R53', tip('STS')]).map((s, j) => (
             <g key={j}>
               <rect x={r.x + 168} y={308 + j * 13} width="64" height="11" rx="2" fill="#fff" stroke="#FFE0B2" strokeWidth="0.5" />
               <text x={r.x + 174} y={316 + j * 13} fontSize="5.5" fill="#BF360C">{s}</text>
@@ -172,15 +190,17 @@ function HyperfleetDiagram({ b }: { b: boolean }) {
 }
 
 function AuthComparison({ b }: { b: boolean }) {
+  const g = createGlossarizer();
+
   return (
     <div className="rosa-bridge">
       <h4>{b ? '🔑 How You Log In — Today vs HyperFleet' : '🔑 Authentication Model Comparison'}</h4>
       <div className="rosa-bridge-content">
         <div className="rosa-bridge-side">
-          <strong style={{ color: '#CC0000' }}>{b ? 'Today' : 'clusters_mgmt (V1)'}</strong>
+          <strong style={{ color: '#CC0000' }}>{b ? 'Today' : <>{g('clusters_mgmt')} (V1)</>}</strong>
           <p>{b
             ? '• You log in with your Red Hat username & password\n• Your browser gets a "session pass" (token)\n• That pass is sent with every request\n• Permissions: your Red Hat org role (like "Org Admin")'
-            : '• Red Hat SSO (consoledot chrome auth)\n• Bearer token in Authorization header\n• RBAC roles assigned in AMS\n• Org Admin, Cluster Editor, etc.'}
+            : <>{g('• Red Hat SSO (consoledot chrome auth)\n• Bearer token in Authorization header\n• RBAC roles assigned in AMS\n• Org Admin, Cluster Editor, etc.')}</>}
           </p>
         </div>
         <div className="rosa-bridge-arrow">
@@ -191,7 +211,7 @@ function AuthComparison({ b }: { b: boolean }) {
           <strong style={{ color: '#283593' }}>{b ? 'HyperFleet' : 'Platform API (V2)'}</strong>
           <p>{b
             ? '• You log in with your AWS credentials (like the AWS Console)\n• Your AWS account is linked to your Red Hat org (one-time setup)\n• Permissions: Cedar "rules" you write — much more flexible\n• Example: "This user can create clusters, but only in Frankfurt"'
-            : '• AWS IAM SigV4 request signing\n• Principal linked to RH user via rosactl link account\n• Cedar policies: permit/forbid with resource labels, context.region\n• Action groups: ReadOnly, ClusterAdmin, NodePoolAdmin, PolicyAdmin'}
+            : <>{g('• AWS IAM SigV4 request signing\n• Principal linked to RH user via rosactl link account\n• Cedar policies: permit/forbid with resource labels, context.region\n• Action groups: ReadOnly, ClusterAdmin, NodePoolAdmin, PolicyAdmin')}</>}
           </p>
         </div>
       </div>
@@ -199,7 +219,7 @@ function AuthComparison({ b }: { b: boolean }) {
         <p><strong>{b ? 'Wait — what about the OCM website?' : 'Browser Authentication'}</strong></p>
         <p>{b
           ? 'Today, your browser talks to the OCM API using your Red Hat login — simple. With HyperFleet, the API expects AWS-style credentials, but browsers can\'t easily do that. So a "translator" is being built — you\'ll still log in with your Red Hat account on the website, and a backend service converts it into something the new API understands. This is being designed now (not built yet).'
-          : 'SigV4 signing requires AWS credentials not available in browser JavaScript. A POST /token exchange endpoint is being designed to convert RH SSO sessions into V2-compatible short-lived tokens, enabling the OCM Console to call the Platform API without exposing AWS credentials client-side.'}
+          : <>{g('SigV4')} signing requires {g('AWS')} credentials not available in browser JavaScript. A POST /token exchange endpoint is being designed to convert RH {g('SSO')} sessions into V2-compatible short-lived tokens, enabling the {g('OCM')} Console to call the Platform {g('API')} without exposing {g('AWS')} credentials client-side. (A {g('BFF')} proxy is one candidate approach.)</>}
         </p>
       </div>
     </div>
@@ -207,14 +227,16 @@ function AuthComparison({ b }: { b: boolean }) {
 }
 
 function CedarPolicies({ b }: { b: boolean }) {
+  const g = createGlossarizer();
+
   return (
     <div className="rosa-bridge">
-      <h4>{b ? '📋 Cedar Policies — A New Way to Control Access' : '📋 Cedar Authorization Model'}</h4>
+      <h4>{b ? '📋 Cedar Policies — A New Way to Control Access' : <>📋 {g('Cedar')} Authorization Model</>}</h4>
       <div className="rosa-bridge-content" style={{ flexDirection: 'column', gap: '8px' }}>
         <div className="rosa-variant-note" style={{ borderLeft: '4px solid #E65100' }}>
           <p>{b
             ? 'Instead of assigning roles like "Cluster Admin", you write rules. These rules can be very specific — like "allow this person to create clusters, but only in the Frankfurt region, and only with the \'development\' label".'
-            : 'Cedar uses default-deny, permit-unless-forbid semantics. Policies are global, attachments can be global or regional. Resources have parent-child hierarchy (Cluster → NodePool, AccessEntry). Action groups: ReadOnly, ClusterAdmin, NodePoolAdmin, AccessEntryAdmin, LabelAdmin, PolicyAdmin.'}
+            : <>{g('Cedar')} uses default-deny, permit-unless-forbid semantics. Policies are global, attachments can be global or regional. Resources have parent-child hierarchy (Cluster → {g('Node Pool', 'NodePool')}, AccessEntry). Action groups: ReadOnly, ClusterAdmin, NodePoolAdmin, AccessEntryAdmin, LabelAdmin, PolicyAdmin.</>}
           </p>
         </div>
         {b ? (
@@ -246,6 +268,8 @@ function CedarPolicies({ b }: { b: boolean }) {
 }
 
 function RegionalExample({ b }: { b: boolean }) {
+  const g = createGlossarizer();
+
   return (
     <div className="rosa-bridge">
       <h4>{b ? '🌍 Example: Aiko in Tokyo Creates a Cluster' : '🌍 Regional Flow Example'}</h4>
@@ -257,7 +281,7 @@ function RegionalExample({ b }: { b: boolean }) {
           <div className="rosa-variant-note" style={{ borderLeft: '4px solid #CC0000' }}>
             <p>{b
               ? '1. Aiko in Tokyo requests a cluster in ap-northeast-1\n2. Request travels to Virginia, USA (us-east-1)\n3. OCM stores cluster metadata in Virginia\n4. Control plane managed from Virginia\n5. ⚡ ~200ms latency on every API call\n6. ⚠️ Cluster metadata stored outside Japan'
-              : '1. POST api.openshift.com/clusters (us-east-1)\n2. Cluster metadata persisted in us-east-1\n3. HyperShift reconciles on us-east-1 MC\n4. Cross-region latency for all API operations\n5. Data residency concerns for JP compliance'}
+              : <>{g('1. POST api.openshift.com/clusters (us-east-1)\n2. Cluster metadata persisted in us-east-1\n3. HyperShift reconciles on us-east-1 MC\n4. Cross-region latency for all API operations\n5. Data residency concerns for JP compliance')}</>}
             </p>
           </div>
         </div>
@@ -268,7 +292,7 @@ function RegionalExample({ b }: { b: boolean }) {
           <div className="rosa-variant-note" style={{ borderLeft: '4px solid #2E7D32' }}>
             <p>{b
               ? '1. Aiko requests a cluster in ap-northeast-1\n2. Request goes to the Tokyo Platform API\n3. Metadata stays in Tokyo\n4. Control plane runs on Tokyo EKS MC\n5. ⚡ Low latency — everything is local\n6. ✅ Data never leaves Japan'
-              : '1. SigV4-signed POST to regional API Gateway (ap-northeast-1)\n2. Platform API stores in regional DynamoDB\n3. Placement CRD assigns to local EKS MC\n4. HyperShift reconciles HostedCluster on local MC\n5. All metadata in-region — data sovereignty compliant'}
+              : <>{g('1. SigV4-signed POST to regional API Gateway (ap-northeast-1)\n2. Platform API stores in regional DynamoDB\n3. Placement CRD assigns to local EKS MC\n4. HyperShift reconciles HostedCluster on local MC\n5. All metadata in-region — data sovereignty compliant')}</>}
             </p>
           </div>
         </div>
@@ -278,6 +302,8 @@ function RegionalExample({ b }: { b: boolean }) {
 }
 
 function OcmuiImpact({ b }: { b: boolean }) {
+  const g = createGlossarizer();
+
   return (
     <div className="rosa-bridge">
       <h4>{b ? '🖥️ Possible Changes to the OCM Website' : '🖥️ Potential OCMUI Impact Areas (pending UX design)'}</h4>
@@ -285,32 +311,32 @@ function OcmuiImpact({ b }: { b: boolean }) {
         {[
           {
             title: b ? '🌐 Region Picker' : '🌐 Region Selector',
-            desc: b ? 'A new dropdown to choose which region you\'re looking at — or "All Regions" to see everything' : 'Masthead or toolbar region scope. "All Regions" parallel fetch vs single-region view. Extends existing MultiRegion components.',
+            desc: b ? 'A new dropdown to choose which region you\'re looking at — or "All Regions" to see everything' : g('Masthead or toolbar region scope. "All Regions" parallel fetch vs single-region view. Extends existing MultiRegion components.'),
             color: '#1565C0',
           },
           {
             title: b ? '📋 Cluster List' : '📋 Cluster List Coexistence',
-            desc: b ? 'Old and new clusters will appear together. New ones will show which region they\'re in more prominently' : 'V1 + V2 clusters in same list during migration. Region column, platform version badge. Different available actions per API version.',
+            desc: b ? 'Old and new clusters will appear together. New ones will show which region they\'re in more prominently' : g('V1 + V2 clusters in same list during migration. Region column, platform version badge. Different available actions per API version.'),
             color: '#6A1B9A',
           },
           {
             title: b ? '🔑 Login Changes' : '🔑 Auth Integration',
-            desc: b ? 'You\'ll still use your Red Hat login on the website — a backend "translator" handles the new API credentials' : 'Token exchange or BFF proxy. Browser session → V2-compatible credentials. Transparent to end user.',
+            desc: b ? 'You\'ll still use your Red Hat login on the website — a backend "translator" handles the new API credentials' : g('Token exchange or BFF proxy. Browser session → V2-compatible credentials. Transparent to end user.'),
             color: '#283593',
           },
           {
             title: b ? '➕ ROSA HCP Wizard Updates' : '➕ ROSA HCP Wizard (V2 backend)',
-            desc: b ? 'The existing ROSA HCP wizard would talk to the new regional API instead. New prerequisite: link your AWS account first. Same cluster settings (region, VPC, networking, etc.).' : 'Same HostedClusterSpec fields (release, platform, networking, FIPS). V2 backend: account linking prereq, OidcConfig as separate CRD, region = API region. Not a separate wizard — adapted existing HCP flow.',
+            desc: b ? 'The existing ROSA HCP wizard would talk to the new regional API instead. New prerequisite: link your AWS account first. Same cluster settings (region, VPC, networking, etc.).' : g('Same HostedClusterSpec fields (release, platform, networking, FIPS). V2 backend: account linking prereq, OidcConfig as separate CRD, region = API region. Not a separate wizard — adapted existing HCP flow.'),
             color: '#E65100',
           },
           {
             title: b ? '📄 Cluster Details' : '📄 Cluster Details (V2)',
-            desc: b ? 'New status info like "which management cluster runs your control plane" and new permission controls' : 'New phases: WaitingForPlacement, Provisioning. Placement info (MC assignment). Cedar-based access control. NodePool (not MachinePool).',
+            desc: b ? 'New status info like "which management cluster runs your control plane" and new permission controls' : g('New phases: WaitingForPlacement, Provisioning. Placement info (MC assignment). Cedar-based access control. NodePool (not MachinePool).'),
             color: '#00695C',
           },
           {
             title: b ? '🔄 Migration' : '🔄 V1→V2 Migration',
-            desc: b ? 'A future wizard to move existing ROSA HCP clusters to the new regional system. Not designed yet.' : 'Customer migration flow. V1 to V2 API routing during transition. AWS Marketplace re-integration.',
+            desc: b ? 'A future wizard to move existing ROSA HCP clusters to the new regional system. Not designed yet.' : g('Customer migration flow. V1 to V2 API routing during transition. AWS Marketplace re-integration.'),
             color: '#C62828',
           },
         ].map((item, i) => (
@@ -325,6 +351,8 @@ function OcmuiImpact({ b }: { b: boolean }) {
 }
 
 function ApiResources({ b }: { b: boolean }) {
+  const g = createGlossarizer();
+
   return (
     <div className="rosa-bridge">
       <h4>{b ? '🗂️ What Can You Manage? (CLI: rosactl)' : '🗂️ V2 API Resources & rosactl Commands'}</h4>
@@ -341,11 +369,11 @@ function ApiResources({ b }: { b: boolean }) {
           {[
             { res: 'Cluster', desc: b ? 'Your OpenShift cluster' : 'ROSA HCP cluster lifecycle', cli: 'cluster create/list/delete', v1: 'Cluster (clusters_mgmt)' },
             { res: 'NodePool', desc: b ? 'Groups of worker machines' : 'Worker node groups per cluster', cli: 'nodepool create/list/delete', v1: 'NodePool (HCP)' },
-            { res: 'OidcConfig', desc: b ? 'Identity setup for pods' : 'OIDC issuer configuration', cli: 'oidc create/list/delete', v1: 'OidcConfig' },
+            { res: 'OidcConfig', desc: b ? 'Identity setup for pods' : g('OIDC issuer configuration'), cli: 'oidc create/list/delete', v1: 'OidcConfig' },
             { res: b ? 'Account Link' : 'Account', desc: b ? 'Connect your AWS account to Red Hat' : 'AWS account ↔ RH org mapping', cli: 'link account', v1: b ? 'Not needed today' : 'N/A (implicit)' },
-            { res: b ? 'Cedar Policy' : 'Policy', desc: b ? 'Permission rules' : 'Cedar permit/forbid policies', cli: 'policy create/attach', v1: b ? 'RBAC roles' : 'AMS RBAC roles' },
-            { res: b ? 'VPC Setup' : 'VPC', desc: b ? 'Network setup' : 'VPC + subnets for cluster', cli: 'vpc create/list/delete', v1: b ? 'Manual / wizard' : 'AWS SDK in wizard' },
-            { res: b ? 'IAM Setup' : 'IAM', desc: b ? 'AWS permission roles' : 'STS roles for cluster', cli: 'iam create/list/delete', v1: b ? 'Roles screen in wizard' : 'Manual / ocm-roles' },
+            { res: b ? 'Cedar Policy' : 'Policy', desc: b ? 'Permission rules' : g('Cedar permit/forbid policies'), cli: 'policy create/attach', v1: b ? 'RBAC roles' : g('AMS RBAC roles') },
+            { res: b ? 'VPC Setup' : 'VPC', desc: b ? 'Network setup' : g('VPC + subnets for cluster'), cli: 'vpc create/list/delete', v1: b ? 'Manual / wizard' : g('AWS SDK in wizard') },
+            { res: b ? 'IAM Setup' : 'IAM', desc: b ? 'AWS permission roles' : g('STS roles for cluster'), cli: 'iam create/list/delete', v1: b ? 'Roles screen in wizard' : 'Manual / ocm-roles' },
           ].map((row, i) => (
             <tr key={i} style={{ borderBottom: '1px solid #eee' }}>
               <td style={{ padding: '5px 6px', fontWeight: 'bold', color: '#333' }}>{row.res}</td>
@@ -364,6 +392,7 @@ function ApiResources({ b }: { b: boolean }) {
 export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
   const [view, setView] = useState<ArchView>('today');
   const b = mode === 'beginner';
+  const g = createGlossarizer();
 
   return (
     <>
@@ -385,7 +414,7 @@ export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
         <p><strong>⚠️ {b ? 'Note' : 'Disclaimer'}</strong></p>
         <p>{b
           ? 'HyperFleet is under active development and not yet available to customers. The information below is based on publicly available open-source code. Features and designs may change before release.'
-          : 'Based on publicly available source code (openshift-online/rosa-hyperfleet-*). v1alpha1 — under active development, not GA. Architecture, API surface, and auth model are subject to change.'}
+          : <>{g('Based on publicly available source code (openshift-online/rosa-hyperfleet-*). v1alpha1 — under active development, not GA. Architecture, API surface, and auth model are subject to change.')}</>}
         </p>
       </div>
 
@@ -393,7 +422,7 @@ export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
         <p><strong>{b ? 'What is HyperFleet?' : 'HyperFleet Overview'}</strong></p>
         <p>{b
           ? 'Today, all ROSA cluster management runs from a single location in the USA (Virginia). HyperFleet changes this — Red Hat will run management services in every major AWS region. This means your cluster data stays in your country, your API calls are faster, and if one region has problems, others keep running.'
-          : 'ROSA Regional Platform (RRP) distributes ROSA HCP management from centralized us-east-1 to per-region EKS Management Clusters. New Platform API (v1alpha1) with AWS IAM SigV4 auth and Cedar-based authorization replaces clusters_mgmt for regional clusters. ROSA HCP only, AWS only.'}
+          : <>{g('ROSA Regional Platform (RRP) distributes ROSA HCP management from centralized us-east-1 to per-region EKS Management Clusters. New Platform API (v1alpha1) with AWS IAM SigV4 auth and Cedar-based authorization replaces clusters_mgmt for regional clusters. ROSA HCP only, AWS only.')}</>}
         </p>
       </div>
 

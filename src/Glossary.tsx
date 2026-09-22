@@ -110,6 +110,17 @@ export const GLOSSARY: Record<string, string> = {
   PKI: 'Public Key Infrastructure — the system of certificates and keys used to encrypt network traffic and verify identities.',
   CCM: 'Cloud Controller Manager — the Kubernetes component that integrates with a cloud provider\'s API for load balancers, routes, and storage.',
   NTP: 'Network Time Protocol — a protocol that keeps all servers\' clocks in sync, critical for certificate validation and etcd consistency.',
+  SSO: 'Single Sign-On — lets you log in once and access multiple services without logging in again.',
+  AMS: 'Account Management Service — Red Hat\'s internal service that manages org subscriptions, roles, and access assignments.',
+  SigV4: 'AWS Signature Version 4 — the signing method AWS uses to authenticate API requests without sending credentials in plaintext.',
+  Cedar: 'An open-source policy language from AWS used in HyperFleet to write fine-grained permit/forbid access rules for ROSA resources.',
+  EKS: 'Elastic Kubernetes Service — AWS\'s managed Kubernetes service, used by HyperFleet as the regional Management Cluster platform.',
+  DynamoDB: 'A fully managed NoSQL database from AWS, used by the regional Platform API to store cluster metadata within the region.',
+  CRD: 'Custom Resource Definition — a Kubernetes extension that lets you define new resource types beyond the built-in ones.',
+  RHOBS: 'Red Hat Observability Service — Red Hat\'s internal platform for collecting metrics and alerts across managed services.',
+  FIPS: 'Federal Information Processing Standards — US government cryptography standards required by some regulated industries.',
+  'clusters_mgmt': 'The V1 OCM API (api.openshift.com) that manages cluster lifecycle today — the predecessor to the regional Platform API.',
+  BFF: 'Backend For Frontend — a server-side proxy that translates browser-friendly requests into the format required by a backend API.',
 };
 
 /** Inline glossary term — shows definition in the footer bar on hover */
