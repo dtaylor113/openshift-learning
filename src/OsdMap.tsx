@@ -5,6 +5,8 @@ import type { ExplainMode } from './types';
 import { ApiCallChain } from './ApiCallChain';
 import { ModeToggle } from './ModeToggle';
 import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
+import { useGlossary } from './GlossaryContext';
+import { GLOSSARY, createGlossarizer } from './Glossary';
 
 type InfraModel = 'ccs' | 'rh-account';
 type CloudProvider = 'aws' | 'gcp';
@@ -21,6 +23,14 @@ interface DiagramProps {
 }
 
 function OsdDiagram({ b, cloud, infraModel }: DiagramProps) {
+  const { show, hide } = useGlossary();
+  const tip = (term: string, label?: string) => (
+    <tspan fill="#78909C" className="svg-glossary-term"
+      onMouseEnter={() => show(term, GLOSSARY[term])}
+      onMouseLeave={hide}
+    >{label || term}</tspan>
+  );
+
   const isRh = infraModel === 'rh-account';
   const isAws = cloud === 'aws';
 
@@ -86,8 +96,8 @@ function OsdDiagram({ b, cloud, infraModel }: DiagramProps) {
       <rect x="10" y="10" width="780" height={redZoneHeight} rx="14" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
       <text x="30" y="38" fontSize="14" fill="#CC0000" fontWeight="bold">
         🔴 {isRh
-          ? (b ? `Red Hat Manages EVERYTHING (including the ${cloudName} account!)` : `Red Hat (OCM + SRE + ${cloudName} Account)`)
-          : (b ? 'Red Hat Manages (dedicated SRE team for YOUR cluster)' : 'Red Hat (OCM + Dedicated SRE)')
+          ? (b ? `Red Hat Manages EVERYTHING (including the ${cloudName} account!)` : <>Red Hat ({tip('OCM')} + {tip('SRE')} + {cloudName} Account)</>)
+          : (b ? 'Red Hat Manages (dedicated SRE team for YOUR cluster)' : <>Red Hat ({tip('OCM')} + Dedicated {tip('SRE')})</>)
         }
       </text>
       {isRh && (
@@ -98,7 +108,7 @@ function OsdDiagram({ b, cloud, infraModel }: DiagramProps) {
 
       {/* OCM Console */}
       <rect x="30" y={isRh ? 65 : 50} width="210" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
-      <text x="45" y={isRh ? 83 : 68} fontSize="10" fill="#C62828" fontWeight="bold">🖥️ {b ? 'Your Dashboard' : 'OCM Console'}</text>
+      <text x="45" y={isRh ? 83 : 68} fontSize="10" fill="#C62828" fontWeight="bold">🖥️ {b ? 'Your Dashboard' : <>{tip('OCM')} Console</>}</text>
       <text x="45" y={isRh ? 96 : 81} fontSize="7" fill="#777" fontFamily="monospace">console.redhat.com/openshift/</text>
       <text x="45" y={isRh ? 108 : 93} fontSize="7" fill="#777" fontFamily="monospace">details/&lt;cluster_id&gt;</text>
       <rect x="50" y={isRh ? 116 : 101} width="100" height="18" rx="9" fill="#0066CC" />
@@ -107,7 +117,7 @@ function OsdDiagram({ b, cloud, infraModel }: DiagramProps) {
       {/* SRE */}
       <rect x="260" y={isRh ? 65 : 50} width="165" height="70" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
       <text x="275" y={isRh ? 83 : 68} fontSize="10" fill="#C62828" fontWeight="bold">
-        {b ? '👷 Dedicated SRE Team' : '👷 SRE (Dedicated)'}
+        {b ? '👷 Dedicated SRE Team' : <>👷 {tip('SRE')} (Dedicated)</>}
       </text>
       <text x="275" y={isRh ? 97 : 82} fontSize="8" fill="#777">{b ? 'A team assigned to YOUR cluster' : 'Backplane, PagerDuty, 24/7'}</text>
       <text x="275" y={isRh ? 109 : 94} fontSize="8" fill="#777">{b ? 'Monitoring & fixing 24/7' : ''}</text>
@@ -167,22 +177,21 @@ function OsdDiagram({ b, cloud, infraModel }: DiagramProps) {
           : `🧠 Control Plane (${cpInstanceType}, SRE-managed)`
         }
       </text>
-      {['Front Door|API Server', 'Memory|etcd', 'Scheduler|Scheduler', 'Auto-Fixer|Controllers'].map((pair, i) => {
-        const [begLabel, expLabel] = pair.split('|');
+      {(b ? ['Front Door', 'Memory', 'Scheduler', 'Auto-Fixer'] : [<>{'API Server'}</>, tip('etcd'), 'Scheduler', 'Controllers']).map((label, i) => {
         const widths = [65, 50, 65, 85];
         const xOffset = [0, 73, 131, 204];
         const baseX = isRh ? 85 : 65;
         return (
           <g key={i}>
             <rect x={baseX + xOffset[i]} y={cloudZoneY + 95} width={widths[i]} height={isRh ? 22 : 28} rx="4" fill="#fff" stroke="#EF9A9A" strokeWidth="1" />
-            <text x={baseX + xOffset[i] + 8} y={cloudZoneY + (isRh ? 110 : 113)} fontSize="7" fill="#C62828">{b ? begLabel : expLabel}</text>
+            <text x={baseX + xOffset[i] + 8} y={cloudZoneY + (isRh ? 110 : 113)} fontSize="7" fill="#C62828">{label}</text>
           </g>
         );
       })}
 
       {/* OCP Console */}
       <rect x={isRh ? 400 : 390} y={cloudZoneY + (isRh ? 60 : 55)} width={isRh ? 140 : 190} height={isRh ? 70 : 85} rx="10" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="2" />
-      <text x={isRh ? 412 : 405} y={cloudZoneY + (isRh ? 80 : 78)} fontSize="10" fill="#00695C" fontWeight="bold">🎛️ {b ? 'Cluster Console' : 'OCP Console'}</text>
+      <text x={isRh ? 412 : 405} y={cloudZoneY + (isRh ? 80 : 78)} fontSize="10" fill="#00695C" fontWeight="bold">🎛️ {b ? 'Cluster Console' : <>{tip('OCP')} Console</>}</text>
       <text x={isRh ? 412 : 405} y={cloudZoneY + (isRh ? 96 : 94)} fontSize={isRh ? 7 : 8} fill="#00897B">console-openshift-console.apps.…</text>
       <text x={isRh ? 412 : 405} y={cloudZoneY + (isRh ? 110 : 110)} fontSize={isRh ? 7 : 8} fill="#00897B">{b ? 'See pods, deployments, logs' : 'Admin + Developer perspectives'}</text>
       {!isRh && (
@@ -209,7 +218,7 @@ function OsdDiagram({ b, cloud, infraModel }: DiagramProps) {
       {/* Worker nodes */}
       <rect x={isRh ? 70 : 50} y={cloudZoneY + (isRh ? 140 : 150)} width={isRh ? 470 : 530} height={isRh ? 120 : 130} rx="10" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1.5" strokeDasharray="5 3" />
       <text x={isRh ? 85 : 65} y={cloudZoneY + (isRh ? 160 : 170)} fontSize="9" fill="#6A1B9A" fontWeight="bold">
-        {b ? '🏗️ Machine Pool (your worker machines)' : `🏗️ Machine Pool → ${poolBackend}`}
+        {b ? <>🏗️ {tip('Machine Pool')} (your worker machines)</> : <>🏗️ {tip('Machine Pool')} → {isAws ? <>{tip('AWS')} {tip('ASG')}</> : <>{tip('GCP')} {tip('MIG')}</>}</>}
       </text>
 
       {['Worker 1', 'Worker 2', 'Worker 3'].map((w, i) => {
@@ -273,7 +282,7 @@ function OsdDiagram({ b, cloud, infraModel }: DiagramProps) {
         <g>
           <rect x={612} y={cloudZoneY + 85 + infraItems.length * 28} width={130} height={22} rx={4} fill="#FFF9C4" stroke="#F9A825" strokeWidth="1.5" />
           <text x={622} y={cloudZoneY + 100 + infraItems.length * 28} fontSize="8" fill="#E65100" fontWeight="bold">
-            {b ? '🔑 Access Key + Secret' : '🔑 IAM User (static keys)'}
+            {b ? '🔑 Access Key + Secret' : <>🔑 {tip('IAM')} User (static keys)</>}
           </text>
         </g>
       )}
@@ -297,6 +306,7 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
   const [infraModel, setInfraModel] = useState<InfraModel>('ccs');
   const [cloud, setCloud] = useState<CloudProvider>('aws');
   const b = mode === 'beginner';
+  const g = createGlossarizer();
 
   return (
     <div className="rosa-map">
@@ -322,7 +332,7 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
         <p><strong>🛡️ {b ? 'What does "Dedicated" mean?' : 'OSD "Dedicated" Model'}</strong></p>
         <p>{b
           ? '"Dedicated" means Red Hat assigns a dedicated SRE (Site Reliability Engineering) team to manage and operate your cluster around the clock. They handle upgrades, monitoring, patching, and incident response — so your team can focus entirely on building and deploying apps. It\'s like having a dedicated building superintendent for your apartment building.'
-          : 'OSD provides a dedicated SRE team per customer cluster. The SRE team manages the control plane, cluster operators, upgrades, and incident response via backplane access. Cluster-specific PagerDuty escalation. SLA-backed uptime guarantees. Available on AWS and GCP, CCS or Red Hat cloud account models.'}
+          : <>{g('OSD provides a dedicated SRE team per customer cluster. The SRE team manages the Control Plane, cluster operators, upgrades, and incident response via backplane access. Cluster-specific PagerDuty escalation. SLA-backed uptime guarantees. Available on AWS and GCP, CCS or Red Hat cloud account models.')}</>}
         </p>
       </div>
 
@@ -352,10 +362,10 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
         <p>{infraModel === 'ccs'
           ? (b
             ? `📌 CCS Model: The cluster runs in YOUR ${cloud === 'aws' ? 'AWS account' : 'Google Cloud project'}. You pay ${cloud === 'aws' ? 'AWS' : 'Google'} directly for compute, storage, and networking. Red Hat manages the cluster but you own the cloud resources.`
-            : `📌 OSD ${cloud.toUpperCase()} (CCS): Cluster in customer ${cloud === 'aws' ? 'AWS account' : 'GCP project'}. Customer pays ${cloud === 'aws' ? 'AWS' : 'GCP'} directly. Customer provides ${cloud === 'aws' ? 'IAM credentials' : 'service account credentials'}. ${cloud === 'aws' ? 'm5.xlarge instances. ASG-based' : 'n1-standard instances. GCE MIG-based'} Machine Pools.`)
+            : <>{g(`📌 OSD ${cloud.toUpperCase()} (CCS): Cluster in customer ${cloud === 'aws' ? 'AWS account' : 'GCP project'}. Customer pays ${cloud === 'aws' ? 'AWS' : 'GCP'} directly. Customer provides ${cloud === 'aws' ? 'IAM credentials' : 'service account credentials'}. ${cloud === 'aws' ? 'm5.xlarge instances. ASG-based' : 'n1-standard instances. GCE MIG-based'} Machine Pools.`)}</>)
           : (b
             ? `📌 Red Hat Account Model: The cluster runs in a ${cloud === 'aws' ? 'AWS account' : 'Google Cloud project'} owned by Red Hat. You don't need your own ${cloud === 'aws' ? 'AWS' : 'GCP'} account! All infrastructure costs are bundled into your OSD subscription.`
-            : `📌 OSD ${cloud.toUpperCase()} (RH Account): Cluster in RH-owned ${cloud === 'aws' ? 'AWS account' : 'GCP project'}. Infrastructure costs bundled in OSD subscription. No customer cloud credentials needed. Simplified billing.`)
+            : <>{g(`📌 OSD ${cloud.toUpperCase()} (RH Account): Cluster in RH-owned ${cloud === 'aws' ? 'AWS account' : 'GCP project'}. Infrastructure costs bundled in OSD subscription. No customer cloud credentials needed. Simplified billing.`)}</>)
         }
         </p>
       </div>
@@ -376,18 +386,18 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
 
       {/* AWS credential model — the KEY difference */}
       <div className="rosa-variant-note" style={{ borderLeft: '4px solid #FF9900' }}>
-        <p><strong>🔑 {b ? 'The #1 difference on AWS: How Red Hat connects to your account' : 'AWS Credential Model: OSD vs ROSA'}</strong></p>
+        <p><strong>🔑 {b ? 'The #1 difference on AWS: How Red Hat connects to your account' : <>{g('AWS')} Credential Model: {g('OSD')} vs {g('ROSA')}</>}</strong></p>
         <p>{b
           ? 'OSD AWS: You give Red Hat a long-lived AWS Access Key ID and Secret Access Key. Red Hat stores these credentials and uses them to manage your cluster. If they\'re compromised, an attacker could access your AWS account until you rotate them.'
-          : 'OSD AWS: Static IAM user credentials (Access Key ID + Secret Access Key). Stored by Red Hat. Broad permissions. Must be manually rotated. Single point of credential compromise.'}
+          : <>{g('OSD')} {g('AWS')}: Static {g('IAM')} user credentials (Access Key ID + Secret Access Key). Stored by Red Hat. Broad permissions. Must be manually rotated. Single point of credential compromise.</>}
         </p>
         <p style={{ marginTop: '8px' }}>{b
           ? 'ROSA: Uses AWS STS (Security Token Service) with IAM Roles. No long-lived keys! Red Hat "assumes" specific roles with temporary tokens that expire automatically. Each component gets only the permissions it needs — much more secure.'
-          : 'ROSA: STS (Security Token Service) with scoped IAM Roles. Temporary credentials via AssumeRoleWithWebIdentity (OIDC). Per-component roles (Installer, Support, ControlPlane, Worker). Tokens expire in ≤1 hour. Least-privilege by design.'}
+          : <>{g('ROSA')}: {g('STS')} (Security Token Service) with scoped {g('IAM')} Roles. Temporary credentials via AssumeRoleWithWebIdentity ({g('OIDC')}). Per-component roles (Installer, Support, ControlPlane, Worker). Tokens expire in ≤1 hour. Least-privilege by design.</>}
         </p>
         <p style={{ marginTop: '8px', fontWeight: 600, color: '#C62828' }}>{b
           ? '⚠️ This is the main reason ROSA is recommended over OSD for new AWS clusters — it\'s significantly more secure.'
-          : '⚠️ STS is the recommended credential model. OSD\'s static keys are considered legacy. New AWS deployments should use ROSA.'}
+          : <>{g('⚠️ STS is the recommended credential model. OSD\'s static keys are considered legacy. New AWS deployments should use ROSA.')}</>}
         </p>
       </div>
 
@@ -398,7 +408,7 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
             <strong style={{ color: '#CC0000' }}>OSD on AWS</strong>
             <p>{b
               ? '• The original managed OpenShift on AWS\n• Uses long-lived AWS access keys 🔑\n• Available on AWS and GCP\n• Control plane always in your account\n• ~45 min to create\n• Still supported, but legacy'
-              : '• Legacy managed offering\n• Static IAM credentials (Access Key + Secret)\n• AWS + GCP (CCS)\n• In-cluster control plane\n• MachineSet-based pools\n• ~45 min provisioning'}
+              : <>{g('• Legacy managed offering\n• Static IAM credentials (Access Key + Secret)\n• AWS + GCP (CCS)\n• In-cluster Control Plane\n• MachineSet-based pools\n• ~45 min provisioning')}</>}
             </p>
           </div>
           <div className="rosa-bridge-arrow">
@@ -409,7 +419,7 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
             <strong style={{ color: '#CC0000' }}>ROSA</strong>
             <p>{b
               ? '• Newer, AWS-only\n• Uses temporary STS tokens 🔒 (no stored keys!)\n• Listed in AWS Marketplace (pay via AWS bill)\n• HCP: control plane in Red Hat\'s account\n• HCP: ~10 min, cheaper\n• ✅ Recommended for new clusters'
-              : '• AWS-native via STS (OIDC + AssumeRole)\n• Temporary, scoped credentials\n• AWS Marketplace integration\n• Classic (in-cluster CP) or HCP (hosted CP)\n• HCP: NodePool-based, ~10 min\n• ✅ Recommended for new AWS deployments'}
+              : <>{g('• AWS-native via STS (OIDC + AssumeRole)\n• Temporary, scoped credentials\n• AWS Marketplace integration\n• Classic (in-cluster CP) or HCP (hosted CP)\n• HCP: NodePool-based, ~10 min\n• ✅ Recommended for new AWS deployments')}</>}
             </p>
           </div>
         </div>
