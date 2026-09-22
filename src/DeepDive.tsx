@@ -1,16 +1,17 @@
 import React, { useState, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Map, HardHat, Laptop, LayoutDashboard } from 'lucide-react';
+import { Map, HardHat, Laptop, LayoutDashboard, Globe, Cloud, Server } from 'lucide-react';
 import type { ExplainMode } from './types';
 import { RosaMap } from './RosaMap';
 import { OsdMap } from './OsdMap';
 import { AssistedInstallerMap } from './AssistedInstallerMap';
 import { LocalDevMap } from './LocalDevMap';
 import { OcpConsoleMap } from './OcpConsoleMap';
+import { HyperfleetMap } from './HyperfleetMap';
 import { ZoomLink } from './ZoomLink';
 import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
 
-export type DeepDiveTab = 'overview' | 'ocp-console' | 'rosa' | 'osd' | 'assisted' | 'local';
+export type DeepDiveTab = 'overview' | 'ocp-console' | 'rosa' | 'osd' | 'hyperfleet' | 'assisted' | 'local';
 
 interface DeepDiveProps {
   mode: ExplainMode;
@@ -30,10 +31,11 @@ function BrandLogo({ srcs, alt }: { srcs: string[]; alt: string }) {
 
 const TABS: { id: DeepDiveTab; label: string; icon: ReactNode; color: string; tagline: string }[] = [
   { id: 'overview', label: 'Overview', icon: <Map size={16} />, color: '#6A1B9A', tagline: 'Compare all cluster types' },
-  { id: 'rosa', label: 'ROSA', icon: <BrandLogo srcs={['logos/redhat.svg', 'logos/aws.svg']} alt="ROSA" />, color: '#CC0000', tagline: 'Red Hat on AWS' },
-  { id: 'osd', label: 'OSD', icon: <BrandLogo srcs={['logos/redhat.svg']} alt="OSD" />, color: '#CC0000', tagline: 'OpenShift Dedicated' },
+  { id: 'rosa', label: 'ROSA', icon: <Cloud size={16} />, color: '#CC0000', tagline: 'Red Hat on AWS' },
+  { id: 'osd', label: 'OSD', icon: <Server size={16} />, color: '#CC0000', tagline: 'OpenShift Dedicated' },
   { id: 'assisted', label: 'Assisted Installer', icon: <HardHat size={16} />, color: '#E65100', tagline: 'Your hardware' },
   { id: 'local', label: 'Local Dev', icon: <Laptop size={16} />, color: '#1565C0', tagline: 'On your laptop' },
+  { id: 'hyperfleet', label: 'HyperFleet', icon: <Globe size={16} />, color: '#0D47A1', tagline: 'ROSA goes regional' },
   { id: 'ocp-console', label: 'OCP Console', icon: <LayoutDashboard size={16} />, color: '#00695C', tagline: 'Inside a cluster' },
 ];
 
@@ -269,6 +271,7 @@ export function DeepDive({ mode, onModeChange, initialTab }: DeepDiveProps) {
           {activeTab === 'ocp-console' && <OcpConsoleMap mode={mode} onModeChange={onModeChange} />}
           {activeTab === 'rosa' && <RosaMap mode={mode} onModeChange={onModeChange} />}
           {activeTab === 'osd' && <OsdMap mode={mode} onModeChange={onModeChange} />}
+          {activeTab === 'hyperfleet' && <HyperfleetMap mode={mode} onModeChange={onModeChange} />}
           {activeTab === 'assisted' && <AssistedInstallerMap mode={mode} onModeChange={onModeChange} />}
           {activeTab === 'local' && <LocalDevMap mode={mode} onModeChange={onModeChange} />}
         </motion.div>

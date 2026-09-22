@@ -65,7 +65,7 @@ export const EXPLORER_LINKS: Record<string, Link[]> = {
 export const DEEP_DIVE_LINKS: Record<string, Link[]> = {
   overview: [
     { label: 'Red Hat OpenShift products', url: 'https://www.redhat.com/en/technologies/cloud-computing/openshift', desc: 'Full product lineup' },
-    { label: 'OpenShift pricing', url: 'https://www.redhat.com/en/technologies/cloud-computing/openshift/pricing', desc: 'Compare editions' },
+    { label: 'ROSA vs OSD vs OCP — choosing the right deployment', url: 'https://docs.openshift.com/container-platform/latest/installing/overview/index.html', desc: 'Installation and deployment options overview' },
   ],
   rosa: [
     { label: 'ROSA documentation', url: 'https://docs.openshift.com/rosa/welcome/index.html', desc: 'Official ROSA docs' },
@@ -84,6 +84,12 @@ export const DEEP_DIVE_LINKS: Record<string, Link[]> = {
   local: [
     { label: 'Red Hat OpenShift Local (CRC)', url: 'https://developers.redhat.com/products/openshift-local/overview', desc: 'Download and getting started' },
     { label: 'MicroShift documentation', url: 'https://access.redhat.com/documentation/en-us/red_hat_build_of_microshift', desc: 'Edge-optimized OpenShift' },
+  ],
+  hyperfleet: [
+    { label: 'ROSA HyperFleet API (GitHub)', url: 'https://github.com/openshift-online/rosa-hyperfleet-api', desc: 'Platform API, operator, and CRD types (v1alpha1)' },
+    { label: 'Cedar Policy Language', url: 'https://docs.cedarpolicy.com/', desc: 'AWS-backed authorization language used by HyperFleet' },
+    { label: 'AWS SigV4 Signing', url: 'https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html', desc: 'How API request authentication works' },
+    { label: 'Amazon EKS', url: 'https://aws.amazon.com/eks/', desc: 'The managed Kubernetes service hosting HyperFleet management clusters' },
   ],
   'ocp-console': [
     { label: 'OCP web console overview', url: 'https://docs.openshift.com/container-platform/latest/web_console/web-console-overview.html', desc: 'Official console docs' },
