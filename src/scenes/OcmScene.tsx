@@ -1,6 +1,8 @@
 import type { SceneProps } from '../types';
 import { AppMarker } from '../AppMarker';
 import { ZoomLink } from '../ZoomLink';
+import { useGlossary } from '../GlossaryContext';
+import { GLOSSARY } from '../Glossary';
 
 function FeatureCard({ x, y, icon, title, subtitle, w }: {
   x: number; y: number; icon: string; title: string; subtitle: string; w?: number;
@@ -24,6 +26,14 @@ const CLUSTER_NAMES = [
 
 export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
   const b = mode === 'beginner';
+  const { show, hide } = useGlossary();
+
+  const tip = (term: string, label?: string) => (
+    <tspan fill="#78909C" className="svg-glossary-term"
+      onMouseEnter={() => show(term, GLOSSARY[term])}
+      onMouseLeave={hide}
+    >{label || term}</tspan>
+  );
 
   // Actual OCM cluster detail tabs (from TabsRow.helper.tsx in uhc-portal)
   const detailTabs = [
@@ -68,7 +78,6 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
         return (
           <g
             key={i}
-            className={isFirst ? 'ocp-glossary-trigger' : undefined}
             style={{ cursor: onNavigate ? 'pointer' : undefined }}
             onClick={() => onNavigate?.(5)}
           >
@@ -76,7 +85,7 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
             <circle cx={cx + 12} cy={ty - 2} r="4" fill="#66BB6A" />
             <text x={tx} y={ty} fontSize="7" fill="#333" fontWeight="bold">
               {'My '}
-              {isFirst ? <tspan fill="#78909C">OCP</tspan> : 'OCP'}
+              {isFirst ? tip('OCP') : 'OCP'}
               {` Cluster ${num}`}
             </text>
             {isFirst && (
@@ -186,13 +195,6 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
            : 'Product IDs: ROSA (MOA), ROSA HCP (MOA_HOSTEDCONTROLPLANE), OSD, OCP_ASSISTEDINSTALL'}
       </text>
 
-      {/* OCP glossary tooltip — rendered last for top z-order */}
-      <g className="ocp-glossary-tip" pointerEvents="none">
-        <rect x={51} y={68} width="160" height="24" rx="4" fill="#333" opacity="0.94" />
-        <text x={55} y={78} fontSize="6.5" fill="#fff" fontWeight="bold">OpenShift Container Platform (OCP)</text>
-        <text x={55} y={85} fontSize="5" fill="#ddd">Red Hat's enterprise Kubernetes distribution</text>
-        <text x={55} y={90} fontSize="5" fill="#ddd">with built-in security and a web console.</text>
-      </g>
     </g>
   );
 }

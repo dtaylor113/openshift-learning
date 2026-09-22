@@ -3,6 +3,7 @@ import { ZOOM_LEVELS } from './types';
 import type { ZoomLevel, ExplainMode } from './types';
 import { ModeToggle } from './ModeToggle';
 import { ExploreMore, EXPLORER_LINKS } from './ExploreMore';
+import { createGlossarizer } from './Glossary';
 
 interface InfoPanelProps {
   level: ZoomLevel;
@@ -15,6 +16,7 @@ interface InfoPanelProps {
 
 export function InfoPanel({ level, currentIndex, totalLevels, mode, onModeChange, onNavigate }: InfoPanelProps) {
   const content = level[mode];
+  const g = createGlossarizer(['OCM', 'OCP', 'CLI', 'API']);
 
   return (
     <div className="info-panel">
@@ -55,7 +57,7 @@ export function InfoPanel({ level, currentIndex, totalLevels, mode, onModeChange
             {level.label}
           </h2>
 
-          <p className="level-description">{content.description}</p>
+          <p className="level-description">{g(content.description)}</p>
 
           <ul className="level-details">
             {content.details.map((detail, i) => (
@@ -65,7 +67,7 @@ export function InfoPanel({ level, currentIndex, totalLevels, mode, onModeChange
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 + i * 0.08 }}
               >
-                {detail}
+                {g(detail)}
               </motion.li>
             ))}
           </ul>

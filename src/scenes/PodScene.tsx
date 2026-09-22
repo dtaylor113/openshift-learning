@@ -1,9 +1,19 @@
 import { AppMarker } from '../AppMarker';
 import { ZoomLink } from '../ZoomLink';
 import type { SceneProps } from '../types';
+import { useGlossary } from '../GlossaryContext';
+import { GLOSSARY } from '../Glossary';
 
 export function PodScene({ mode, onNavigate }: SceneProps) {
   const b = mode === 'beginner';
+  const { show, hide } = useGlossary();
+
+  const tip = (term: string, label?: string) => (
+    <tspan fill="#78909C" className="svg-glossary-term"
+      onMouseEnter={() => show(term, GLOSSARY[term])}
+      onMouseLeave={hide}
+    >{label || term}</tspan>
+  );
 
   return (
     <g>
@@ -11,13 +21,13 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
       <rect x="15" y="8" width="470" height="195" rx="14" fill="none" stroke="#E57373" strokeWidth="2" strokeDasharray="6 4" />
       <rect x="20" y="12" width="200" height="16" rx="4" fill="#FFEBEE" />
       <text x="28" y="24" fontSize="8" fill="#C62828" fontWeight="bold">
-        {b ? '📋 Deployment: "keep 3 copies running"' : '📋 Deployment: myapp (replicas: 3)'}
+        {b ? <>📋 {tip('Deployment')}: "keep 3 copies running"</> : <>📋 {tip('Deployment')}: myapp (replicas: 3)</>}
       </text>
 
       {/* ---- Pod (primary, detailed) ---- */}
       <rect x="25" y="35" width="220" height="160" rx="14" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="2.5" />
       <text x="42" y="55" fontSize="11" fill="#E65100" fontWeight="bold">
-        {b ? 'Pod (one or more containers)' : 'Pod: myapp-7d4f8b-x2k9p'}
+        {b ? <>Pod (one or more {tip('Container', 'containers')})</> : 'Pod: myapp-7d4f8b-x2k9p'}
       </text>
 
       {/* App container — clickable to zoom into Container level */}
@@ -47,7 +57,7 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
         {b ? '📦 Helper' : '📦 envoy (sidecar proxy)'}
       </text>
       <text x="152" y="92" fontSize="7" fill="#333">
-        {b ? 'Auto-security' : 'mTLS'}
+        {b ? 'Auto-security' : tip('mTLS')}
       </text>
       <text x="152" y="104" fontSize="6" fill="#666">
         {b ? 'Log shipping' : 'metrics + logs'}
@@ -70,7 +80,7 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
 
       {/* "identical copies" label — above copies */}
       <text x="270" y="28" fontSize="7" fill="#BF360C" fontStyle="italic">
-        {b ? '← identical copies, managed by the Deployment' : '← ReplicaSet pods (same spec, unique names)'}
+        {b ? <>← identical copies, managed by the {tip('Deployment')}</> : <>← {tip('ReplicaSet')} pods (same spec, unique names)</>}
       </text>
 
       {/* ---- Replica pods (smaller, show the "3 copies" concept) ---- */}
@@ -98,7 +108,7 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
       {/* ---- Autoscaler overlay ---- */}
       <rect x="370" y="160" width="115" height="30" rx="6" fill="#FCE4EC" stroke="#F48FB1" strokeWidth="1.5" />
       <text x="382" y="174" fontSize="7" fill="#AD1457" fontWeight="bold">
-        {b ? '📈 Auto-scaler' : 'HPA (Horiz. Pod Autoscaler)'}
+        {b ? '📈 Auto-scaler' : <>{tip('HPA')} (Horiz. Pod Autoscaler)</>}
       </text>
       <text x="382" y="185" fontSize="6" fill="#C2185B">
         {b ? 'Adds copies when busy' : 'min:2 max:10 cpu:70%'}
@@ -107,13 +117,13 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
       {/* ---- Service overlay ---- */}
       <rect x="40" y="215" width="430" height="65" rx="12" fill="#E8EAF6" stroke="#7986CB" strokeWidth="2.5" />
       <text x="65" y="236" fontSize="11" fill="#283593" fontWeight="bold">
-        {b ? 'Service: one stable address for all copies' : 'Service: myapp-svc'}
+        {b ? <>{tip('Service')}: one stable address for all copies</> : <>{tip('Service')}: myapp-svc</>}
       </text>
       <text x="65" y="252" fontSize="8" fill="#3949AB">
-        {b ? 'Users hit this → traffic spreads to any healthy copy ⚖️' : 'ClusterIP: 172.30.45.120 • Port: 80 → 8080 • selector: app=myapp'}
+        {b ? 'Users hit this → traffic spreads to any healthy copy ⚖️' : <>{tip('ClusterIP')}: 172.30.45.120 • Port: 80 → 8080 • {tip('selector')}: app=myapp</>}
       </text>
       <text x="65" y="266" fontSize="7" fill="#5C6BC0">
-        {b ? 'If one copy is down, the Service skips it automatically' : 'EndpointSlices track pod IPs; kube-proxy rewrites via iptables DNAT'}
+        {b ? 'If one copy is down, the Service skips it automatically' : <>{tip('EndpointSlices')} track pod IPs; {tip('kube-proxy')} rewrites via {tip('iptables')} {tip('DNAT')}</>}
       </text>
 
       {/* Arrows from service up to pods */}
@@ -126,7 +136,7 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
 
       {/* Internet traffic arrow into service */}
       <text x="250" y="310" fontSize="8" fill="#5C6BC0" textAnchor="middle">
-        {b ? '🌐 Internet traffic enters here' : '🌐 Ingress / Route → Service'}
+        {b ? '🌐 Internet traffic enters here' : <>🌐 {tip('Ingress')} / Route → {tip('Service')}</>}
       </text>
       <line x1="250" y1="298" x2="250" y2="282" stroke="#7986CB" strokeWidth="2" />
       <polygon points="246,285 250,278 254,285" fill="#7986CB" />
@@ -138,8 +148,8 @@ export function PodScene({ mode, onNavigate }: SceneProps) {
       </text>
       <text x="55" y="358" fontSize="7" fill="#777">
         {b
-          ? 'Deployment → creates & maintains copies  |  Service → routes traffic to them  |  Auto-scaler → adds/removes copies'
-          : 'Deployment → manages ReplicaSet → owns Pods  |  Service → selects Pods by label  |  HPA → scales replica count'}
+          ? <>{tip('Deployment')} → creates &amp; maintains copies  |  {tip('Service')} → routes traffic to them  |  Auto-scaler → adds/removes copies</>
+          : <>{tip('Deployment')} → manages {tip('ReplicaSet')} → owns Pods  |  {tip('Service')} → selects Pods by label  |  {tip('HPA')} → scales replica count</>}
       </text>
 
       <AppMarker x={88} y={85} size="small" />

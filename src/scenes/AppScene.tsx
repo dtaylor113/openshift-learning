@@ -1,9 +1,19 @@
 import { AppMarker } from '../AppMarker';
 import { AnalogyCallout } from '../AnalogyCallout';
 import type { SceneProps } from '../types';
+import { useGlossary } from '../GlossaryContext';
+import { GLOSSARY } from '../Glossary';
 
 export function AppScene({ mode }: SceneProps) {
   const b = mode === 'beginner';
+  const { show, hide } = useGlossary();
+
+  const tip = (term: string, label?: string) => (
+    <tspan fill="#78909C" className="svg-glossary-term"
+      onMouseEnter={() => show(term, GLOSSARY[term])}
+      onMouseLeave={hide}
+    >{label || term}</tspan>
+  );
 
   return (
     <g>
@@ -59,14 +69,14 @@ export function AppScene({ mode }: SceneProps) {
 
       {/* User label */}
       <text x="250" y="372" fontSize="8" fill="#FB8C00" textAnchor="middle" fontWeight="bold">
-        {b ? 'A person using your app' : 'End user (HTTP client)'}
+        {b ? 'A person using your app' : <>End user ({tip('HTTP')} client)</>}
       </text>
 
       {/* Request arrow */}
       <line x1="280" y1="315" x2="280" y2="285" stroke="#4FC3F7" strokeWidth="2" strokeDasharray="4 3" />
       <polygon points="275,288 280,278 285,288" fill="#4FC3F7" />
       <text x="290" y="302" fontSize="8" fill="#4FC3F7" fontFamily="monospace">
-        {b ? 'request' : 'HTTP GET'}
+        {b ? 'request' : <>{tip('HTTP')} GET</>}
       </text>
 
       {/* App marker */}

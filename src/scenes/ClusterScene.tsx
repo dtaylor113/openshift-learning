@@ -1,6 +1,8 @@
 import { AppMarker } from '../AppMarker';
 import { ZoomLink } from '../ZoomLink';
 import type { SceneProps } from '../types';
+import { useGlossary } from '../GlossaryContext';
+import { GLOSSARY } from '../Glossary';
 
 function MiniNode({ x, y, label, pods, highlighted, variant }: {
   x: number; y: number; label: string; pods: number; highlighted?: boolean;
@@ -28,19 +30,28 @@ function MiniNode({ x, y, label, pods, highlighted, variant }: {
 
 export function ClusterScene({ mode, onNavigate }: SceneProps) {
   const b = mode === 'beginner';
+  const { show, hide } = useGlossary();
+
+  /** Shorthand for a glossary-linked tspan with dotted underline */
+  const tip = (term: string, label?: string) => (
+    <tspan fill="#78909C" className="svg-glossary-term"
+      onMouseEnter={() => show(term, GLOSSARY[term])}
+      onMouseLeave={hide}
+    >{label || term}</tspan>
+  );
 
   return (
     <g>
       {/* Cluster boundary */}
       <rect x="15" y="10" width="485" height="395" rx="18" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="3" />
       <text x="38" y="34" fontSize="13" fill="#00695C" fontWeight="bold">
-        {b ? 'Kubernetes Cluster (all machines working together)' : 'Kubernetes Cluster (K8s)'}
+        {b ? 'Kubernetes Cluster (all machines working together)' : <>Kubernetes Cluster ({tip('K8s')})</>}
       </text>
 
       {/* ---- Control Plane section ---- */}
       <rect x="35" y="45" width="450" height="100" rx="10" fill="#B2DFDB" stroke="#26A69A" strokeWidth="2" />
       <text x="52" y="63" fontSize="10" fill="#004D40" fontWeight="bold">
-        {b ? '🧠 Control Plane Nodes — the cluster\'s "brain" (don\'t run your apps)' : '🧠 Control Plane Nodes (×3 HA)'}
+        {b ? <>🧠 {tip('Control Plane')} Nodes — the cluster's "brain" (don't run your apps)</> : <>🧠 {tip('Control Plane')} Nodes (×3 {tip('HA')})</>}
       </text>
 
       {/* CP components */}
@@ -51,7 +62,7 @@ export function ClusterScene({ mode, onNavigate }: SceneProps) {
       <text x="60" y="118" fontSize="6" fill="#00897B">{b ? '' : ':6443'}</text>
 
       <rect x="150" y="72" width="90" height="55" rx="5" fill="#fff" stroke="#4DB6AC" strokeWidth="1.5" />
-      <text x="160" y="86" fontSize="7" fill="#00695C" fontWeight="bold">{b ? 'Memory' : 'etcd'}</text>
+      <text x="160" y="86" fontSize="7" fill="#00695C" fontWeight="bold">{b ? 'Memory' : tip('etcd')}</text>
       <text x="160" y="98" fontSize="6" fill="#00897B">{b ? 'Remembers what' : 'Raft consensus'}</text>
       <text x="160" y="108" fontSize="6" fill="#00897B">{b ? 'should be running' : 'distributed KV'}</text>
       <text x="160" y="118" fontSize="6" fill="#00897B">{b ? '& where' : '3-member quorum'}</text>
@@ -70,13 +81,13 @@ export function ClusterScene({ mode, onNavigate }: SceneProps) {
 
       {/* ---- Worker Nodes section ---- */}
       <text x="45" y="168" fontSize="10" fill="#6A1B9A" fontWeight="bold">
-        {b ? '⚙️ Worker Nodes — where your apps actually run' : '⚙️ Worker Nodes'}
+        {b ? <>⚙️ {tip('Worker Node', 'Worker Nodes')} — where your apps actually run</> : <>⚙️ {tip('Worker Node', 'Worker Nodes')}</>}
       </text>
 
       {/* Machine Pool overlay */}
       <rect x="35" y="178" width="340" height="170" rx="10" fill="none" stroke="#9575CD" strokeWidth="1.2" strokeDasharray="5 3" />
       <text x="48" y="196" fontSize="7" fill="#4527A0" fontWeight="bold">
-        {b ? '🏗️ Machine Pool (group of identical workers)' : '🏗️ Machine Pool: worker-pool (m5.xlarge)'}
+        {b ? <>🏗️ {tip('Machine Pool')} (group of identical workers)</> : <>🏗️ {tip('Machine Pool')}: worker-pool (m5.xlarge)</>}
       </text>
 
       {[
@@ -118,7 +129,7 @@ export function ClusterScene({ mode, onNavigate }: SceneProps) {
       <line x1="250" y1="145" x2="220" y2="204" stroke="#26A69A" strokeWidth="1" strokeDasharray="3 2" opacity="0.5" />
       <line x1="250" y1="145" x2="310" y2="204" stroke="#26A69A" strokeWidth="1" strokeDasharray="3 2" opacity="0.5" />
       <text x="250" y="160" fontSize="8" fill="#00695C" textAnchor="middle" fontWeight="bold" fontStyle="italic">
-        {b ? 'brain tells workers what to run' : 'API server → kubelet scheduling'}
+        {b ? 'brain tells workers what to run' : <>API server → {tip('kubelet')} scheduling</>}
       </text>
 
       {/* External traffic */}
@@ -132,10 +143,10 @@ export function ClusterScene({ mode, onNavigate }: SceneProps) {
       {/* Legend at bottom */}
       <rect x="35" y="355" width="450" height="35" rx="6" fill="rgba(255,255,255,0.6)" stroke="#B2DFDB" strokeWidth="1" />
       <text x="50" y="370" fontSize="7" fill="#00695C" fontWeight="bold">
-        {b ? '💡 Control plane nodes = brain (decisions). Worker nodes = muscle (runs your stuff). They\'re different machines!' : '💡 CP nodes: API server, etcd, scheduler, controllers. Workers: kubelet + CRI-O + your pods. Separate failure domains.'}
+        {b ? '💡 Control plane nodes = brain (decisions). Worker nodes = muscle (runs your stuff). They\'re different machines!' : <>💡 CP nodes: {tip('API')} server, {tip('etcd')}, {tip('kube-scheduler', 'scheduler')}, controllers. Workers: {tip('kubelet')} + {tip('CRI-O')} + your pods. Separate failure domains.</>}
       </text>
       <text x="50" y="382" fontSize="6" fill="#00897B">
-        {b ? 'Machine Pools let you add/remove worker nodes as a group. Infra nodes handle cluster services (not your apps).' : 'Machine Pools (MachineSet → cloud auto-scaling group). Infra nodes: tainted to only run router, monitoring, logging.'}
+        {b ? <>{tip('Machine Pool', 'Machine Pools')} let you add/remove worker nodes as a group. Infra nodes handle cluster services (not your apps).</> : <>{tip('Machine Pool', 'Machine Pools')} ({tip('MachineSet')} → cloud {tip('ASG', 'auto-scaling group')}). Infra nodes: {tip('taints', 'tainted')} to only run router, monitoring, logging.</>}
       </text>
 
     </g>

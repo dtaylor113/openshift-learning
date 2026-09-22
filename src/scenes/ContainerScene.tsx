@@ -2,9 +2,19 @@ import { AppMarker } from '../AppMarker';
 import { AnalogyCallout } from '../AnalogyCallout';
 import { ZoomLink } from '../ZoomLink';
 import type { SceneProps } from '../types';
+import { useGlossary } from '../GlossaryContext';
+import { GLOSSARY } from '../Glossary';
 
 export function ContainerScene({ mode, onNavigate }: SceneProps) {
   const b = mode === 'beginner';
+  const { show, hide } = useGlossary();
+
+  const tip = (term: string, label?: string) => (
+    <tspan fill="#78909C" className="svg-glossary-term"
+      onMouseEnter={() => show(term, GLOSSARY[term])}
+      onMouseLeave={hide}
+    >{label || term}</tspan>
+  );
 
   return (
     <g>
@@ -35,7 +45,7 @@ export function ContainerScene({ mode, onNavigate }: SceneProps) {
       <rect x="140" y="120" width="220" height="120" rx="10" fill="#fff" stroke="#4FC3F7" strokeWidth="2.5" />
       <rect x="136" y="116" width="228" height="128" rx="12" fill="none" stroke="#4FC3F7" strokeWidth="1" strokeOpacity="0.3" />
       <text x="160" y="145" fontSize="11" fill="#333" fontWeight="bold">
-        {b ? 'Your App (myapp)' : 'App Process — PID 1'}
+        {b ? 'Your App (myapp)' : <>App Process — {tip('PID')} 1</>}
       </text>
       <ZoomLink x={330} y={215} />
       <text x="160" y="162" fontSize="9" fill="#666" fontFamily="monospace">
@@ -77,19 +87,19 @@ export function ContainerScene({ mode, onNavigate }: SceneProps) {
       <g transform="translate(100, 315)">
         <rect x="0" y="0" width="95" height="22" rx="6" fill="#A5D6A7" />
         <text x="10" y="15" fontSize="7" fill="#1B5E20" fontWeight="bold">
-          {b ? '🔒 Isolated space' : '🔒 namespace'}
+          {b ? '🔒 Isolated space' : <>🔒 {tip('namespace')}</>}
         </text>
       </g>
       <g transform="translate(205, 315)">
         <rect x="0" y="0" width="95" height="22" rx="6" fill="#A5D6A7" />
         <text x="10" y="15" fontSize="7" fill="#1B5E20" fontWeight="bold">
-          {b ? '📊 Resource limits' : '📊 cgroups'}
+          {b ? '📊 Resource limits' : <>📊 {tip('cgroups')}</>}
         </text>
       </g>
       <g transform="translate(310, 315)">
         <rect x="0" y="0" width="95" height="22" rx="6" fill="#A5D6A7" />
         <text x="10" y="15" fontSize="7" fill="#1B5E20" fontWeight="bold">
-          {b ? '📁 Own filesystem' : '📁 overlayfs'}
+          {b ? '📁 Own filesystem' : <>📁 {tip('overlayfs')}</>}
         </text>
       </g>
 

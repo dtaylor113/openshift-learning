@@ -1,6 +1,8 @@
 import { AppMarker } from '../AppMarker';
 import { ZoomLink } from '../ZoomLink';
 import type { SceneProps } from '../types';
+import { useGlossary } from '../GlossaryContext';
+import { GLOSSARY } from '../Glossary';
 
 function SmallPod({ x, y, name, color, highlighted }: { x: number; y: number; name: string; color: string; highlighted?: boolean }) {
   return (
@@ -19,6 +21,14 @@ function SmallPod({ x, y, name, color, highlighted }: { x: number; y: number; na
 
 export function NodeScene({ mode, onNavigate }: SceneProps) {
   const b = mode === 'beginner';
+  const { show, hide } = useGlossary();
+
+  const tip = (term: string, label?: string) => (
+    <tspan fill="#78909C" className="svg-glossary-term"
+      onMouseEnter={() => show(term, GLOSSARY[term])}
+      onMouseLeave={hide}
+    >{label || term}</tspan>
+  );
 
   return (
     <g>
@@ -26,16 +36,16 @@ export function NodeScene({ mode, onNavigate }: SceneProps) {
       <rect x="12" y="6" width="476" height="400" rx="20" fill="none" stroke="#9575CD" strokeWidth="1.5" strokeDasharray="6 4" />
       <rect x="18" y="10" width="220" height="16" rx="4" fill="#EDE7F6" />
       <text x="26" y="22" fontSize="8" fill="#4527A0" fontWeight="bold">
-        {b ? '🏗️ Machine Pool: a group of identical nodes' : '🏗️ Machine Pool: worker-pool-1 (e.g. m5.xlarge × 3)'}
+        {b ? <>🏗️ {tip('Machine Pool')}: a group of identical nodes</> : <>🏗️ {tip('Machine Pool')}: worker-pool-1 (e.g. m5.xlarge × 3)</>}
       </text>
 
       {/* Node boundary */}
       <rect x="25" y="32" width="450" height="300" rx="16" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="3" />
       <text x="45" y="56" fontSize="13" fill="#6A1B9A" fontWeight="bold">
-        {b ? 'Worker Node (runs your app pods)' : 'Worker Node: ip-10-0-1-42'}
+        {b ? <>{tip('Worker Node')} (runs your app pods)</> : <>{tip('Worker Node')}: ip-10-0-1-42</>}
       </text>
       <text x="45" y="72" fontSize="9" fill="#7B1FA2" fontFamily="monospace">
-        {b ? 'One machine in the pool — the cluster can add more if needed' : 'RHCOS • e.g. m5.xlarge • 4 vCPU • 16 GiB RAM'}
+        {b ? 'One machine in the pool — the cluster can add more if needed' : <>{tip('RHCOS')} • e.g. m5.xlarge • 4 vCPU • 16 GiB RAM</>}
       </text>
 
       {/* System services */}
@@ -50,7 +60,7 @@ export function NodeScene({ mode, onNavigate }: SceneProps) {
 
       <rect x="45" y={b ? 95 : 82} width="130" height="36" rx="8" fill="#CE93D8" fillOpacity="0.3" stroke="#AB47BC" strokeWidth="1.5" />
       <text x="58" y={b ? 110 : 98} fontSize="9" fill="#6A1B9A" fontWeight="bold">
-        {b ? 'Pod Manager' : 'kubelet'}
+        {b ? 'Pod Manager' : tip('kubelet')}
       </text>
       <text x="58" y={b ? 122 : 110} fontSize="7" fill="#8E24AA">
         {b ? 'Starts & stops pods' : 'manages pod lifecycle'}
@@ -58,7 +68,7 @@ export function NodeScene({ mode, onNavigate }: SceneProps) {
 
       <rect x="185" y={b ? 95 : 82} width="130" height="36" rx="8" fill="#CE93D8" fillOpacity="0.3" stroke="#AB47BC" strokeWidth="1.5" />
       <text x="198" y={b ? 110 : 98} fontSize="9" fill="#6A1B9A" fontWeight="bold">
-        {b ? 'Container Engine' : 'CRI-O'}
+        {b ? 'Container Engine' : tip('CRI-O')}
       </text>
       <text x="198" y={b ? 122 : 110} fontSize="7" fill="#8E24AA">
         {b ? 'Runs containers' : 'OCI container runtime'}
@@ -66,7 +76,7 @@ export function NodeScene({ mode, onNavigate }: SceneProps) {
 
       <rect x="325" y={b ? 95 : 82} width="135" height="36" rx="8" fill="#CE93D8" fillOpacity="0.3" stroke="#AB47BC" strokeWidth="1.5" />
       <text x="338" y={b ? 110 : 98} fontSize="9" fill="#6A1B9A" fontWeight="bold">
-        {b ? 'Network Manager' : 'kube-proxy'}
+        {b ? 'Network Manager' : tip('kube-proxy')}
       </text>
       <text x="338" y={b ? 122 : 110} fontSize="7" fill="#8E24AA">
         {b ? 'Routes traffic to pods' : 'iptables / IPVS rules'}
@@ -127,12 +137,12 @@ export function NodeScene({ mode, onNavigate }: SceneProps) {
       {/* Machine Pool callout at bottom */}
       <rect x="25" y="345" width="450" height="42" rx="8" fill="rgba(255,255,255,0.7)" stroke="#B39DDB" strokeWidth="1" />
       <text x="40" y="360" fontSize="8" fill="#4527A0" fontWeight="bold">
-        {b ? '💡 This node is part of a Machine Pool — a group of identical machines:' : '💡 Machine Pool (ROSA Classic) / Node Pool (ROSA HCP):'}
+        {b ? <>💡 This node is part of a {tip('Machine Pool')} — a group of identical machines:</> : <>💡 {tip('Machine Pool')} ({tip('ROSA')} {tip('Classic')}) / {tip('Node Pool')} ({tip('ROSA')} {tip('HCP')}):</>}
       </text>
       <text x="40" y="375" fontSize="7" fill="#7B1FA2">
         {b
           ? 'The pool can grow or shrink automatically. Need more capacity? The pool adds another node just like this one.'
-          : 'Maps to an AWS Auto Scaling Group. Pool defines instance type, AZ, labels, taints. Autoscaler adjusts count.'}
+          : <>Maps to an {tip('AWS')} {tip('ASG', 'Auto Scaling Group')}. Pool defines instance type, {tip('AZ')}, labels, {tip('taints')}. {tip('MachineAutoscaler', 'Autoscaler')} adjusts count.</>}
       </text>
 
     </g>

@@ -1,9 +1,19 @@
 import { AppMarker } from '../AppMarker';
 import { ZoomLink } from '../ZoomLink';
 import type { SceneProps } from '../types';
+import { useGlossary } from '../GlossaryContext';
+import { GLOSSARY } from '../Glossary';
 
 export function OpenShiftScene({ mode, onNavigate }: SceneProps) {
   const b = mode === 'beginner';
+  const { show, hide } = useGlossary();
+
+  const tip = (term: string, label?: string) => (
+    <tspan fill="#78909C" className="svg-glossary-term"
+      onMouseEnter={() => show(term, GLOSSARY[term])}
+      onMouseLeave={hide}
+    >{label || term}</tspan>
+  );
 
   return (
     <g>
@@ -14,19 +24,19 @@ export function OpenShiftScene({ mode, onNavigate }: SceneProps) {
         OpenShift Container Platform (OCP) Cluster
       </text>
       <text x="35" y="56" fontSize="9" fill="#B71C1C" fontFamily="monospace">
-        {b ? 'Kubernetes is the engine — OpenShift is the full vehicle' : 'Enterprise Kubernetes + operator-managed platform services'}
+        {b ? <>{tip('Kubernetes')} is the engine — OpenShift is the full vehicle</> : <>Enterprise {tip('Kubernetes')} + operator-managed platform services</>}
       </text>
 
       {/* Inner K8s cluster — clickable to zoom into Cluster level */}
       <g style={{ cursor: onNavigate ? 'pointer' : undefined }} onClick={() => onNavigate?.(4)}>
       <rect x="30" y="68" width="210" height="130" rx="12" fill="#E0F2F1" stroke="#4DB6AC" strokeWidth="2" />
       <text x="45" y="88" fontSize="10" fill="#00695C" fontWeight="bold">
-        {b ? 'Kubernetes (K8s Cluster)' : 'Kubernetes Core'}
+        {b ? <>{tip('Kubernetes')} ({tip('K8s')} Cluster)</> : <>{tip('Kubernetes')} Core</>}
       </text>
       <rect x="42" y="96" width="60" height="25" rx="4" fill="#B2DFDB" />
       <text x="48" y="112" fontSize="7" fill="#004D40">{b ? 'Front Door' : 'API Server'}</text>
       <rect x="108" y="96" width="45" height="25" rx="4" fill="#B2DFDB" />
-      <text x="114" y="112" fontSize="7" fill="#004D40">{b ? 'Memory' : 'etcd'}</text>
+      <text x="114" y="112" fontSize="7" fill="#004D40">{b ? 'Memory' : tip('etcd')}</text>
       <rect x="159" y="96" width="68" height="25" rx="4" fill="#B2DFDB" />
       <text x="165" y="112" fontSize="7" fill="#004D40">Scheduler</text>
 
@@ -39,7 +49,7 @@ export function OpenShiftScene({ mode, onNavigate }: SceneProps) {
       <text x="160" y="147" fontSize="6" fill="#6A1B9A">{b ? 'Machine 3' : 'worker-3'}</text>
 
       <text x="42" y="190" fontSize="7" fill="#00695C">
-        {b ? '+ pod manager, container engine, networking' : '+ CRI-O, kubelet, kube-proxy'}
+        {b ? '+ pod manager, container engine, networking' : <>+ {tip('CRI-O')}, {tip('kubelet')}, {tip('kube-proxy')}</>}
       </text>
       <ZoomLink x={215} y={180} />
       </g>
@@ -54,56 +64,56 @@ export function OpenShiftScene({ mode, onNavigate }: SceneProps) {
       {/* Routes */}
       <rect x="260" y="90" width="210" height="30" rx="6" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.5" />
       <text x="275" y="105" fontSize="8" fill="#B71C1C" fontWeight="bold">
-        {b ? '🚦 Easy public URLs' : '🚦 Routes (HAProxy)'}
+        {b ? '🚦 Easy public URLs' : <>🚦 Routes ({tip('HAProxy')})</>}
       </text>
       <text x="275" y="116" fontSize="7" fill="#C62828">
-        {b ? 'Expose your app to the internet simply' : 'TLS edge/passthrough/re-encrypt termination'}
+        {b ? 'Expose your app to the internet simply' : <>{tip('TLS')} edge/passthrough/re-encrypt termination</>}
       </text>
 
       {/* OperatorHub */}
       <rect x="260" y="126" width="210" height="30" rx="6" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.5" />
       <text x="275" y="141" fontSize="8" fill="#B71C1C" fontWeight="bold">
-        {b ? '🏪 Add-on Store' : '🏪 OperatorHub + OLM'}
+        {b ? '🏪 Add-on Store' : <>🏪 {tip('OperatorHub')} + {tip('OLM')}</>}
       </text>
       <text x="275" y="152" fontSize="7" fill="#C62828">
-        {b ? 'Install databases, queues, tools in clicks' : 'Operator lifecycle management + CSV upgrades'}
+        {b ? 'Install databases, queues, tools in clicks' : <>Operator lifecycle management + {tip('CSV')} upgrades</>}
       </text>
 
       {/* OAuth */}
       <rect x="260" y="162" width="210" height="30" rx="6" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.5" />
       <text x="275" y="177" fontSize="8" fill="#B71C1C" fontWeight="bold">
-        {b ? '🔐 Company login' : '🔐 OAuth Server'}
+        {b ? '🔐 Company login' : <>🔐 {tip('OAuth')} Server</>}
       </text>
       <text x="275" y="188" fontSize="7" fill="#C62828">
-        {b ? 'Connect your company identity provider' : 'LDAP, OIDC, HTPasswd, GitHub, Google'}
+        {b ? 'Connect your company identity provider' : <>{tip('LDAP')}, {tip('OIDC')}, HTPasswd, GitHub, Google</>}
       </text>
 
       {/* Bottom features */}
       <rect x="30" y="210" width="140" height="50" rx="8" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.5" />
       <text x="45" y="228" fontSize="8" fill="#B71C1C" fontWeight="bold">
-        {b ? '📊 Dashboards' : '📊 Monitoring (Prometheus)'}
+        {b ? '📊 Dashboards' : <>📊 Monitoring ({tip('Prometheus')})</>}
       </text>
       <text x="45" y="242" fontSize="7" fill="#C62828">
-        {b ? 'Pre-built health' : 'Prometheus + Alertmanager'}
+        {b ? 'Pre-built health' : <>{tip('Prometheus')} + {tip('Alertmanager')}</>}
       </text>
       <text x="45" y="252" fontSize="7" fill="#C62828">
-        {b ? 'monitoring & alerts' : '+ Thanos, pre-configured'}
+        {b ? 'monitoring & alerts' : <>+ {tip('Thanos')}, pre-configured</>}
       </text>
 
       <rect x="180" y="210" width="140" height="50" rx="8" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.5" />
       <text x="195" y="228" fontSize="8" fill="#B71C1C" fontWeight="bold">
-        {b ? '📝 Log collection' : '📝 Logging (Loki/EFK)'}
+        {b ? '📝 Log collection' : <>📝 Logging ({tip('Loki')}/{tip('EFK')})</>}
       </text>
       <text x="195" y="242" fontSize="7" fill="#C62828">
         {b ? 'All logs gathered' : 'Cluster logging operator'}
       </text>
       <text x="195" y="252" fontSize="7" fill="#C62828">
-        {b ? 'in one place' : 'LokiStack or EFK pipeline'}
+        {b ? 'in one place' : <>LokiStack or {tip('EFK')} pipeline</>}
       </text>
 
       <rect x="330" y="210" width="140" height="50" rx="8" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.5" />
       <text x="345" y="228" fontSize="8" fill="#B71C1C" fontWeight="bold">
-        {b ? '🖼️ Image management' : '🖼️ ImageStreams'}
+        {b ? '🖼️ Image management' : <>🖼️ {tip('ImageStreams')}</>}
       </text>
       <text x="345" y="242" fontSize="7" fill="#C62828">
         {b ? 'Track & rollback' : 'Image abstraction with'}
@@ -114,13 +124,13 @@ export function OpenShiftScene({ mode, onNavigate }: SceneProps) {
 
       <rect x="30" y="270" width="140" height="50" rx="8" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.5" />
       <text x="45" y="288" fontSize="8" fill="#B71C1C" fontWeight="bold">
-        {b ? '🛡️ Security guardrails' : '🛡️ SCCs'}
+        {b ? '🛡️ Security guardrails' : <>🛡️ {tip('SCC', 'SCCs')}</>}
       </text>
       <text x="45" y="302" fontSize="7" fill="#C62828">
-        {b ? 'Prevents insecure' : 'Security Context Constraints'}
+        {b ? 'Prevents insecure' : <>Security Context Constraints</>}
       </text>
       <text x="45" y="312" fontSize="7" fill="#C62828">
-        {b ? 'deployments by default' : 'stricter than PSA'}
+        {b ? 'deployments by default' : <>stricter than {tip('PSA')}</>}
       </text>
 
       <rect x="180" y="270" width="140" height="50" rx="8" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.5" />
@@ -131,7 +141,7 @@ export function OpenShiftScene({ mode, onNavigate }: SceneProps) {
         {b ? 'Visual app topology,' : 'Topology view, builds,'}
       </text>
       <text x="195" y="312" fontSize="7" fill="#C62828">
-        {b ? 'builds, and pipelines' : 'Tekton pipelines'}
+        {b ? 'builds, and pipelines' : <>{tip('Tekton')} pipelines</>}
       </text>
 
       <rect x="330" y="270" width="140" height="50" rx="8" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.5" />
@@ -139,7 +149,7 @@ export function OpenShiftScene({ mode, onNavigate }: SceneProps) {
         {b ? '🔧 Power CLI' : '🔧 oc CLI'}
       </text>
       <text x="345" y="302" fontSize="7" fill="#C62828">
-        {b ? 'Command-line with' : 'kubectl superset with'}
+        {b ? 'Command-line with' : <>{tip('kubectl')} superset with</>}
       </text>
       <text x="345" y="312" fontSize="7" fill="#C62828">
         {b ? 'extra shortcuts' : 'login, new-app, projects'}
@@ -148,7 +158,7 @@ export function OpenShiftScene({ mode, onNavigate }: SceneProps) {
       {/* RHCOS */}
       <rect x="30" y="340" width="440" height="35" rx="8" fill="#D32F2F" fillOpacity="0.1" stroke="#D32F2F" strokeWidth="1.5" />
       <text x="50" y="358" fontSize="9" fill="#B71C1C" fontWeight="bold">
-        {b ? '🖥️ Self-updating OS on every machine' : '🖥️ RHCOS (Red Hat CoreOS)'}
+        {b ? '🖥️ Self-updating OS on every machine' : <>🖥️ {tip('RHCOS')} (Red Hat CoreOS)</>}
       </text>
       <text x={b ? 280 : 240} y="358" fontSize="8" fill="#C62828">
         {b ? 'Nodes patch themselves automatically' : 'Immutable OS — managed by Machine Config Operator'}

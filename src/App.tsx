@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { Telescope } from 'lucide-react';
+import { Telescope, BookOpen } from 'lucide-react';
 import { ZOOM_LEVELS } from './types';
 import type { ExplainMode } from './types';
 import { ZoomViewer } from './ZoomViewer';
@@ -7,6 +7,7 @@ import { InfoPanel } from './InfoPanel';
 import { Minimap } from './Minimap';
 import { DeepDive } from './DeepDive';
 import type { DeepDiveTab } from './DeepDive';
+import { GlossaryProvider, useGlossary } from './GlossaryContext';
 import './App.css';
 
     type View = 'explorer' | 'deep-dive';
@@ -204,9 +205,32 @@ function App() {
           <DeepDive mode={mode} onModeChange={setMode} initialTab={deepDiveTab} initialRosaVariant={rosaVariant} />
         </main>
       )}
-      <footer className="app-footer">by Dave Taylor</footer>
+      <GlossaryFooter />
     </div>
   );
 }
 
-export default App;
+function GlossaryFooter() {
+  const { state } = useGlossary();
+  return (
+    <>
+      {state.term && (
+        <div className="glossary-bar">
+          <BookOpen size={14} className="glossary-footer-icon" />
+          <strong>{state.term}</strong> — {state.definition}
+        </div>
+      )}
+      <footer className="app-footer">by Dave Taylor</footer>
+    </>
+  );
+}
+
+function AppWithProvider() {
+  return (
+    <GlossaryProvider>
+      <App />
+    </GlossaryProvider>
+  );
+}
+
+export default AppWithProvider;

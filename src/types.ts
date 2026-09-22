@@ -90,7 +90,7 @@ export const ZOOM_LEVELS: ZoomLevel[] = [
         'Both containers share the same network — connected by the dotted lines in the graphic',
         'The Deployment keeps 3 copies running for safety — if one crashes, the other 2 keep serving users',
         'The Service gives all copies one address — users don\'t know (or care) which copy handles their request',
-        '⚠️ Replicas ≠ more machines. 3 replicas might run on the same machine. Machines are managed separately (see Node level).',
+        '⚠️ More copies ≠ more machines. All 3 copies could run on the same machine — copies are about reliability, not computing power. Machines are managed separately (see Node level).',
       ],
     },
     expert: {

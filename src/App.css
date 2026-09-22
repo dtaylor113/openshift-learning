@@ -508,16 +508,27 @@ body {
   transition-delay: 0.15s;
 }
 
-/* Glossary tooltip rendered at end of SVG for z-order, triggered by sibling hover */
-.ocp-glossary-tip {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.1s ease;
+/* SVG glossary term (dotted underline in graphics) */
+.svg-glossary-term {
+  cursor: help;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: #90A4AE;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
 }
-.ocp-glossary-trigger:hover ~ .ocp-glossary-tip {
-  opacity: 1;
-  transition-delay: 0.15s;
+
+/* HTML glossary term tooltips (right panel) */
+.glossary-term {
+  color: #78909C;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: #90A4AE;
+  text-underline-offset: 2px;
+  cursor: help;
+  position: relative;
 }
+
 
 .deep-dive-btn {
   margin-top: 12px;
@@ -1112,16 +1123,37 @@ body {
   background: #fafafa;
 }
 
-/* ---- Footer ---- */
+/* ---- Footer / Glossary bar ---- */
 .app-footer {
   position: fixed;
-  bottom: 8px;
+  bottom: 4px;
   left: 16px;
   font-size: 11px;
   color: #aaa;
   font-weight: 500;
   z-index: 10;
   pointer-events: none;
+}
+.glossary-bar {
+  position: fixed;
+  bottom: 40px;
+  right: 416px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #444;
+  font-size: 13px;
+  font-weight: 400;
+  z-index: 10;
+  pointer-events: none;
+  background: rgba(255,255,255,0.95);
+  padding: 6px 12px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+.glossary-footer-icon {
+  color: #78909C;
+  flex-shrink: 0;
 }
 
 /* ---- Responsive ---- */
