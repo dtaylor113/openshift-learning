@@ -424,6 +424,43 @@ function CedarPolicies({ b }: { b: boolean }) {
 function RegionalExample({ b }: { b: boolean }) {
   const g = createGlossarizer();
 
+  const liStyle: React.CSSProperties = { marginBottom: '4px' };
+  const olStyle: React.CSSProperties = { margin: 0, paddingLeft: '18px', fontSize: '12px', color: '#555', lineHeight: 1.75 };
+
+  const todayItems = b
+    ? [
+        'Aiko in Tokyo requests a cluster in ap-northeast-1',
+        'Request travels to Virginia, USA (us-east-1)',
+        'OCM stores cluster metadata in Virginia',
+        'Control plane managed from Virginia',
+        '⚡ ~200ms latency on every API call',
+        '⚠️ Cluster metadata stored outside Japan',
+      ]
+    : [
+        'POST api.openshift.com/clusters (us-east-1)',
+        'Cluster metadata persisted in us-east-1',
+        'HyperShift reconciles on us-east-1 MC',
+        'Cross-region latency for all API operations',
+        'Data residency concerns for JP compliance',
+      ];
+
+  const hyperfleetItems = b
+    ? [
+        'Aiko requests a cluster in ap-northeast-1',
+        'Request goes to the Tokyo Platform API',
+        'Metadata stays in Tokyo',
+        'Control plane runs on Tokyo EKS Management Cluster',
+        '⚡ Low latency — everything is local',
+        '✅ Data never leaves Japan',
+      ]
+    : [
+        'SigV4-signed POST to regional Platform API (ap-northeast-1)',
+        'Platform API writes to regional Aurora DB (hyperfleet-db)',
+        'DynamoDB fan-out → kube-applier on EKS MC applies desired state',
+        'HyperShift reconciles HostedCluster on local MC',
+        'All metadata in-region — data sovereignty compliant',
+      ];
+
   return (
     <div className="rosa-bridge">
       <h4>{b ? '🌍 Example: Aiko in Tokyo Creates a Cluster' : '🌍 Regional Flow Example'}</h4>
@@ -433,10 +470,11 @@ function RegionalExample({ b }: { b: boolean }) {
             {b ? '❌ Today' : '❌ Centralized (V1)'}
           </p>
           <div className="rosa-variant-note" style={{ borderLeft: '4px solid #CC0000' }}>
-            <p>{b
-              ? '1. Aiko in Tokyo requests a cluster in ap-northeast-1\n2. Request travels to Virginia, USA (us-east-1)\n3. OCM stores cluster metadata in Virginia\n4. Control plane managed from Virginia\n5. ⚡ ~200ms latency on every API call\n6. ⚠️ Cluster metadata stored outside Japan'
-              : <>{g('1. POST api.openshift.com/clusters (us-east-1)\n2. Cluster metadata persisted in us-east-1\n3. HyperShift reconciles on us-east-1 MC\n4. Cross-region latency for all API operations\n5. Data residency concerns for JP compliance')}</>}
-            </p>
+            <ol style={olStyle}>
+              {todayItems.map((item, i) => (
+                <li key={i} style={liStyle}>{b ? item : g(item)}</li>
+              ))}
+            </ol>
           </div>
         </div>
         <div>
@@ -444,10 +482,11 @@ function RegionalExample({ b }: { b: boolean }) {
             {b ? '✅ With HyperFleet' : '✅ Regional (V2)'}
           </p>
           <div className="rosa-variant-note" style={{ borderLeft: '4px solid #2E7D32' }}>
-            <p>{b
-              ? '1. Aiko requests a cluster in ap-northeast-1\n2. Request goes to the Tokyo Platform API\n3. Metadata stays in Tokyo\n4. Control plane runs on Tokyo EKS MC\n5. ⚡ Low latency — everything is local\n6. ✅ Data never leaves Japan'
-              : <>{g('1. SigV4-signed POST to regional Platform API (ap-northeast-1)\n2. Platform API writes to regional Aurora DB (hyperfleet-db)\n3. DynamoDB fan-out → kube-applier on EKS MC applies desired state\n4. HyperShift reconciles HostedCluster on local MC\n5. All metadata in-region — data sovereignty compliant')}</>}
-            </p>
+            <ol style={olStyle}>
+              {hyperfleetItems.map((item, i) => (
+                <li key={i} style={liStyle}>{b ? item : g(item)}</li>
+              ))}
+            </ol>
           </div>
         </div>
       </div>
