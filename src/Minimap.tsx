@@ -31,7 +31,6 @@ export function Minimap({ currentIndex, onNavigate, mode }: MinimapProps) {
   return (
     <div className="minimap-column">
       {/* Analogy legend — fills the space above the map */}
-      {mode === 'beginner' && (
         <div className="analogy-legend">
           <div className="analogy-legend-title">🍽️ Restaurant Analogy</div>
           {[...ZOOM_LEVELS].reverse().map((level, ri) => {
@@ -54,7 +53,6 @@ export function Minimap({ currentIndex, onNavigate, mode }: MinimapProps) {
             );
           })}
         </div>
-      )}
 
       <div className="minimap">
         <div className="minimap-label">Architecture Map</div>

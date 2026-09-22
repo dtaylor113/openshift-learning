@@ -11,12 +11,15 @@ import './App.css';
 
     type View = 'explorer' | 'deep-dive';
 
-const DEEP_DIVE_TABS = ['overview', 'rosa', 'osd', 'assisted', 'local', 'hyperfleet', 'ocp-console'] as const;
+const DEEP_DIVE_TABS = ['overview', 'rosa', 'osd', 'assisted', 'local', 'ocp-console'] as const;
 const EXPLORER_LEVELS = ZOOM_LEVELS.map(l => l.id);
 
-function parseHash(): { view: View; levelId?: string; tab?: DeepDiveTab } {
+type RosaVariant = 'classic' | 'hcp' | 'hyperfleet';
+
+function parseHash(): { view: View; levelId?: string; tab?: DeepDiveTab; rosaVariant?: RosaVariant } {
   const hash = window.location.hash.replace('#', '');
   if (!hash) return { view: 'explorer' };
+  if (hash === 'hyperfleet') return { view: 'deep-dive', tab: 'rosa', rosaVariant: 'hyperfleet' };
   if (DEEP_DIVE_TABS.includes(hash as DeepDiveTab)) return { view: 'deep-dive', tab: hash as DeepDiveTab };
   if (hash === 'deep-dive') return { view: 'deep-dive', tab: 'overview' };
   if (EXPLORER_LEVELS.includes(hash)) return { view: 'explorer', levelId: hash };
@@ -54,9 +57,11 @@ function App() {
   }, [currentIndex]);
 
   const [deepDiveTab, setDeepDiveTab] = useState<DeepDiveTab>(initial.tab || 'overview');
+  const [rosaVariant, setRosaVariant] = useState<RosaVariant | undefined>(initial.rosaVariant);
   const openDeepDive = useCallback((tab?: string) => {
     const t = (tab as DeepDiveTab) || 'overview';
     setDeepDiveTab(t);
+    setRosaVariant(undefined);
     setView('deep-dive');
     window.location.hash = t;
   }, []);
@@ -79,6 +84,7 @@ function App() {
       if (parsed.view === 'deep-dive') {
         setView('deep-dive');
         setDeepDiveTab(parsed.tab || 'overview');
+        setRosaVariant(parsed.rosaVariant);
       } else {
         setView('explorer');
         if (parsed.levelId) {
@@ -195,7 +201,7 @@ function App() {
         </main>
       ) : (
         <main className="app-main rosa-main">
-          <DeepDive mode={mode} onModeChange={setMode} initialTab={deepDiveTab} />
+          <DeepDive mode={mode} onModeChange={setMode} initialTab={deepDiveTab} initialRosaVariant={rosaVariant} />
         </main>
       )}
       <footer className="app-footer">by Dave Taylor</footer>

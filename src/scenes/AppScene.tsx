@@ -72,7 +72,7 @@ export function AppScene({ mode }: SceneProps) {
       {/* App marker */}
       <AppMarker x={370} y={140} />
 
-      {b && <AnalogyCallout x={120} y={60} width={260} text="Think of it as: a dish on the menu" />}
+      <AnalogyCallout x={120} y={60} width={260} text="Think of it as: a dish on the menu" />
     </g>
   );
 }

@@ -508,6 +508,17 @@ body {
   transition-delay: 0.15s;
 }
 
+/* Glossary tooltip rendered at end of SVG for z-order, triggered by sibling hover */
+.ocp-glossary-tip {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+.ocp-glossary-trigger:hover ~ .ocp-glossary-tip {
+  opacity: 1;
+  transition-delay: 0.15s;
+}
+
 .deep-dive-btn {
   margin-top: 12px;
   background: linear-gradient(135deg, #EE0000, #CC0000) !important;
@@ -873,6 +884,11 @@ body {
   font-style: italic;
   font-weight: 600;
   color: #555;
+}
+
+.dd-title-icon {
+  vertical-align: middle;
+  flex-shrink: 0;
 }
 
 .dd-title-logo {

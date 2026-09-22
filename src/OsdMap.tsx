@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Server } from 'lucide-react';
 import type { ExplainMode } from './types';
 import { ApiCallChain } from './ApiCallChain';
 import { ModeToggle } from './ModeToggle';
@@ -312,7 +313,7 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
       </div>
 
       <h2 className="dd-page-title">
-        <img src={import.meta.env.BASE_URL + 'logos/redhat.svg'} alt="Red Hat" className="dd-title-logo" />
+        <Server size={22} className="dd-title-icon" style={{ color: '#CC0000' }} />
         OSD — <em>OpenShift Dedicated</em>
       </h2>
 

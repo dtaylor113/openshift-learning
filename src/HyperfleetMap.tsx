@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Globe } from 'lucide-react';
 import type { ExplainMode } from './types';
 import { ModeToggle } from './ModeToggle';
 import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
@@ -359,29 +360,26 @@ function ApiResources({ b }: { b: boolean }) {
   );
 }
 
-export function HyperfleetMap({ mode, onModeChange }: HyperfleetMapProps) {
+/** Inner content — used when embedded inside RosaMap's 3-way toggle */
+export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
   const [view, setView] = useState<ArchView>('today');
   const b = mode === 'beginner';
 
   return (
-    <div className="rosa-map">
-      <div className="rosa-controls">
-        <div className="variant-toggle">
-          <button className={`variant-btn ${view === 'today' ? 'active' : ''}`} onClick={() => setView('today')}>
-            {b ? 'Today (Centralized)' : 'clusters_mgmt (V1)'}
-          </button>
-          <button className={`variant-btn ${view === 'hyperfleet' ? 'active' : ''}`} onClick={() => setView('hyperfleet')}>
-            {b ? 'HyperFleet (Regional)' : 'Platform API (V2)'}
-          </button>
-        </div>
-        <ModeToggle mode={mode} onModeChange={onModeChange} />
+    <>
+      <div className="variant-toggle" style={{ marginBottom: 12, justifyContent: 'center', display: 'flex' }}>
+        <button className={`variant-btn ${view === 'today' ? 'active' : ''}`} onClick={() => setView('today')}>
+          {b ? 'Today (Centralized)' : 'clusters_mgmt (V1)'}
+        </button>
+        <button className={`variant-btn ${view === 'hyperfleet' ? 'active' : ''}`} onClick={() => setView('hyperfleet')}>
+          {b ? 'HyperFleet (Regional)' : 'Platform API (V2)'}
+        </button>
       </div>
 
-      <h2 className="dd-page-title">
-        <img src={import.meta.env.BASE_URL + 'logos/redhat.svg'} alt="Red Hat" className="dd-title-logo" />
-        <img src={import.meta.env.BASE_URL + 'logos/aws.svg'} alt="AWS" className="dd-title-logo" />
+      <h3 className="dd-page-title" style={{ fontSize: '1.1rem', marginBottom: 8 }}>
+        <Globe size={18} className="dd-title-icon" style={{ color: '#0D47A1' }} />
         {b ? 'HyperFleet — ROSA Goes Regional' : 'HyperFleet — ROSA Regional Platform (RRP)'}
-      </h2>
+      </h3>
 
       <div className="rosa-variant-note" style={{ borderLeft: '4px solid #F57F17', background: '#FFFDE7' }}>
         <p><strong>⚠️ {b ? 'Note' : 'Disclaimer'}</strong></p>
@@ -418,6 +416,25 @@ export function HyperfleetMap({ mode, onModeChange }: HyperfleetMapProps) {
       <OcmuiImpact b={b} />
 
       <ExploreMore links={DEEP_DIVE_LINKS.hyperfleet} />
+    </>
+  );
+}
+
+/** Standalone page — used when accessed as its own deep dive tab (kept for backward compat) */
+export function HyperfleetMap({ mode, onModeChange }: HyperfleetMapProps) {
+  return (
+    <div className="rosa-map">
+      <div className="rosa-controls">
+        <div style={{ flex: 1 }} />
+        <ModeToggle mode={mode} onModeChange={onModeChange} />
+      </div>
+
+      <h2 className="dd-page-title">
+        <Globe size={22} className="dd-title-icon" style={{ color: '#0D47A1' }} />
+        ROSA HyperFleet
+      </h2>
+
+      <HyperfleetContent mode={mode} />
     </div>
   );
 }

@@ -95,7 +95,7 @@ export function ContainerScene({ mode, onNavigate }: SceneProps) {
 
       <AppMarker x={330} y={155} size="small" />
 
-      {b && <AnalogyCallout x={80} y={342} width={340} text="Think of it as: a sealed meal kit (recipe + all ingredients)" />}
+      <AnalogyCallout x={80} y={342} width={340} text="Think of it as: a sealed meal kit (recipe + all ingredients)" />
     </g>
   );
 }

@@ -278,7 +278,10 @@ export function OcpConsoleMap({ mode, onModeChange }: OcpConsoleMapProps) {
         <ModeToggle mode={mode} onModeChange={onModeChange} />
       </div>
 
-      <h2 className="dd-page-title">OCP Console — <em>OpenShift Container Platform Console</em></h2>
+      <h2 className="dd-page-title">
+        <LayoutDashboard size={22} className="dd-title-icon" style={{ color: '#00695C' }} />
+        OCP Console — <em>OpenShift Container Platform Console</em>
+      </h2>
 
       <div className="rosa-variant-note" style={{ borderLeft: '4px solid #4DB6AC' }}>
         <p><strong>{b ? 'What is the OCP Console?' : 'OCP Console Overview'}</strong></p>

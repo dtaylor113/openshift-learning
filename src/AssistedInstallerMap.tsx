@@ -1,3 +1,4 @@
+import { HardHat } from 'lucide-react';
 import type { ExplainMode } from './types';
 import { ModeToggle } from './ModeToggle';
 import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
@@ -145,7 +146,10 @@ export function AssistedInstallerMap({ mode, onModeChange }: AssistedInstallerMa
         <ModeToggle mode={mode} onModeChange={onModeChange} />
       </div>
 
-      <h2 className="dd-page-title">🏗️ OCP Assisted Installer — <em>OpenShift Container Platform on Your Hardware</em></h2>
+      <h2 className="dd-page-title">
+        <HardHat size={22} className="dd-title-icon" style={{ color: '#E65100' }} />
+        OCP Assisted Installer — <em>OpenShift Container Platform on Your Hardware</em>
+      </h2>
 
       <AssistedDiagram b={b} />
 

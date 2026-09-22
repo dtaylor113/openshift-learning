@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Cloud } from 'lucide-react';
 import type { ExplainMode } from './types';
 import { ApiCallChain } from './ApiCallChain';
 import { ModeToggle } from './ModeToggle';
 import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
+import { HyperfleetContent } from './HyperfleetMap';
 
-type RosaVariant = 'classic' | 'hcp';
+export type RosaVariant = 'classic' | 'hcp' | 'hyperfleet';
 
 interface RosaMapProps {
   mode: ExplainMode;
   onModeChange: (mode: ExplainMode) => void;
+  initialVariant?: RosaVariant;
 }
 
 function ClassicDiagram({ b }: { b: boolean }) {
@@ -268,43 +271,54 @@ function IamRbacBridge({ b }: { b: boolean }) {
   );
 }
 
-export function RosaMap({ mode, onModeChange }: RosaMapProps) {
-  const [variant, setVariant] = useState<RosaVariant>('classic');
+export function RosaMap({ mode, onModeChange, initialVariant }: RosaMapProps) {
+  const [variant, setVariant] = useState<RosaVariant>(initialVariant || 'classic');
   const b = mode === 'beginner';
+
+  const changeVariant = (v: RosaVariant) => {
+    setVariant(v);
+    window.location.hash = v === 'hyperfleet' ? 'hyperfleet' : 'rosa';
+  };
 
   return (
     <div className="rosa-map">
       <div className="rosa-controls">
         <div className="variant-toggle">
-          <button className={`variant-btn ${variant === 'classic' ? 'active' : ''}`} onClick={() => setVariant('classic')}>
+          <button className={`variant-btn ${variant === 'classic' ? 'active' : ''}`} onClick={() => changeVariant('classic')}>
             ROSA Classic
           </button>
-          <button className={`variant-btn ${variant === 'hcp' ? 'active' : ''}`} onClick={() => setVariant('hcp')}>
+          <button className={`variant-btn ${variant === 'hcp' ? 'active' : ''}`} onClick={() => changeVariant('hcp')}>
             ROSA HCP
+          </button>
+          <button className={`variant-btn ${variant === 'hyperfleet' ? 'active' : ''}`} onClick={() => changeVariant('hyperfleet')}
+            style={variant === 'hyperfleet' ? { borderColor: '#0D47A1', color: '#0D47A1' } : undefined}
+          >
+            HyperFleet
           </button>
         </div>
         <ModeToggle mode={mode} onModeChange={onModeChange} />
       </div>
 
       <h2 className="dd-page-title">
-        <img src={import.meta.env.BASE_URL + 'logos/redhat.svg'} alt="Red Hat" className="dd-title-logo" />
-        <img src={import.meta.env.BASE_URL + 'logos/aws.svg'} alt="AWS" className="dd-title-logo" />
+        <Cloud size={22} className="dd-title-icon" style={{ color: '#CC0000' }} />
         ROSA — <em>Red Hat OpenShift Service on AWS</em>
       </h2>
 
-      <div className="rosa-variant-note">
-        {variant === 'classic' ? (
-          <p>{b
-            ? '📌 In ROSA Classic, the control plane runs on machines in YOUR AWS account. Red Hat manages it, but you pay for those cloud machines. Machine Pools let you add or remove groups of worker machines.'
-            : '📌 Classic: 3 control plane nodes (m5.xlarge) in-cluster. Customer pays for CP EC2. MachineSet-based Machine Pools → ASGs. SRE access via backplane.'}
-          </p>
-        ) : (
-          <p>{b
-            ? '📌 In ROSA HCP, the control plane runs in Red Hat\'s AWS account — you never see or pay for those machines. Only your worker nodes are in your AWS account. This is simpler, cheaper, and faster to set up (~10 minutes).'
-            : '📌 HCP: Control plane in Red Hat\'s AWS via HyperShift. Customer only pays for worker EC2. NodePool-based (not MachineSet). PrivateLink connects CP ↔ workers. ~10 min provisioning. Lower CP cost.'}
-          </p>
-        )}
-      </div>
+      {variant !== 'hyperfleet' && (
+        <div className="rosa-variant-note">
+          {variant === 'classic' ? (
+            <p>{b
+              ? '📌 In ROSA Classic, the control plane runs on machines in YOUR AWS account. Red Hat manages it, but you pay for those cloud machines. Machine Pools let you add or remove groups of worker machines.'
+              : '📌 Classic: 3 control plane nodes (m5.xlarge) in-cluster. Customer pays for CP EC2. MachineSet-based Machine Pools → ASGs. SRE access via backplane.'}
+            </p>
+          ) : (
+            <p>{b
+              ? '📌 In ROSA HCP, the control plane runs in Red Hat\'s AWS account — you never see or pay for those machines. Only your worker nodes are in your AWS account. This is simpler, cheaper, and faster to set up (~10 minutes).'
+              : '📌 HCP: Control plane in Red Hat\'s AWS via HyperShift. Customer only pays for worker EC2. NodePool-based (not MachineSet). PrivateLink connects CP ↔ workers. ~10 min provisioning. Lower CP cost.'}
+            </p>
+          )}
+        </div>
+      )}
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -314,15 +328,19 @@ export function RosaMap({ mode, onModeChange }: RosaMapProps) {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
-          {variant === 'classic' ? <ClassicDiagram b={b} /> : <HcpDiagram b={b} />}
+          {variant === 'classic' && <ClassicDiagram b={b} />}
+          {variant === 'hcp' && <HcpDiagram b={b} />}
+          {variant === 'hyperfleet' && <HyperfleetContent mode={mode} />}
         </motion.div>
       </AnimatePresence>
 
-      <ApiCallChain mode={mode} variant={variant === 'classic' ? 'rosa-classic' : 'rosa-hcp'} />
-
-      <IamRbacBridge b={b} />
-
-      <ExploreMore links={DEEP_DIVE_LINKS.rosa} />
+      {variant !== 'hyperfleet' && (
+        <>
+          <ApiCallChain mode={mode} variant={variant === 'classic' ? 'rosa-classic' : 'rosa-hcp'} />
+          <IamRbacBridge b={b} />
+          <ExploreMore links={DEEP_DIVE_LINKS.rosa} />
+        </>
+      )}
     </div>
   );
 }

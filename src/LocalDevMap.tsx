@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Laptop } from 'lucide-react';
 import type { ExplainMode } from './types';
 import { ModeToggle } from './ModeToggle';
 import { ExploreMore, DEEP_DIVE_LINKS } from './ExploreMore';
@@ -208,7 +209,10 @@ export function LocalDevMap({ mode, onModeChange }: LocalDevMapProps) {
         <ModeToggle mode={mode} onModeChange={onModeChange} />
       </div>
 
-      <h2 className="dd-page-title">💻 Local Dev — <em>Red Hat OpenShift Local (crc) &amp; MicroShift</em></h2>
+      <h2 className="dd-page-title">
+        <Laptop size={22} className="dd-title-icon" style={{ color: '#1565C0' }} />
+        Local Dev — <em>Red Hat OpenShift Local (crc) &amp; MicroShift</em>
+      </h2>
 
       <AnimatePresence mode="wait">
         <motion.div

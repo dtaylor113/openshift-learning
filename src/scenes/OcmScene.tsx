@@ -58,19 +58,35 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
       </text>
 
       {/* Named cluster cards — 4 clusters in 2×2 grid */}
-      {CLUSTER_NAMES.map((name, i) => (
-        <g
-          key={i}
-          style={{ cursor: onNavigate ? 'pointer' : undefined }}
-          onClick={() => onNavigate?.(5)}
-        >
-          <rect x={35 + (i % 2) * 150} y={84 + Math.floor(i / 2) * 42} width="135" height="34" rx="6" fill="#fff" stroke="#E0E0E0" strokeWidth="1.5" />
-          <circle cx={47 + (i % 2) * 150} cy={97 + Math.floor(i / 2) * 42} r="4" fill="#66BB6A" />
-          <text x={55 + (i % 2) * 150} y={99 + Math.floor(i / 2) * 42} fontSize="7" fill="#333" fontWeight="bold">{name}</text>
-          <rect x={55 + (i % 2) * 150} y={103 + Math.floor(i / 2) * 42} width={40 + (i % 2) * 20} height="5" rx="2.5" fill="#F5F5F5" />
-          <ZoomLink parentX={35 + (i % 2) * 150} parentY={84 + Math.floor(i / 2) * 42} parentW={135} parentH={34} />
-        </g>
-      ))}
+      {CLUSTER_NAMES.map((name, i) => {
+        const cx = 35 + (i % 2) * 150;
+        const cy = 84 + Math.floor(i / 2) * 42;
+        const tx = 55 + (i % 2) * 150;
+        const ty = 99 + Math.floor(i / 2) * 42;
+        const num = name.replace('My OCP Cluster ', '');
+        const isFirst = i === 0;
+        return (
+          <g
+            key={i}
+            className={isFirst ? 'ocp-glossary-trigger' : undefined}
+            style={{ cursor: onNavigate ? 'pointer' : undefined }}
+            onClick={() => onNavigate?.(5)}
+          >
+            <rect x={cx} y={cy} width="135" height="34" rx="6" fill="#fff" stroke="#E0E0E0" strokeWidth="1.5" />
+            <circle cx={cx + 12} cy={ty - 2} r="4" fill="#66BB6A" />
+            <text x={tx} y={ty} fontSize="7" fill="#333" fontWeight="bold">
+              {'My '}
+              {isFirst ? <tspan fill="#78909C">OCP</tspan> : 'OCP'}
+              {` Cluster ${num}`}
+            </text>
+            {isFirst && (
+              <line x1={tx + 14} y1={ty + 1.5} x2={tx + 28} y2={ty + 1.5} stroke="#90A4AE" strokeWidth="0.5" strokeDasharray="1.2 0.8" />
+            )}
+            <rect x={tx} y={ty + 4} width={40 + (i % 2) * 20} height="5" rx="2.5" fill="#F5F5F5" />
+            <ZoomLink parentX={cx} parentY={cy} parentW={135} parentH={34} />
+          </g>
+        );
+      })}
 
       <AppMarker x={135} y={97} size="small" />
 
@@ -169,6 +185,14 @@ export function OcmScene({ mode, onDeepDive, onNavigate }: SceneProps) {
         {b ? 'Each cluster type (ROSA, OSD, etc.) is a different "franchise model" — click Create cluster to explore ↑'
            : 'Product IDs: ROSA (MOA), ROSA HCP (MOA_HOSTEDCONTROLPLANE), OSD, OCP_ASSISTEDINSTALL'}
       </text>
+
+      {/* OCP glossary tooltip — rendered last for top z-order */}
+      <g className="ocp-glossary-tip" pointerEvents="none">
+        <rect x={51} y={68} width="160" height="24" rx="4" fill="#333" opacity="0.94" />
+        <text x={55} y={78} fontSize="6.5" fill="#fff" fontWeight="bold">OpenShift Container Platform (OCP)</text>
+        <text x={55} y={85} fontSize="5" fill="#ddd">Red Hat's enterprise Kubernetes distribution</text>
+        <text x={55} y={90} fontSize="5" fill="#ddd">with built-in security and a web console.</text>
+      </g>
     </g>
   );
 }
