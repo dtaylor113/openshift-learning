@@ -1153,12 +1153,13 @@ body {
   white-space: nowrap;
 }
 
-/* Deep dive: pin to left gutter, wrap text so it doesn't overlay the SVG */
+/* Deep dive: pin to left gutter, vertically centered, wrap text */
 .glossary-bar.in-gutter {
   left: 12px;
   right: auto;
   bottom: auto;
-  top: 130px;
+  top: 50vh;
+  transform: translateY(-50%);
   max-width: calc((100vw - 1100px) / 2 - 20px);
   min-width: 140px;
   white-space: normal;
