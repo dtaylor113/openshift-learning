@@ -147,7 +147,7 @@ function HyperfleetDiagram({ b }: { b: boolean }) {
         <line x1="340" y1="226" x2="340" y2="240" stroke="#7986CB" strokeWidth="2" strokeDasharray="5 3" />
         <rect x="148" y="240" width="384" height="26" rx="7" fill="#E8EAF6" stroke="#7986CB" strokeWidth="1.2" />
         <text x="340" y="256" textAnchor="middle" fontSize="9.5" fill="#283593" fontWeight="bold">
-          📤 Settings relay — sends desired cluster state down to the computer below
+          📤 Settings relay — sends desired cluster state down to the Management Cluster below
         </text>
         <line x1="340" y1="266" x2="340" y2="282" stroke="#7986CB" strokeWidth="2" strokeDasharray="5 3" />
         <polygon points="334,278 340,286 346,278" fill="#7986CB" />
