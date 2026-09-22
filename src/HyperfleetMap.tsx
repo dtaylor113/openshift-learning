@@ -106,7 +106,7 @@ function HyperfleetDiagram({ b }: { b: boolean }) {
   /* ── BEGINNER: single-region exemplar, plain English, large text ── */
   if (b) {
     return (
-      <svg viewBox="0 0 680 572" className="rosa-svg">
+      <svg viewBox="0 0 680 592" className="rosa-svg">
 
         {/* ×3 badge */}
         <rect x="10" y="4" width="660" height="24" rx="8" fill="#E8EAF6" stroke="#7986CB" strokeWidth="1.2" />
@@ -115,7 +115,7 @@ function HyperfleetDiagram({ b }: { b: boolean }) {
         </text>
 
         {/* ── Red Hat Regional Cluster ── */}
-        <rect x="10" y="34" width="660" height="174" rx="12" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
+        <rect x="10" y="34" width="660" height="192" rx="12" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
         <text x="24" y="55" fontSize="13" fill="#CC0000" fontWeight="bold">🔴 Red Hat Regional Cluster</text>
 
         {/* Platform API */}
@@ -144,68 +144,69 @@ function HyperfleetDiagram({ b }: { b: boolean }) {
         </text>
 
         {/* ── Relay ── */}
-        <line x1="340" y1="212" x2="340" y2="228" stroke="#7986CB" strokeWidth="2" strokeDasharray="5 3" />
-        <rect x="148" y="228" width="384" height="26" rx="7" fill="#E8EAF6" stroke="#7986CB" strokeWidth="1.2" />
-        <text x="340" y="244" textAnchor="middle" fontSize="9.5" fill="#283593" fontWeight="bold">
+        <line x1="340" y1="226" x2="340" y2="240" stroke="#7986CB" strokeWidth="2" strokeDasharray="5 3" />
+        <rect x="148" y="240" width="384" height="26" rx="7" fill="#E8EAF6" stroke="#7986CB" strokeWidth="1.2" />
+        <text x="340" y="256" textAnchor="middle" fontSize="9.5" fill="#283593" fontWeight="bold">
           📤 Settings relay — sends desired cluster state down to the computer below
         </text>
-        <line x1="340" y1="254" x2="340" y2="270" stroke="#7986CB" strokeWidth="2" strokeDasharray="5 3" />
-        <polygon points="334,266 340,274 346,266" fill="#7986CB" />
+        <line x1="340" y1="266" x2="340" y2="282" stroke="#7986CB" strokeWidth="2" strokeDasharray="5 3" />
+        <polygon points="334,278 340,286 346,278" fill="#7986CB" />
 
         {/* ── Management Computer ── */}
-        <rect x="10" y="276" width="660" height="148" rx="12" fill="#EDE7F6" stroke="#7B1FA2" strokeWidth="2" />
-        <text x="24" y="297" fontSize="13" fill="#6A1B9A" fontWeight="bold">🖥 Management Computer</text>
+        <rect x="10" y="292" width="660" height="150" rx="12" fill="#EDE7F6" stroke="#7B1FA2" strokeWidth="2" />
+        <text x="24" y="312" fontSize="13" fill="#6A1B9A" fontWeight="bold">🖥 Management Computer</text>
+        <text x="24" y="326" fontSize="9" fill="#B39DDB" fontStyle="italic">🔴 also run by Red Hat (in Red Hat's AWS account)</text>
 
         {/* Settings Fetcher */}
-        <rect x="18" y="303" width="308" height="80" rx="8" fill="#fff" stroke="#CE93D8" strokeWidth="1.2" />
-        <text x="30" y="321" fontSize="11" fill="#6A1B9A" fontWeight="bold">📥 Settings Fetcher</text>
-        <text x="30" y="337" fontSize="9" fill="#555">Reads the relay above and applies</text>
-        <text x="30" y="352" fontSize="9" fill="#555">the settings to run your cluster here</text>
-        <text x="30" y="372" fontSize="8" fill="#aaa" fontStyle="italic">(kube-applier — pull-based)</text>
+        <rect x="18" y="332" width="308" height="80" rx="8" fill="#fff" stroke="#CE93D8" strokeWidth="1.2" />
+        <text x="30" y="350" fontSize="11" fill="#6A1B9A" fontWeight="bold">📥 Settings Fetcher</text>
+        <text x="30" y="366" fontSize="9" fill="#555">Reads the relay above and applies</text>
+        <text x="30" y="381" fontSize="9" fill="#555">the settings to run your cluster here</text>
+        <text x="30" y="400" fontSize="8" fill="#aaa" fontStyle="italic">(kube-applier — pull-based)</text>
 
         {/* Control Plane Engine */}
-        <rect x="338" y="303" width="324" height="80" rx="8" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.2" />
-        <text x="350" y="321" fontSize="11" fill="#B71C1C" fontWeight="bold">🧠 Control Plane Engine</text>
-        <text x="350" y="337" fontSize="9" fill="#555">Runs your OpenShift cluster's</text>
-        <text x="350" y="352" fontSize="9" fill="#555">"brain" — API, scheduling, self-healing</text>
-        <text x="350" y="372" fontSize="8" fill="#aaa" fontStyle="italic">(HyperShift — one per customer cluster)</text>
+        <rect x="338" y="332" width="324" height="80" rx="8" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.2" />
+        <text x="350" y="350" fontSize="11" fill="#B71C1C" fontWeight="bold">🧠 Control Plane Engine</text>
+        <text x="350" y="366" fontSize="9" fill="#555">Runs your OpenShift cluster's</text>
+        <text x="350" y="381" fontSize="9" fill="#555">"brain" — API, scheduling, self-healing</text>
+        <text x="350" y="400" fontSize="8" fill="#aaa" fontStyle="italic">(HyperShift — one per customer cluster)</text>
 
         {/* Lifecycle row */}
-        <rect x="18" y="389" width="644" height="26" rx="6" fill="#fff" stroke="#CE93D8" strokeWidth="0.8" />
-        <text x="30" y="406" fontSize="9.5" fill="#6A1B9A">🔑 Certificate manager · 🌐 DNS manager · 📊 Cluster health checks</text>
+        <rect x="18" y="418" width="644" height="20" rx="6" fill="#fff" stroke="#CE93D8" strokeWidth="0.8" />
+        <text x="30" y="432" fontSize="9.5" fill="#6A1B9A">🔑 Certificate manager · 🌐 DNS manager · 📊 Cluster health checks</text>
 
         {/* Arrow */}
-        <line x1="340" y1="428" x2="340" y2="446" stroke="#FF9900" strokeWidth="2.5" />
-        <polygon points="334,442 340,450 346,442" fill="#FF9900" />
+        <line x1="340" y1="448" x2="340" y2="466" stroke="#FF9900" strokeWidth="2.5" />
+        <polygon points="334,462 340,470 346,462" fill="#FF9900" />
 
         {/* ── Customer AWS ── */}
-        <rect x="10" y="452" width="660" height="116" rx="12" fill="#FFF8E1" stroke="#FF9900" strokeWidth="2" />
-        <text x="24" y="473" fontSize="13" fill="#E65100" fontWeight="bold">🟠 Your AWS Account</text>
+        <rect x="10" y="472" width="660" height="116" rx="12" fill="#FFF8E1" stroke="#FF9900" strokeWidth="2" />
+        <text x="24" y="493" fontSize="13" fill="#E65100" fontWeight="bold">🟠 Your AWS Account</text>
 
         {/* Workers */}
-        <rect x="18" y="479" width="310" height="76" rx="8" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1" strokeDasharray="4 2" />
-        <text x="30" y="495" fontSize="10" fill="#6A1B9A" fontWeight="bold">Node Pool (your worker machines)</text>
+        <rect x="18" y="499" width="310" height="76" rx="8" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1" strokeDasharray="4 2" />
+        <text x="30" y="515" fontSize="10" fill="#6A1B9A" fontWeight="bold">Node Pool (your worker machines)</text>
         {[0, 1, 2].map(j => (
           <g key={j}>
-            <rect x={30 + j * 93} y={500} width={84} height={20} rx="4" fill="#EDE7F6" stroke="#CE93D8" strokeWidth="0.8" />
-            <text x={36 + j * 93} y={513} fontSize="8.5" fill="#6A1B9A">Worker {j + 1}</text>
-            <rect x={30 + j * 93} y={524} width={84} height={14} rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.5" />
-            <text x={36 + j * 93} y={534} fontSize="7.5" fill="#2E7D32">your pods</text>
+            <rect x={30 + j * 93} y={520} width={84} height={20} rx="4" fill="#EDE7F6" stroke="#CE93D8" strokeWidth="0.8" />
+            <text x={36 + j * 93} y={533} fontSize="8.5" fill="#6A1B9A">Worker {j + 1}</text>
+            <rect x={30 + j * 93} y={544} width={84} height={14} rx="3" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="0.5" />
+            <text x={36 + j * 93} y={554} fontSize="7.5" fill="#2E7D32">your pods</text>
           </g>
         ))}
 
         {/* AWS Infra */}
-        <rect x="338" y="479" width="324" height="76" rx="8" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1" />
-        <text x="350" y="495" fontSize="10" fill="#E65100" fontWeight="bold">🔧 AWS Infrastructure</text>
+        <rect x="338" y="499" width="324" height="76" rx="8" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1" />
+        <text x="350" y="515" fontSize="10" fill="#E65100" fontWeight="bold">🔧 AWS Infrastructure</text>
         {['🌐 Virtual network (VPC)', '💿 Storage disks (EBS)', '🔤 DNS routing (Route53)', '🔑 Access permissions (IAM)'].map((s, j) => (
           <g key={j}>
-            <rect x="350" y={500 + j * 14} width="304" height="12" rx="2" fill="#fff" stroke="#FFE0B2" strokeWidth="0.5" />
-            <text x="356" y={510 + j * 14} fontSize="8.5" fill="#BF360C">{s}</text>
+            <rect x="350" y={520 + j * 14} width="304" height="12" rx="2" fill="#fff" stroke="#FFE0B2" strokeWidth="0.5" />
+            <text x="356" y={530 + j * 14} fontSize="8.5" fill="#BF360C">{s}</text>
           </g>
         ))}
 
         {/* Bottom callout */}
-        <rect x="10" y="575" width="660" height="0" fill="none" />
+        <rect x="10" y="595" width="660" height="0" fill="none" />
       </svg>
     );
   }
@@ -666,13 +667,17 @@ export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
         </motion.div>
       </AnimatePresence>
 
-      <RegionalExample b={b} />
-      <ArchCallout b={b} />
-      <AuthComparison b={b} />
-      <CedarPolicies b={b} />
-      <ZoaSection b={b} />
-      <ApiResources b={b} />
-      <OcmuiImpact b={b} />
+      {view === 'hyperfleet' && (
+        <>
+          <RegionalExample b={b} />
+          <ArchCallout b={b} />
+          <AuthComparison b={b} />
+          <CedarPolicies b={b} />
+          <ZoaSection b={b} />
+          <ApiResources b={b} />
+          <OcmuiImpact b={b} />
+        </>
+      )}
 
       <ExploreMore links={DEEP_DIVE_LINKS.hyperfleet} />
     </>
