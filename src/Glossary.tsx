@@ -121,6 +121,13 @@ export const GLOSSARY: Record<string, string> = {
   FIPS: 'Federal Information Processing Standards — US government cryptography standards required by some regulated industries.',
   'clusters_mgmt': 'The V1 OCM API (api.openshift.com) that manages cluster lifecycle today — the predecessor to the regional Platform API.',
   BFF: 'Backend For Frontend — a server-side proxy that translates browser-friendly requests into the format required by a backend API.',
+  Route53: 'Amazon Route 53 — AWS\'s DNS service, used by OpenShift to resolve the cluster API endpoint and application ingress domains.',
+  S3: 'Amazon Simple Storage Service — AWS object storage used by OpenShift for the internal container image registry.',
+  ELB: 'Elastic Load Balancer — AWS\'s classic load balancer for distributing inbound cluster traffic across nodes.',
+  GCS: 'Google Cloud Storage — GCP\'s object storage service, used by OpenShift for the internal container image registry on GCP.',
+  'Persistent Disks': 'Google Cloud Persistent Disks — GCP\'s block storage, used for persistent volume claims and etcd in OpenShift on GCP.',
+  'Cloud DNS': 'Google Cloud DNS — GCP\'s managed DNS service, used to resolve the cluster API and application ingress domains.',
+  'Cloud Load Balancing': 'Google Cloud Load Balancing — GCP\'s load balancer service, equivalent to AWS NLB/ALB, used for cluster ingress traffic.',
 };
 
 /** Inline glossary term — shows definition in the footer bar on hover */

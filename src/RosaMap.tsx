@@ -128,8 +128,8 @@ function ClassicDiagram({ b }: { b: boolean }) {
         <>{tip('VPC')} + Subnets</>,
         <>{tip('EBS')} Volumes</>,
         <>{tip('NLB')} / {tip('ALB')}</>,
-        'Route53',
-        'S3 Registry',
+        <>{tip('Route53')}</>,
+        <>{tip('S3')} Registry</>,
         <>{tip('IAM')} Roles ({tip('STS')})</>,
       ]).map((item, i) => (
         <g key={i}>
@@ -257,7 +257,7 @@ function HcpDiagram({ b }: { b: boolean }) {
         <>{tip('VPC')} + {tip('PrivateLink')}</>,
         <>{tip('EBS')} Volumes</>,
         <>{tip('NLB')} / {tip('ALB')}</>,
-        'Route53',
+        <>{tip('Route53')}</>,
         <>{tip('IAM')} Roles ({tip('STS')})</>,
       ]).map((item, i) => (
         <g key={i}>

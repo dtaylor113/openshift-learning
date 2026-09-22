@@ -62,19 +62,19 @@ function OsdDiagram({ b, cloud, infraModel }: DiagramProps) {
   // Cloud infra items
   const infraItems = isAws
     ? [
-        b ? 'Network (VPC)' : 'VPC + Subnets',
-        b ? 'Storage disks' : 'EBS Volumes',
-        b ? 'Load balancers' : 'ELB / NLB',
-        b ? 'DNS' : 'Route53',
-        b ? 'Image storage' : 'S3 Registry',
+        b ? 'Network (VPC)' : <>{tip('VPC')} + Subnets</>,
+        b ? 'Storage disks' : <>{tip('EBS')} Volumes</>,
+        b ? 'Load balancers' : <>{tip('ELB')} / {tip('NLB')}</>,
+        b ? 'DNS' : <>{tip('Route53')}</>,
+        b ? 'Image storage' : <>{tip('S3')} Registry</>,
       ]
     : [
-        b ? 'Network (VPC)' : 'VPC + Subnets',
-        b ? 'Storage disks' : 'Persistent Disks',
-        b ? 'Load balancers' : 'Cloud Load Balancing',
-        b ? 'DNS' : 'Cloud DNS',
-        b ? 'Image storage' : 'GCS Registry',
-        b ? 'Permissions' : 'IAM + Service Accounts',
+        b ? 'Network (VPC)' : <>{tip('VPC')} + Subnets</>,
+        b ? 'Storage disks' : <>{tip('Persistent Disks')}</>,
+        b ? 'Load balancers' : <>{tip('Cloud Load Balancing')}</>,
+        b ? 'DNS' : <>{tip('Cloud DNS')}</>,
+        b ? 'Image storage' : <>{tip('GCS')} Registry</>,
+        b ? 'Permissions' : <>{tip('IAM')} + Service Accounts</>,
       ];
 
   // Credential callout (AWS CCS only — static keys)
