@@ -57,8 +57,6 @@ function OsdDiagram({ b, cloud, infraModel }: DiagramProps) {
 
   // Instance types
   const cpInstanceType = isAws ? '3× m5.xlarge' : '3× n1-standard-4';
-  const poolBackend = isAws ? 'AWS ASG' : 'GCE MIG';
-
   // Cloud infra items
   const infraItems = isAws
     ? [

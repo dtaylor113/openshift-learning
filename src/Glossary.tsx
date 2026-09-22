@@ -24,6 +24,7 @@ export const GLOSSARY: Record<string, string> = {
   SCC: 'Security Context Constraint — OpenShift rules that control what containers are allowed to do on a node.',
   MCO: 'Machine Config Operator — manages the operating system and configuration of cluster nodes.',
   RHCOS: 'Red Hat CoreOS — the minimal, immutable operating system that runs on every OpenShift node.',
+  RHEL: 'Red Hat Enterprise Linux — Red Hat\'s enterprise-grade Linux distribution, used by HyperFleet on EKS nodes to enable FIPS-validated cryptography.',
   K8s: 'Kubernetes — abbreviated as K-8 letters-s (K8s). The open-source container orchestration system that OpenShift is built on.',
   TLS: 'Transport Layer Security — encryption protocol that secures network traffic (the "S" in HTTPS).',
   OIDC: 'OpenID Connect — a login protocol built on OAuth2 that lets users sign in with an external identity provider.',
@@ -128,6 +129,12 @@ export const GLOSSARY: Record<string, string> = {
   'Persistent Disks': 'Google Cloud Persistent Disks — GCP\'s block storage, used for persistent volume claims and etcd in OpenShift on GCP.',
   'Cloud DNS': 'Google Cloud DNS — GCP\'s managed DNS service, used to resolve the cluster API and application ingress domains.',
   'Cloud Load Balancing': 'Google Cloud Load Balancing — GCP\'s load balancer service, equivalent to AWS NLB/ALB, used for cluster ingress traffic.',
+  Aurora: 'Amazon Aurora — AWS\'s cloud-native PostgreSQL-compatible managed database, used by HyperFleet as the primary state store for all cluster controllers.',
+  Karpenter: 'An open-source Kubernetes node autoscaler that provisions nodes on demand — HyperFleet uses it instead of EKS Auto Mode to support custom RHEL AMIs needed for FIPS compliance.',
+  ExternalDNS: 'A Kubernetes controller that automatically creates and updates DNS records for cluster services and ingress endpoints.',
+  CertManager: 'A Kubernetes controller that automates TLS certificate provisioning and renewal from certificate authorities.',
+  ArgoCD: 'A declarative GitOps continuous delivery tool for Kubernetes — used on HyperFleet\'s Regional Cluster to manage application lifecycles.',
+  ZOA: 'Zero Operator Access — HyperFleet\'s security model where operators have no standing credentials; every action runs as a pre-approved, Jira-linked Trusted Action with a full audit trail.',
 };
 
 /** Inline glossary term — shows definition in the footer bar on hover */

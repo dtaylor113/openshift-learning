@@ -343,12 +343,12 @@ export function RosaMap({ mode, onModeChange, initialVariant }: RosaMapProps) {
           {variant === 'classic' ? (
             <p>{b
               ? '📌 In ROSA Classic, the control plane runs on machines in YOUR AWS account. Red Hat manages it, but you pay for those cloud machines. Machine Pools let you add or remove groups of worker machines.'
-              : <>📌 {g('Classic')}: 3 {g('Control Plane')} nodes (m5.xlarge) in-cluster. Customer pays for CP EC2. {g('MachineSet')}-based {g('Machine Pool', 'Machine Pools')} → {g('ASG', 'ASGs')}. {g('SRE')} access via backplane.</>}
+              : <>📌 {g('Classic')}: 3 {g('Control Plane')} nodes (m5.xlarge) in-cluster. Customer pays for CP EC2. {g('MachineSet')}-based {g('Machine Pool')} → {g('ASG')}. {g('SRE')} access via backplane.</>}
             </p>
           ) : (
             <p>{b
               ? '📌 In ROSA HCP, the control plane runs in Red Hat\'s AWS account — you never see or pay for those machines. Only your worker nodes are in your AWS account. This is simpler, cheaper, and faster to set up (~10 minutes).'
-              : <>📌 {g('HCP')}: {g('Control Plane')} in Red Hat's {g('AWS')} via {g('HyperShift')}. Customer only pays for worker EC2. {g('Node Pool', 'NodePool')}-based (not {g('MachineSet')}). {g('PrivateLink')} connects CP ↔ workers. ~10 min provisioning. Lower CP cost.</>}
+              : <>📌 {g('HCP')}: {g('Control Plane')} in Red Hat's {g('AWS')} via {g('HyperShift')}. Customer only pays for worker EC2. {g('Node Pool')}-based (not {g('MachineSet')}). {g('PrivateLink')} connects CP ↔ workers. ~10 min provisioning. Lower CP cost.</>}
             </p>
           )}
         </div>
