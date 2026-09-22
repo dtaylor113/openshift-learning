@@ -1150,10 +1150,27 @@ body {
   padding: 6px 12px;
   border-radius: 6px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  white-space: nowrap;
 }
+
+/* Deep dive: pin to left gutter, wrap text so it doesn't overlay the SVG */
+.glossary-bar.in-gutter {
+  left: 12px;
+  right: auto;
+  bottom: auto;
+  top: 130px;
+  max-width: calc((100vw - 1100px) / 2 - 20px);
+  min-width: 140px;
+  white-space: normal;
+  line-height: 1.55;
+  align-items: flex-start;
+  font-size: 12px;
+}
+
 .glossary-footer-icon {
   color: #78909C;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
 /* ---- Responsive ---- */

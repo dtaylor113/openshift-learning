@@ -205,19 +205,20 @@ function App() {
           <DeepDive mode={mode} onModeChange={setMode} initialTab={deepDiveTab} initialRosaVariant={rosaVariant} />
         </main>
       )}
-      <GlossaryFooter />
+      <GlossaryFooter view={view} />
     </div>
   );
 }
 
-function GlossaryFooter() {
+function GlossaryFooter({ view }: { view: View }) {
   const { state } = useGlossary();
+  const inGutter = view === 'deep-dive';
   return (
     <>
       {state.term && (
-        <div className="glossary-bar">
-          <BookOpen size={14} className="glossary-footer-icon" />
-          <strong>{state.term}</strong> — {state.definition}
+        <div className={`glossary-bar${inGutter ? ' in-gutter' : ''}`}>
+          <BookOpen size={14} className="glossary-footer-icon" style={{ flexShrink: 0 }} />
+          <span><strong>{state.term}</strong> — {state.definition}</span>
         </div>
       )}
       <footer className="app-footer">by Dave Taylor</footer>
