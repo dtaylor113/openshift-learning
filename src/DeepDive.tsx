@@ -20,15 +20,6 @@ interface DeepDiveProps {
   initialRosaVariant?: RosaVariant;
 }
 
-function BrandLogo({ srcs, alt }: { srcs: string[]; alt: string }) {
-  return (
-    <span className="dd-tab-brand-logo">
-      {srcs.map((src, i) => (
-        <img key={i} src={import.meta.env.BASE_URL + src} alt={alt} className="dd-brand-img" />
-      ))}
-    </span>
-  );
-}
 
 const TABS: { id: DeepDiveTab; label: string; icon: ReactNode; color: string; tagline: string }[] = [
   { id: 'overview', label: 'Overview', icon: <Map size={16} />, color: '#6A1B9A', tagline: 'Compare all cluster types' },

@@ -5,7 +5,7 @@ import type { ExplainMode } from './types';
 interface MinimapProps {
   currentIndex: number;
   onNavigate: (index: number) => void;
-  mode: ExplainMode;
+  mode?: ExplainMode;
 }
 
 const ANALOGIES = [
@@ -18,7 +18,7 @@ const ANALOGIES = [
   { icon: '🏛️', label: 'Corporate HQ (oversees all locations)' },
 ];
 
-export function Minimap({ currentIndex, onNavigate, mode }: MinimapProps) {
+export function Minimap({ currentIndex, onNavigate }: MinimapProps) {
   const levels = [...ZOOM_LEVELS].reverse();
   const totalLevels = levels.length;
 
