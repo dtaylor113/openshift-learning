@@ -248,7 +248,7 @@ export function DeepDive({ mode, onModeChange, initialTab }: DeepDiveProps) {
             <button
               key={tab.id}
               className={`dd-tab ${isActive ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => { setActiveTab(tab.id); window.location.hash = tab.id; }}
               style={isActive ? { borderColor: tab.color, color: tab.color } : undefined}
             >
               <span className="dd-tab-icon" style={{ color: tab.color }}>{tab.icon}</span>

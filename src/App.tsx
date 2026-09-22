@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Telescope } from 'lucide-react';
 import { ZOOM_LEVELS } from './types';
 import type { ExplainMode } from './types';
@@ -11,9 +11,28 @@ import './App.css';
 
     type View = 'explorer' | 'deep-dive';
 
+const DEEP_DIVE_TABS = ['overview', 'rosa', 'osd', 'assisted', 'local', 'hyperfleet', 'ocp-console'] as const;
+const EXPLORER_LEVELS = ZOOM_LEVELS.map(l => l.id);
+
+function parseHash(): { view: View; levelId?: string; tab?: DeepDiveTab } {
+  const hash = window.location.hash.replace('#', '');
+  if (!hash) return { view: 'explorer' };
+  if (DEEP_DIVE_TABS.includes(hash as DeepDiveTab)) return { view: 'deep-dive', tab: hash as DeepDiveTab };
+  if (hash === 'deep-dive') return { view: 'deep-dive', tab: 'overview' };
+  if (EXPLORER_LEVELS.includes(hash)) return { view: 'explorer', levelId: hash };
+  return { view: 'explorer' };
+}
+
 function App() {
-  const [view, setView] = useState<View>('explorer');
-  const [currentIndex, setCurrentIndex] = useState(ZOOM_LEVELS.length - 1);
+  const initial = parseHash();
+  const [view, setView] = useState<View>(initial.view);
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    if (initial.levelId) {
+      const idx = ZOOM_LEVELS.findIndex(l => l.id === initial.levelId);
+      return idx >= 0 ? idx : ZOOM_LEVELS.length - 1;
+    }
+    return ZOOM_LEVELS.length - 1;
+  });
   const [direction, setDirection] = useState(1);
   const [mode, setMode] = useState<ExplainMode>('beginner');
   const isTransitioning = useRef(false);
@@ -34,12 +53,43 @@ function App() {
     }, 700);
   }, [currentIndex]);
 
-  const [deepDiveTab, setDeepDiveTab] = useState<DeepDiveTab>('overview');
+  const [deepDiveTab, setDeepDiveTab] = useState<DeepDiveTab>(initial.tab || 'overview');
   const openDeepDive = useCallback((tab?: string) => {
-    setDeepDiveTab((tab as DeepDiveTab) || 'overview');
+    const t = (tab as DeepDiveTab) || 'overview';
+    setDeepDiveTab(t);
     setView('deep-dive');
+    window.location.hash = t;
   }, []);
-  const backToExplorer = useCallback(() => setView('explorer'), []);
+  const backToExplorer = useCallback(() => {
+    setView('explorer');
+    window.location.hash = ZOOM_LEVELS[currentIndex].id;
+  }, [currentIndex]);
+
+  // Sync hash when explorer level changes
+  useEffect(() => {
+    if (view === 'explorer') {
+      window.location.hash = ZOOM_LEVELS[currentIndex].id;
+    }
+  }, [view, currentIndex]);
+
+  // Handle browser back/forward
+  useEffect(() => {
+    const onHashChange = () => {
+      const parsed = parseHash();
+      if (parsed.view === 'deep-dive') {
+        setView('deep-dive');
+        setDeepDiveTab(parsed.tab || 'overview');
+      } else {
+        setView('explorer');
+        if (parsed.levelId) {
+          const idx = ZOOM_LEVELS.findIndex(l => l.id === parsed.levelId);
+          if (idx >= 0) setCurrentIndex(idx);
+        }
+      }
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
 
   const handleWheel = useCallback(
     (e: React.WheelEvent) => {
