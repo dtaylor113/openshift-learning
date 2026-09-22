@@ -152,24 +152,24 @@ function HyperfleetDiagram({ b }: { b: boolean }) {
         <line x1="340" y1="266" x2="340" y2="282" stroke="#7986CB" strokeWidth="2" strokeDasharray="5 3" />
         <polygon points="334,278 340,286 346,278" fill="#7986CB" />
 
-        {/* ── Management Computer ── */}
+        {/* ── Management Cluster (MC) ── */}
         <rect x="10" y="292" width="660" height="150" rx="12" fill="#EDE7F6" stroke="#7B1FA2" strokeWidth="2" />
-        <text x="24" y="312" fontSize="13" fill="#6A1B9A" fontWeight="bold">🖥 Management Computer</text>
-        <text x="24" y="326" fontSize="9" fill="#B39DDB" fontStyle="italic">🔴 also run by Red Hat (in Red Hat's AWS account)</text>
+        <text x="24" y="312" fontSize="13" fill="#6A1B9A" fontWeight="bold">🖥 Management Cluster (MC)</text>
+        <text x="24" y="327" fontSize="9" fill="#7E57C2">Red Hat's EKS cluster · same region · your control plane runs here in its own isolated space</text>
 
         {/* Settings Fetcher */}
-        <rect x="18" y="332" width="308" height="80" rx="8" fill="#fff" stroke="#CE93D8" strokeWidth="1.2" />
-        <text x="30" y="350" fontSize="11" fill="#6A1B9A" fontWeight="bold">📥 Settings Fetcher</text>
-        <text x="30" y="366" fontSize="9" fill="#555">Reads the relay above and applies</text>
-        <text x="30" y="381" fontSize="9" fill="#555">the settings to run your cluster here</text>
-        <text x="30" y="400" fontSize="8" fill="#aaa" fontStyle="italic">(kube-applier — pull-based)</text>
+        <rect x="18" y="335" width="308" height="80" rx="8" fill="#fff" stroke="#CE93D8" strokeWidth="1.2" />
+        <text x="30" y="353" fontSize="11" fill="#6A1B9A" fontWeight="bold">📥 Config Sync Agent</text>
+        <text x="30" y="369" fontSize="9" fill="#555">Fetches desired cluster state from</text>
+        <text x="30" y="384" fontSize="9" fill="#555">the relay, applies it here</text>
+        <text x="30" y="403" fontSize="8" fill="#aaa" fontStyle="italic">(kube-applier — pull-based)</text>
 
         {/* Control Plane Engine */}
-        <rect x="338" y="332" width="324" height="80" rx="8" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.2" />
-        <text x="350" y="350" fontSize="11" fill="#B71C1C" fontWeight="bold">🧠 Control Plane Engine</text>
-        <text x="350" y="366" fontSize="9" fill="#555">Runs your OpenShift cluster's</text>
-        <text x="350" y="381" fontSize="9" fill="#555">"brain" — API, scheduling, self-healing</text>
-        <text x="350" y="400" fontSize="8" fill="#aaa" fontStyle="italic">(HyperShift — one per customer cluster)</text>
+        <rect x="338" y="335" width="324" height="80" rx="8" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1.2" />
+        <text x="350" y="353" fontSize="11" fill="#B71C1C" fontWeight="bold">🧠 Your Control Plane</text>
+        <text x="350" y="369" fontSize="9" fill="#555">Runs in its own isolated namespace —</text>
+        <text x="350" y="384" fontSize="9" fill="#555">Red Hat's infra, but only your cluster</text>
+        <text x="350" y="403" fontSize="8" fill="#aaa" fontStyle="italic">(HyperShift HostedCluster)</text>
 
         {/* Lifecycle row */}
         <rect x="18" y="418" width="644" height="20" rx="6" fill="#fff" stroke="#CE93D8" strokeWidth="0.8" />
