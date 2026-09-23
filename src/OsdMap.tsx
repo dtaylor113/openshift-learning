@@ -356,17 +356,15 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
         </motion.div>
       </AnimatePresence>
 
-      <div className="rosa-variant-note">
-        <p>{infraModel === 'ccs'
-          ? (b
-            ? `📌 CCS Model: The cluster runs in YOUR ${cloud === 'aws' ? 'AWS account' : 'Google Cloud project'}. You pay ${cloud === 'aws' ? 'AWS' : 'Google'} directly for compute, storage, and networking. Red Hat manages the cluster but you own the cloud resources.`
-            : <>{g(`📌 OSD ${cloud.toUpperCase()} (CCS): Cluster in customer ${cloud === 'aws' ? 'AWS account' : 'GCP project'}. Customer pays ${cloud === 'aws' ? 'AWS' : 'GCP'} directly. Customer provides ${cloud === 'aws' ? 'IAM credentials' : 'service account credentials'}. ${cloud === 'aws' ? 'm5.xlarge instances. ASG-based' : 'n1-standard instances. GCE MIG-based'} Machine Pools.`)}</>)
-          : (b
-            ? `📌 Red Hat Account Model: The cluster runs in a ${cloud === 'aws' ? 'AWS account' : 'Google Cloud project'} owned by Red Hat. You don't need your own ${cloud === 'aws' ? 'AWS' : 'GCP'} account! All infrastructure costs are bundled into your OSD subscription.`
-            : <>{g(`📌 OSD ${cloud.toUpperCase()} (RH Account): Cluster in RH-owned ${cloud === 'aws' ? 'AWS account' : 'GCP project'}. Infrastructure costs bundled in OSD subscription. No customer cloud credentials needed. Simplified billing.`)}</>)
-        }
-        </p>
-      </div>
+      {!b && (
+        <div className="rosa-variant-note">
+          <p>{infraModel === 'ccs'
+            ? <>{g(`📌 OSD ${cloud.toUpperCase()} (CCS): Cluster in customer ${cloud === 'aws' ? 'AWS account' : 'GCP project'}. Customer pays ${cloud === 'aws' ? 'AWS' : 'GCP'} directly. Customer provides ${cloud === 'aws' ? 'IAM credentials' : 'service account credentials'}. ${cloud === 'aws' ? 'm5.xlarge instances. ASG-based' : 'n1-standard instances. GCE MIG-based'} Machine Pools.`)}</>
+            : <>{g(`📌 OSD ${cloud.toUpperCase()} (RH Account): Cluster in RH-owned ${cloud === 'aws' ? 'AWS account' : 'GCP project'}. Infrastructure costs bundled in OSD subscription. No customer cloud credentials needed. Simplified billing.`)}</>
+          }
+          </p>
+        </div>
+      )}
 
       <div className="rosa-variant-note" style={{ borderLeft: '4px solid #7B1FA2' }}>
         <p><strong>🏢 {b ? 'Two ways to pay for the cloud infrastructure' : 'Infrastructure Models: CCS vs Red Hat Account'}</strong></p>
