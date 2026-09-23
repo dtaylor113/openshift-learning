@@ -383,7 +383,7 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
       <ApiCallChain mode={mode} variant={cloud === 'aws' ? 'osd-aws' : 'osd-gcp'} />
 
       {/* AWS credential model — the KEY difference (AWS only) */}
-      {isAws && <div className="rosa-variant-note" style={{ borderLeft: '4px solid #FF9900' }}>
+      {cloud === 'aws' && <div className="rosa-variant-note" style={{ borderLeft: '4px solid #FF9900' }}>
         <p><strong>🔑 {b ? 'The #1 difference on AWS: How Red Hat connects to your account' : <>{g('AWS')} Credential Model: {g('OSD')} vs {g('ROSA')}</>}</strong></p>
         <p>{b
           ? 'OSD AWS: You give Red Hat a long-lived AWS Access Key ID and Secret Access Key. Red Hat stores these credentials and uses them to manage your cluster. If they\'re compromised, an attacker could access your AWS account until you rotate them.'
@@ -399,7 +399,7 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
         </p>
       </div>}
 
-      {isAws && <div className="rosa-bridge">
+      {cloud === 'aws' && <div className="rosa-bridge">
         <h4>{b ? '🔄 OSD AWS vs ROSA — Full comparison' : '🔄 OSD AWS vs ROSA Comparison'}</h4>
         <div className="rosa-bridge-content">
           <div className="rosa-bridge-side">
