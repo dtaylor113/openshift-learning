@@ -63,8 +63,8 @@ function TodayDiagram({ b }: { b: boolean }) {
       <line x1="400" y1="180" x2="400" y2="260" stroke="#999" strokeWidth="1.5" strokeDasharray="5 3" />
       <line x1="500" y1="180" x2="680" y2="260" stroke="#999" strokeWidth="1.5" strokeDasharray="5 3" />
 
-      {/* Distance/latency labels */}
-      <text x="170" y="225" fontSize="8" fill="#999" transform="rotate(-25 170 225)">{b ? '⚡ long distance' : 'cross-region latency'}</text>
+      {/* Distance/latency labels — Frankfurt (middle) and Tokyo connectors */}
+      <text x="400" y="218" fontSize="8" fill="#999" transform="rotate(0 400 218)">{b ? '⚡ long distance' : 'cross-region latency'}</text>
       <text x="550" y="225" fontSize="8" fill="#999" transform="rotate(25 550 225)">{b ? '⚡ long distance' : 'cross-region latency'}</text>
 
       {/* Customer clusters worldwide */}
@@ -89,6 +89,320 @@ function TodayDiagram({ b }: { b: boolean }) {
       <rect x="120" y="405" width="560" height="14" rx="4" fill="#FFF9C4" stroke="#FBC02D" strokeWidth="0.8" />
       <text x="400" y="415" textAnchor="middle" fontSize="8" fill="#F57F17" fontWeight="bold">
         {b ? '⚠️ ALL cluster metadata goes to Virginia, even for clusters in Tokyo or Frankfurt' : '⚠️ All cluster metadata stored in us-east-1 regardless of cluster region'}
+      </text>
+    </svg>
+  );
+}
+
+function ClusterCreateDiagram({ b }: { b: boolean }) {
+  const { show, hide } = useGlossary();
+  const tip = (term: string, label?: string) => (
+    <tspan fill="#78909C" className="svg-glossary-term"
+      onMouseEnter={() => show(term, GLOSSARY[term])}
+      onMouseLeave={hide}
+    >{label || term}</tspan>
+  );
+
+  if (b) {
+    return (
+      <>
+        <svg viewBox="0 0 660 468" className="rosa-svg">
+          {/* Aiko */}
+          <rect x="10" y="10" width="640" height="40" rx="8" fill="#F3E5F5" stroke="#9C27B0" strokeWidth="1.5" />
+          <text x="330" y="28" textAnchor="middle" fontSize="11" fill="#6A1B9A" fontWeight="bold">🇯🇵 Aiko (based in Tokyo) opens console.redhat.com/openshift</text>
+          <text x="330" y="43" textAnchor="middle" fontSize="9" fill="#7B1FA2">Clicks "Create Cluster" · selects, or defaults to, Tokyo · fills in settings (VPC, node size, version)</text>
+
+          {/* arrow */}
+          <line x1="330" y1="50" x2="330" y2="66" stroke="#9C27B0" strokeWidth="1.8" />
+          <polygon points="325,62 330,70 335,62" fill="#9C27B0" />
+          <rect x="338" y="52" width="148" height="14" rx="3" fill="#F3E5F5" />
+          <text x="344" y="63" fontSize="8.5" fill="#6A1B9A">create cluster in Tokyo</text>
+
+          {/* UI + Translator */}
+          <rect x="10" y="70" width="640" height="38" rx="8" fill="#E8EAF6" stroke="#3949AB" strokeWidth="1.2" />
+          <text x="330" y="87" textAnchor="middle" fontSize="10.5" fill="#283593" fontWeight="bold">Assumption: translator, or the website calls Tokyo directly</text>
+          <text x="330" y="102" textAnchor="middle" fontSize="9" fill="#444">Not in the architecture blog · the create goes only to the Tokyo Platform API</text>
+
+          {/* arrow */}
+          <line x1="330" y1="108" x2="330" y2="124" stroke="#E65100" strokeWidth="1.8" />
+          <polygon points="325,120 330,128 335,120" fill="#E65100" />
+
+          {/* Tokyo RC */}
+          <rect x="10" y="128" width="640" height="108" rx="10" fill="#FDE8E8" stroke="#CC0000" strokeWidth="2" />
+          <text x="24" y="148" fontSize="12" fill="#CC0000" fontWeight="bold">🔴 Tokyo Regional Cluster (RC) — Red Hat's infra, ap-northeast-1</text>
+          <rect x="18" y="155" width="304" height="72" rx="7" fill="#fff" stroke="#EF5350" strokeWidth="1" />
+          <text x="30" y="173" fontSize="10" fill="#C62828" fontWeight="bold">⚙️ Platform API</text>
+          <text x="30" y="188" fontSize="9" fill="#444">Receives + validates create request</text>
+          <text x="30" y="203" fontSize="9" fill="#444">Checks Cedar policies, account link</text>
+          <text x="30" y="218" fontSize="9" fill="#444">Returns: cluster ID + status</text>
+          <rect x="332" y="155" width="310" height="72" rx="7" fill="#E8F5E9" stroke="#66BB6A" strokeWidth="1" />
+          <text x="344" y="173" fontSize="10" fill="#2E7D32" fontWeight="bold">🗄️ Aurora DB (Tokyo)</text>
+          <text x="344" y="188" fontSize="9" fill="#444">Stores desired cluster state</text>
+          <text x="344" y="203" fontSize="9" fill="#444">Source of truth for this region</text>
+          <text x="344" y="218" fontSize="9" fill="#2E7D32" fontWeight="600">Data stays in Tokyo ✅</text>
+
+          {/* arrow */}
+          <line x1="330" y1="236" x2="330" y2="252" stroke="#7B1FA2" strokeWidth="1.8" />
+          <polygon points="325,248 330,256 335,248" fill="#7B1FA2" />
+
+          {/* Tokyo MC */}
+          <rect x="10" y="256" width="640" height="80" rx="10" fill="#EDE7F6" stroke="#7B1FA2" strokeWidth="1.8" />
+          <text x="24" y="274" fontSize="12" fill="#6A1B9A" fontWeight="bold">🖥 Tokyo Management Cluster (MC)</text>
+          <text x="24" y="288" fontSize="9" fill="#7E57C2">Red Hat's EKS cluster in ap-northeast-1 — runs Aiko's control plane in its own isolated space</text>
+          <rect x="18" y="296" width="304" height="32" rx="6" fill="#fff" stroke="#CE93D8" strokeWidth="1" />
+          <text x="30" y="311" fontSize="9.5" fill="#6A1B9A" fontWeight="bold">📥 Config Sync Agent</text>
+          <text x="30" y="325" fontSize="9" fill="#444">Pulls state from Aurora, applies it</text>
+          <rect x="332" y="296" width="310" height="32" rx="6" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1" />
+          <text x="344" y="311" fontSize="9.5" fill="#B71C1C" fontWeight="bold">🧠 Aiko's Control Plane</text>
+          <text x="344" y="325" fontSize="9" fill="#444">HyperShift namespace — isolated to her cluster</text>
+
+          {/* arrow */}
+          <line x1="330" y1="336" x2="330" y2="352" stroke="#FF9900" strokeWidth="1.8" />
+          <polygon points="325,348 330,356 335,348" fill="#FF9900" />
+
+          {/* Aiko's AWS Tokyo */}
+          <rect x="10" y="356" width="640" height="56" rx="10" fill="#FFF8E1" stroke="#FF9900" strokeWidth="1.8" />
+          <text x="24" y="376" fontSize="11" fill="#E65100" fontWeight="bold">🟠 Aiko's AWS Account — ap-northeast-1 (Tokyo)</text>
+          <rect x="18" y="382" width="196" height="22" rx="5" fill="#F3E5F5" stroke="#BA68C8" strokeWidth="1" />
+          <text x="30" y="396" fontSize="9" fill="#6A1B9A">Worker machines (Node Pool)</text>
+          <rect x="224" y="382" width="196" height="22" rx="5" fill="#FFF3E0" stroke="#FFB74D" strokeWidth="1" />
+          <text x="236" y="396" fontSize="9" fill="#E65100">VPC · EBS · Route53 · IAM</text>
+          <rect x="430" y="382" width="212" height="22" rx="5" fill="#E8F5E9" stroke="#A5D6A7" strokeWidth="1" />
+          <text x="442" y="396" fontSize="9" fill="#2E7D32">Aiko's apps run here 🇯🇵</text>
+
+          {/* Result */}
+          <rect x="10" y="424" width="640" height="34" rx="8" fill="#E8F5E9" stroke="#2E7D32" strokeWidth="1.5" />
+          <text x="330" y="439" textAnchor="middle" fontSize="10" fill="#1B5E20" fontWeight="bold">✅ Cluster created — control plane, data, and workers all in Tokyo</text>
+          <text x="330" y="455" textAnchor="middle" fontSize="9" fill="#2E7D32">Aiko used a global website, but everything that matters stays in her region</text>
+        </svg>
+
+        <div className="rosa-variant-note" style={{ borderLeft: '4px solid #7B1FA2', marginTop: '12px' }}>
+          <p><strong>🌐 But when Aiko lists her clusters…</strong></p>
+          <p>She goes to the same <strong>console.redhat.com/openshift</strong> and sees ALL her clusters worldwide. Tokyo cluster data is <em>read</em> from Tokyo's Aurora database — it doesn't move. Reading data globally doesn't centralize it; Tokyo remains the source of truth.</p>
+          <p style={{ marginTop: 6 }}><strong>Is this truly regional?</strong> For CREATE and data storage — yes, fully. For the cluster LIST, the global website is a read aggregator, not a data store. The "Region Picker" widget (see Possible Changes above) is where this gets resolved: Aiko's UI could default to ap-northeast-1, showing only local clusters with an "All Regions" option — giving her a genuinely regional default view.</p>
+        </div>
+      </>
+    );
+  }
+
+  /* Expert */
+  return (
+    <>
+      <svg viewBox="0 0 720 476" className="rosa-svg">
+        {/* Aiko */}
+        <rect x="10" y="10" width="700" height="32" rx="7" fill="#F3E5F5" stroke="#9C27B0" strokeWidth="1.2" />
+        <text x="360" y="24" textAnchor="middle" fontSize="9.5" fill="#6A1B9A" fontWeight="bold">🇯🇵 Aiko (ap-northeast-1) — POST /clusters (region=ap-northeast-1) via console.redhat.com/openshift · RH SSO Bearer token</text>
+        <text x="360" y="36" textAnchor="middle" fontSize="8.5" fill="#7B1FA2">HostedClusterSpec: release, platform.type=AWS, networking, FIPS, nodePool config</text>
+
+        {/* arrow */}
+        <line x1="360" y1="42" x2="360" y2="56" stroke="#9C27B0" strokeWidth="1.5" />
+        <polygon points="355,52 360,60 365,52" fill="#9C27B0" />
+
+        {/* BFF */}
+        <rect x="10" y="60" width="700" height="34" rx="7" fill="#FFF8E1" stroke="#F9A825" strokeWidth="1.5" />
+        <text x="360" y="76" textAnchor="middle" fontSize="9.5" fill="#E65100" fontWeight="bold">Assumption: translator or the UI calls Tokyo — not in the blog</text>
+        <text x="360" y="88" textAnchor="middle" fontSize="8.5" fill="#444">Either path sends one SigV4 POST to the ap-northeast-1 Platform API. No cross-region fan-out.</text>
+
+        {/* arrow */}
+        <line x1="360" y1="94" x2="360" y2="108" stroke="#E65100" strokeWidth="1.5" />
+        <polygon points="355,104 360,112 365,104" fill="#E65100" />
+
+        {/* Tokyo RC */}
+        <rect x="10" y="112" width="700" height="108" rx="9" fill="#FDE8E8" stroke="#CC0000" strokeWidth="1.8" />
+        <text x="24" y="130" fontSize="10" fill="#CC0000" fontWeight="bold">🔴 RC (EKS) — ap-northeast-1 · Red Hat's account</text>
+        <rect x="18" y="136" width="336" height="76" rx="6" fill="#fff" stroke="#EF5350" strokeWidth="1" />
+        <text x="28" y="153" fontSize="9" fill="#C62828" fontWeight="bold">⚙️ Platform API (v1alpha1)</text>
+        <text x="28" y="167" fontSize="8.5" fill="#444">Auth: {tip('SigV4')} · Authz: {tip('Cedar')} (permit ClusterAdmin action)</text>
+        <text x="28" y="181" fontSize="8.5" fill="#444">Validates: account link, VPC exists, quota</text>
+        <text x="28" y="195" fontSize="8.5" fill="#444">Writes to hyperfleet-db · returns 202 + cluster ID</text>
+        <text x="28" y="207" fontSize="7.5" fill="#777" fontStyle="italic">{tip('DynamoDB')} fan-out triggers kube-applier reconcile</text>
+        <rect x="364" y="136" width="338" height="76" rx="6" fill="#E8F5E9" stroke="#66BB6A" strokeWidth="1" />
+        <text x="374" y="153" fontSize="9" fill="#2E7D32" fontWeight="bold">🗄️ hyperfleet-db ({tip('Aurora')} PostgreSQL, ap-northeast-1)</text>
+        <text x="374" y="167" fontSize="8.5" fill="#444">Stores HostedCluster CR desired state</text>
+        <text x="374" y="181" fontSize="8.5" fill="#444">Regional source of truth — data does not leave ap-northeast-1</text>
+        <text x="374" y="195" fontSize="8.5" fill="#2E7D32" fontWeight="600">Data sovereignty: Tokyo ✅</text>
+        <text x="374" y="207" fontSize="7.5" fill="#777" fontStyle="italic">{tip('DynamoDB')} GSI for read fan-out (cross-region reads only)</text>
+
+        {/* arrow */}
+        <line x1="360" y1="220" x2="360" y2="234" stroke="#7B1FA2" strokeWidth="1.5" />
+        <polygon points="355,230 360,238 365,230" fill="#7B1FA2" />
+
+        {/* MC */}
+        <rect x="10" y="238" width="700" height="78" rx="9" fill="#EDE7F6" stroke="#7B1FA2" strokeWidth="1.5" />
+        <text x="24" y="255" fontSize="10" fill="#6A1B9A" fontWeight="bold">🖥 MC (EKS) — ap-northeast-1 · {tip('namespace')}/Aiko-cluster-id</text>
+        <rect x="18" y="262" width="336" height="46" rx="5" fill="#fff" stroke="#CE93D8" strokeWidth="1" />
+        <text x="28" y="277" fontSize="9" fill="#6A1B9A" fontWeight="bold">📥 kube-applier (pull-based)</text>
+        <text x="28" y="291" fontSize="8.5" fill="#444">Watches {tip('DynamoDB')} stream · applies {tip('HostedCluster')} CR</text>
+        <text x="28" y="304" fontSize="8.5" fill="#444">{tip('HyperShift')} reconciles: {tip('OIDC')}, {tip('KAS')}, etcd, ingress</text>
+        <rect x="364" y="262" width="338" height="46" rx="5" fill="#FFCDD2" stroke="#EF5350" strokeWidth="1" />
+        <text x="374" y="277" fontSize="9" fill="#B71C1C" fontWeight="bold">🧠 HostedControlPlane (Aiko's namespace)</text>
+        <text x="374" y="291" fontSize="8.5" fill="#444">{tip('RBAC')} + {tip('NetworkPolicy')} isolation · {tip('Karpenter')} provisions nodes</text>
+        <text x="374" y="304" fontSize="8.5" fill="#444">Credentials via {tip('ZOA')} ({tip('Lambda')} + Trusted Actions)</text>
+
+        {/* arrow */}
+        <line x1="360" y1="316" x2="360" y2="330" stroke="#FF9900" strokeWidth="1.5" />
+        <polygon points="355,326 360,334 365,326" fill="#FF9900" />
+
+        {/* AWS */}
+        <rect x="10" y="334" width="700" height="62" rx="8" fill="#FFF8E1" stroke="#FF9900" strokeWidth="1.5" />
+        <text x="24" y="352" fontSize="10" fill="#E65100" fontWeight="bold">🟠 Aiko's AWS Account — ap-northeast-1</text>
+        <text x="24" y="367" fontSize="8.5" fill="#444">{tip('NodePool')}: {tip('Karpenter')}-managed EC2 · {tip('VPC')}/{tip('EBS')}/{tip('Route53')}/{tip('STS')} roles · {tip('OIDC')} provider</text>
+        <text x="24" y="381" fontSize="8.5" fill="#444">Workers run Aiko's pods · {tip('SRE')} access via {tip('ZOA')} only (no standing credentials)</text>
+
+        {/* Result */}
+        <rect x="10" y="408" width="700" height="22" rx="6" fill="#E8F5E9" stroke="#2E7D32" strokeWidth="1.2" />
+        <text x="360" y="422" textAnchor="middle" fontSize="9" fill="#1B5E20" fontWeight="bold">✅ HostedCluster provisioned — control plane in ap-northeast-1 MC · state in ap-northeast-1 Aurora · workers in Aiko's AWS account</text>
+
+        {/* Assumption */}
+        <rect x="10" y="442" width="700" height="24" rx="6" fill="#FFF3E0" stroke="#FF9800" strokeWidth="1" />
+        <text x="20" y="454" fontSize="8.5" fill="#CC0000" fontWeight="700">Assumption: </text>
+        <text x="100" y="454" fontSize="8.5" fill="#444">Cluster LIST aggregation (see Cluster List tab) reads ap-northeast-1 data without moving it — regional sovereignty is preserved for write/store operations.</text>
+      </svg>
+
+      <div className="rosa-variant-note" style={{ borderLeft: '4px solid #7B1FA2', marginTop: '12px' }}>
+        <p><strong>Regional for CREATE and STORE — global for READ</strong></p>
+        <p style={{ fontSize: '12px' }}>Data sovereignty and fault isolation apply to where data is <em>written and stored</em> (ap-northeast-1 Aurora). Global aggregation for the cluster list is a read-only view — it doesn't centralize the data. A region-scoped UI view (Region Picker defaulting to ap-northeast-1) gives Aiko a genuinely regional experience without losing global visibility.</p>
+      </div>
+    </>
+  );
+}
+
+function OverviewDiagram({ b }: { b: boolean }) {
+  const { show, hide } = useGlossary();
+  const tip = (term: string, label?: string) => (
+    <tspan fill="#78909C" className="svg-glossary-term"
+      onMouseEnter={() => show(term, GLOSSARY[term])}
+      onMouseLeave={hide}
+    >{label || term}</tspan>
+  );
+
+  if (b) {
+    return (
+      <svg viewBox="0 0 660 378" className="rosa-svg">
+        {/* Browser */}
+        <rect x="10" y="10" width="640" height="44" rx="8" fill="#F5F5F5" stroke="#9E9E9E" strokeWidth="1.5" />
+        <text x="330" y="30" textAnchor="middle" fontSize="11" fill="#333" fontWeight="bold">🌐 Your Browser</text>
+        <text x="330" y="46" textAnchor="middle" fontSize="9" fill="#666">You visit: console.redhat.com/openshift — same URL as today, no change</text>
+
+        {/* arrow */}
+        <line x1="330" y1="54" x2="330" y2="70" stroke="#1565C0" strokeWidth="1.8" />
+        <polygon points="325,66 330,74 335,66" fill="#1565C0" />
+
+        {/* OCM UI */}
+        <rect x="10" y="74" width="640" height="50" rx="8" fill="#E8EAF6" stroke="#3949AB" strokeWidth="1.5" />
+        <text x="330" y="94" textAnchor="middle" fontSize="11" fill="#283593" fontWeight="bold">🖥️ OCM Website (unchanged)</text>
+        <text x="330" y="110" textAnchor="middle" fontSize="9" fill="#555">Displays your cluster list, lets you create new clusters — makes API calls behind the scenes.</text>
+
+        {/* arrow + label */}
+        <line x1="330" y1="124" x2="330" y2="140" stroke="#E65100" strokeWidth="1.8" strokeDasharray="4 2" />
+        <polygon points="325,136 330,144 335,136" fill="#E65100" />
+        <rect x="340" y="126" width="120" height="14" rx="3" fill="#FFF3E0" />
+        <text x="346" y="137" fontSize="8" fill="#E65100">cluster list / create calls</text>
+
+        {/* Backend Translator */}
+        <rect x="10" y="144" width="640" height="64" rx="8" fill="#FFF8E1" stroke="#F9A825" strokeWidth="2" />
+        <text x="330" y="162" textAnchor="middle" fontSize="11" fill="#E65100" fontWeight="bold">🔄 Backend Translator or Frontend Aggregator</text>
+        <text x="330" y="176" textAnchor="middle" fontSize="9" fill="#CC0000" fontWeight="600">Assumption — neither is in the architecture blog</text>
+        <text x="330" y="191" textAnchor="middle" fontSize="9" fill="#444">A backend could call every region and return one list,</text>
+        <text x="330" y="204" textAnchor="middle" fontSize="9" fill="#444">or the website could call each region and merge the list itself.</text>
+
+        {/* split arrows */}
+        <line x1="170" y1="208" x2="170" y2="226" stroke="#757575" strokeWidth="1.5" />
+        <polygon points="165,222 170,230 175,222" fill="#757575" />
+        <line x1="490" y1="208" x2="490" y2="226" stroke="#283593" strokeWidth="1.5" />
+        <polygon points="485,222 490,230 495,222" fill="#283593" />
+
+        {/* Left: Today's API */}
+        <rect x="10" y="230" width="320" height="74" rx="8" fill="#FDE8E8" stroke="#CC0000" strokeWidth="1.5" />
+        <text x="170" y="250" textAnchor="middle" fontSize="10" fill="#C62828" fontWeight="bold">📡 Today's Cluster API</text>
+        <text x="170" y="266" textAnchor="middle" fontSize="9" fill="#333">Single global location (Virginia)</text>
+        <text x="170" y="282" textAnchor="middle" fontSize="9" fill="#333">Your existing clusters live here</text>
+        <text x="170" y="297" textAnchor="middle" fontSize="8" fill="#777" fontStyle="italic">api.openshift.com/api/clusters_mgmt</text>
+
+        {/* Right: Regional APIs */}
+        <rect x="340" y="230" width="310" height="74" rx="8" fill="#E8EAF6" stroke="#283593" strokeWidth="1.5" />
+        <text x="495" y="258" textAnchor="middle" fontSize="10" fill="#283593" fontWeight="bold">⚙️ Platform API — one per region</text>
+        <text x="495" y="276" textAnchor="middle" fontSize="9" fill="#333">The API inside each Regional Platform</text>
+        <text x="495" y="292" textAnchor="middle" fontSize="9" fill="#333">Runs on the Regional Cluster</text>
+
+        {/* merge arrows */}
+        <line x1="170" y1="304" x2="170" y2="322" stroke="#757575" strokeWidth="1.5" />
+        <line x1="490" y1="304" x2="490" y2="322" stroke="#283593" strokeWidth="1.5" />
+        <line x1="170" y1="322" x2="490" y2="322" stroke="#2E7D32" strokeWidth="1.5" />
+        <line x1="330" y1="322" x2="330" y2="338" stroke="#2E7D32" strokeWidth="1.8" />
+        <polygon points="325,334 330,342 335,334" fill="#2E7D32" />
+
+        {/* Result */}
+        <rect x="130" y="342" width="400" height="26" rx="7" fill="#E8F5E9" stroke="#2E7D32" strokeWidth="1.5" />
+        <text x="330" y="359" textAnchor="middle" fontSize="10" fill="#1B5E20" fontWeight="bold">✅ One unified cluster list → back to your browser</text>
+      </svg>
+    );
+  }
+
+  /* Expert */
+  return (
+    <svg viewBox="0 0 720 420" className="rosa-svg">
+      {/* Browser */}
+      <rect x="10" y="10" width="700" height="40" rx="7" fill="#F5F5F5" stroke="#9E9E9E" strokeWidth="1.2" />
+      <text x="360" y="27" textAnchor="middle" fontSize="10" fill="#333" fontWeight="bold">🌐 Browser — console.redhat.com/openshift (RH SSO Bearer token via consoledot chrome)</text>
+      <text x="360" y="42" textAnchor="middle" fontSize="9" fill="#555">UI calls: GET /api/clusters_mgmt/... (cluster list), POST /api/clusters_mgmt/... (create)</text>
+
+      {/* arrow */}
+      <line x1="360" y1="46" x2="360" y2="60" stroke="#1565C0" strokeWidth="1.5" />
+      <polygon points="355,56 360,64 365,56" fill="#1565C0" />
+
+      {/* BFF / token exchange */}
+      <rect x="10" y="64" width="700" height="48" rx="7" fill="#FFF8E1" stroke="#F9A825" strokeWidth="2" />
+      <text x="360" y="82" textAnchor="middle" fontSize="10" fill="#E65100" fontWeight="bold">🔄 Backend Translator or Frontend Aggregator — assumption, not in the blog</text>
+      <text x="360" y="96" textAnchor="middle" fontSize="8" fill="#555">Backend could SigV4-sign and fan out to each Platform API plus {tip('clusters_mgmt')}.</text>
+      <text x="360" y="108" textAnchor="middle" fontSize="8" fill="#555">Or the UI could call each regional API and {tip('clusters_mgmt')} itself and merge the list.</text>
+
+      {/* split arrows */}
+      <line x1="185" y1="112" x2="185" y2="130" stroke="#757575" strokeWidth="1.2" />
+      <polygon points="180,126 185,134 190,126" fill="#757575" />
+      <text x="88" y="126" fontSize="7.5" fill="#757575">Bearer token passthrough</text>
+      <line x1="535" y1="112" x2="535" y2="130" stroke="#283593" strokeWidth="1.2" />
+      <polygon points="530,126 535,134 540,126" fill="#283593" />
+      <text x="544" y="126" fontSize="7.5" fill="#283593">{tip('SigV4')}-signed request</text>
+
+      {/* Left: clusters_mgmt */}
+      <rect x="10" y="134" width="350" height="80" rx="7" fill="#FDE8E8" stroke="#CC0000" strokeWidth="1.2" />
+      <text x="185" y="153" textAnchor="middle" fontSize="9.5" fill="#C62828" fontWeight="bold">📡 {tip('clusters_mgmt')} API (V1)</text>
+      <text x="185" y="168" textAnchor="middle" fontSize="9" fill="#555" fontFamily="monospace">api.openshift.com/api/clusters_mgmt/v1</text>
+      <text x="185" y="183" textAnchor="middle" fontSize="9" fill="#444">Existing ROSA HCP clusters · {tip('AMS')} {tip('RBAC')} · us-east-1</text>
+      <text x="185" y="198" textAnchor="middle" fontSize="9" fill="#444">Auth: Bearer token ({tip('RH SSO')})</text>
+      <text x="185" y="210" textAnchor="middle" fontSize="8" fill="#666" fontStyle="italic">Unchanged — same endpoint the UI uses today</text>
+
+      {/* Right: Platform API */}
+      <rect x="370" y="134" width="340" height="80" rx="7" fill="#E8EAF6" stroke="#283593" strokeWidth="1.2" />
+      <text x="540" y="153" textAnchor="middle" fontSize="9.5" fill="#283593" fontWeight="bold">🌍 Platform API (V2 / v1alpha1)</text>
+      <text x="540" y="168" textAnchor="middle" fontSize="9" fill="#555" fontStyle="italic">URL format TBD — not yet public (pre-GA)</text>
+      <text x="540" y="183" textAnchor="middle" fontSize="9" fill="#444">3 regional instances: us-east-1 · eu-central-1 · ap-northeast-1</text>
+      <text x="540" y="198" textAnchor="middle" fontSize="9" fill="#444">Auth: {tip('AWS')} {tip('SigV4')} · Authz: {tip('Cedar')} policies</text>
+      <text x="540" y="210" textAnchor="middle" fontSize="8" fill="#666" fontStyle="italic">Runs on each RC — part of the Regional Platform</text>
+
+      {/* merge arrows */}
+      <line x1="185" y1="214" x2="185" y2="238" stroke="#757575" strokeWidth="1.2" />
+      <line x1="535" y1="214" x2="535" y2="238" stroke="#283593" strokeWidth="1.2" />
+      <line x1="185" y1="238" x2="535" y2="238" stroke="#2E7D32" strokeWidth="1.2" />
+      <line x1="360" y1="238" x2="360" y2="254" stroke="#2E7D32" strokeWidth="1.5" />
+      <polygon points="355,250 360,258 365,250" fill="#2E7D32" />
+
+      {/* Unified result */}
+      <rect x="110" y="258" width="500" height="24" rx="6" fill="#E8F5E9" stroke="#2E7D32" strokeWidth="1.2" />
+      <text x="360" y="274" textAnchor="middle" fontSize="9.5" fill="#1B5E20" fontWeight="bold">✅ Unified cluster list (V1 + V2) → back to browser</text>
+
+      {/* Assumption box */}
+      <rect x="10" y="294" width="700" height="66" rx="7" fill="#FFF3E0" stroke="#FF9800" strokeWidth="1.2" />
+      <text x="20" y="311" fontSize="9.5" fill="#CC0000" fontWeight="700">Assumption — aggregation approach (TBD):</text>
+      <text x="20" y="327" fontSize="9" fill="#444">① Translator fans out → queries each regional API + clusters_mgmt in parallel, merges results (simpler infra, more latency)</text>
+      <text x="20" y="342" fontSize="9" fill="#444">② {tip('DynamoDB')} Global Table / {tip('Aurora')} global read → all state already aggregated; translator queries one endpoint (lower latency, more infra)</text>
+      <text x="20" y="357" fontSize="9" fill="#555">   Blog post describes {tip('DynamoDB')} as "read-optimized fan-out" layer — option ② is plausible.</text>
+
+      {/* CLI note */}
+      <rect x="10" y="372" width="700" height="24" rx="6" fill="#E3F2FD" stroke="#90CAF9" strokeWidth="1" />
+      <text x="360" y="388" textAnchor="middle" fontSize="9" fill="#1565C0">
+        🖥 rosa CLI: holds {tip('AWS')} credentials directly → calls regional Platform API without the backend translator (no BFF needed)
       </text>
     </svg>
   );
@@ -363,18 +677,41 @@ function AuthComparison({ b }: { b: boolean }) {
         </div>
         <div className="rosa-bridge-side">
           <strong style={{ color: '#283593' }}>{b ? 'HyperFleet' : 'Platform API (V2)'}</strong>
-          <p>{b
-            ? '• You log in with your AWS credentials (like the AWS Console)\n• Your AWS account is linked to your Red Hat org (one-time setup)\n• Permissions: Cedar "rules" you write — much more flexible\n• Example: "This user can create clusters, but only in Frankfurt"'
-            : <>{g('• AWS IAM SigV4 request signing\n• Principal linked to RH user via rosactl link account\n• Cedar policies: permit/forbid with resource labels, context.region\n• Action groups: ReadOnly, ClusterAdmin, NodePoolAdmin, PolicyAdmin')}</>}
-          </p>
+          {b ? (
+            <>
+              <p style={{ marginBottom: '6px' }}>
+                One-time prerequisite added to <strong>ROSA HCP get-started</strong>:
+              </p>
+              <div style={{ background: '#1E1E1E', borderRadius: '6px', padding: '8px 12px', fontFamily: 'monospace', fontSize: '12px', color: '#CE9178', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                <span>rosa link account --hyperfleet</span>
+                <button
+                  onClick={() => navigator.clipboard.writeText('rosa link account --hyperfleet')}
+                  style={{ background: 'none', border: '1px solid #555', borderRadius: '4px', color: '#ccc', padding: '2px 7px', fontSize: '11px', cursor: 'pointer', flexShrink: 0 }}
+                  title="Copy to clipboard"
+                >
+                  copy
+                </button>
+              </div>
+              <p style={{ fontSize: '12px', color: '#555' }}>
+                Links your AWS account to your Red Hat org — run once, before the wizard. After that, you still log in at <strong>console.redhat.com/openshift</strong> with your Red Hat account — a backend translator service (being designed) converts that into the new API credentials automatically.
+              </p>
+              <p style={{ fontSize: '12px', color: '#555', marginTop: '6px' }}>
+                Permissions become Cedar rules (e.g. "allow clusters only in Frankfurt") instead of fixed org roles.
+              </p>
+            </>
+          ) : (
+            <>
+              <p style={{ marginBottom: '6px', fontSize: '12px' }}>
+                New step in <strong>ROSA HCP get-started flow</strong>:
+              </p>
+              <div style={{ background: '#1E1E1E', borderRadius: '6px', padding: '6px 10px', fontFamily: 'monospace', fontSize: '11px', color: '#CE9178', marginBottom: '8px' }}>
+                rosa link account --hyperfleet
+              </div>
+              <p style={{ fontSize: '12px', color: '#555' }}>{g('Maps RH org ↔ AWS IAM principal. Likely pre-populated from existing Accounts & Roles data. BFF/token-exchange converts RH SSO session → SigV4-signed calls to the regional Platform API. Cedar policies replace AMS RBAC roles.')}</p>
+              <p style={{ fontSize: '12px', color: '#555', marginTop: '6px' }}>{g('Console URL: console.redhat.com/openshift (unchanged). Backend API: regional endpoint — exact URL TBD (v1alpha1, not yet public; pattern: api.rosa.<region>.openshift.com/v2alpha1/). Action groups: ReadOnly, ClusterAdmin, NodePoolAdmin, PolicyAdmin.')}</p>
+            </>
+          )}
         </div>
-      </div>
-      <div className="rosa-variant-note" style={{ borderLeft: '4px solid #7986CB', marginTop: '12px' }}>
-        <p><strong>{b ? 'Wait — what about the OCM website?' : 'Browser Authentication'}</strong></p>
-        <p>{b
-          ? 'Today, your browser talks to the OCM API using your Red Hat login — simple. With HyperFleet, the API expects AWS-style credentials, but browsers can\'t easily do that. So a "translator" is being built — you\'ll still log in with your Red Hat account on the website, and a backend service converts it into something the new API understands. This is being designed now (not built yet).'
-          : <>{g('SigV4')} signing requires {g('AWS')} credentials not available in browser JavaScript. A POST /token exchange endpoint is being designed to convert RH {g('SSO')} sessions into V2-compatible short-lived tokens, enabling the {g('OCM')} Console to call the Platform {g('API')} without exposing {g('AWS')} credentials client-side. (A {g('BFF')} proxy is one candidate approach.)</>}
-        </p>
       </div>
     </div>
   );
@@ -509,8 +846,15 @@ function OcmuiImpact({ b }: { b: boolean }) {
           },
           {
             title: b ? '📋 Cluster List' : '📋 Cluster List Coexistence',
-            desc: b ? 'Old and new clusters will appear together. New ones will show which region they\'re in more prominently' : g('V1 + V2 clusters in same list during migration. Region column, platform version badge. Different available actions per API version.'),
+            desc: b ? 'Old and new clusters will appear together. New ones will show which region they\'re in more prominently.' : g('V1 + V2 clusters in same list during migration. Region column, platform version badge. Different available actions per API version.'),
             color: '#6A1B9A',
+            assumption: b
+              ? 'The UI\'s existing cluster API call stays the same. A backend service aggregates clusters across regions before returning the list — your browser never calls regional endpoints directly.'
+              : 'UI\'s existing clusters GET call stays the same. Backend aggregation layer fans out to global + regional endpoints before returning unified list to UI. Two likely approaches:',
+            assumptionDetail: b ? null : [
+              '① Backend translator fans out → queries each regional API, merges results, returns unified list (simpler DB, higher latency)',
+              '② DynamoDB Global Table / Aurora global read → all cluster state already aggregated; backend queries one endpoint (lower latency, more infra)',
+            ],
           },
           {
             title: b ? '🔑 Login Changes' : '🔑 Auth Integration',
@@ -519,7 +863,7 @@ function OcmuiImpact({ b }: { b: boolean }) {
           },
           {
             title: b ? '➕ ROSA HCP Wizard Updates' : '➕ ROSA HCP Wizard (V2 backend)',
-            desc: b ? 'The same ROSA HCP wizard, talking to the new regional API. If your AWS account is already linked (see Login Changes above), no extra steps — same cluster settings as today (region, VPC, networking, etc.).' : g('Same HostedClusterSpec fields (release, platform, networking, FIPS). V2 backend: account-link is a prereq but may be auto-satisfied from existing HCP Accounts & Roles data. OidcConfig as separate CRD, region = API region. Not a new wizard — adapted existing HCP flow.'),
+            desc: b ? 'The same ROSA HCP wizard — same cluster settings (region, VPC, networking, etc.). The backend translator routes your request to the right regional API. If your AWS account is already linked (see Login Changes above), no extra steps.' : g('Same HostedClusterSpec fields (release, platform, networking, FIPS). Wizard API call shape unchanged — backend translator routes to correct regional endpoint. Account-link prereq may be auto-satisfied from existing HCP Accounts & Roles data. OidcConfig as separate CRD, region = API region. Not a new wizard — adapted existing HCP flow.'),
             color: '#E65100',
           },
           {
@@ -536,6 +880,19 @@ function OcmuiImpact({ b }: { b: boolean }) {
           <div key={i} className="rosa-variant-note" style={{ borderLeft: `4px solid ${item.color}` }}>
             <p><strong>{item.title}</strong></p>
             <p style={{ whiteSpace: 'pre-line' }}>{item.desc}</p>
+            {'assumption' in item && item.assumption && (
+              <p style={{ fontSize: '11px', marginTop: '6px' }}>
+                <span style={{ color: '#CC0000', fontWeight: 700 }}>Assumption: </span>
+                <span style={{ color: '#555' }}>{item.assumption}</span>
+                {'assumptionDetail' in item && Array.isArray(item.assumptionDetail) && (
+                  <span>
+                    {item.assumptionDetail.map((d: string, j: number) => (
+                      <span key={j} style={{ display: 'block', color: '#555', marginTop: '4px' }}>{d}</span>
+                    ))}
+                  </span>
+                )}
+              </p>
+            )}
           </div>
         ))}
       </div>
@@ -659,6 +1016,7 @@ function ZoaSection({ b }: { b: boolean }) {
 /** Inner content — used when embedded inside RosaMap's 3-way toggle */
 export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
   const [view, setView] = useState<ArchView>('today');
+  const [diagView, setDiagView] = useState<'list' | 'create' | 'platform'>('list');
   const b = mode === 'beginner';
   const g = createGlossarizer();
 
@@ -687,34 +1045,56 @@ export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
       </div>
 
       <div className="rosa-variant-note" style={{ borderLeft: '4px solid #0D47A1' }}>
-        <p><strong>{b ? 'What is HyperFleet?' : 'HyperFleet Overview'}</strong></p>
+        <p><strong>{b
+          ? (view === 'today' ? 'Today' : 'What is HyperFleet?')
+          : 'HyperFleet Overview'}
+        </strong></p>
         <p>{b
-          ? 'Today, all ROSA cluster management runs from a single location in the USA (Virginia). HyperFleet changes this — Red Hat will run management services in every major AWS region. This means your cluster data stays in your country, your API calls are faster, and if one region has problems, others keep running.'
+          ? (view === 'today'
+              ? 'Today, all ROSA cluster management runs from a single location in the USA (Virginia).'
+              : 'Today, all ROSA cluster management runs from a single location in the USA (Virginia). HyperFleet changes this — Red Hat will run management services in every major AWS region. This means your cluster data stays in your country, your API calls are faster, and if one region has problems, others keep running.')
           : <>{g('ROSA Regional Platform (RRP) distributes ROSA HCP management to per-region EKS Regional Clusters (RC), each backed by Aurora PostgreSQL (via hyperfleet-db) and driving one or more Management Clusters (MC) via DynamoDB fan-out and kube-applier agents. New Platform API (v1alpha1) with AWS IAM SigV4 auth and Cedar-based authorization. ROSA HCP only, AWS only.')}</>}
         </p>
       </div>
 
+      {/* Cluster List / Cluster Create / Regional Platform — single row, HyperFleet tab only */}
+      {view === 'hyperfleet' && (
+        <div className="variant-toggle" style={{ marginBottom: 8, justifyContent: 'center', display: 'flex' }}>
+          <button className={`variant-btn ${diagView === 'list' ? 'active' : ''}`} onClick={() => setDiagView('list')}>Cluster List</button>
+          <button className={`variant-btn ${diagView === 'create' ? 'active' : ''}`} onClick={() => setDiagView('create')}>Cluster Create</button>
+          <button className={`variant-btn ${diagView === 'platform' ? 'active' : ''}`} onClick={() => setDiagView('platform')}>Regional Platform</button>
+        </div>
+      )}
+
       <AnimatePresence mode="wait">
         <motion.div
-          key={view}
+          key={view + diagView}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
-          {view === 'today' ? <TodayDiagram b={b} /> : <HyperfleetDiagram b={b} />}
+          {view === 'today'
+            ? <TodayDiagram b={b} />
+            : diagView === 'list'
+              ? <OverviewDiagram b={b} />
+              : diagView === 'create'
+                ? <ClusterCreateDiagram b={b} />
+                : <HyperfleetDiagram b={b} />}
         </motion.div>
       </AnimatePresence>
 
-      {view === 'hyperfleet' && (
+      {view === 'hyperfleet' && diagView === 'create' && (
+        <RegionalExample b={b} />
+      )}
+      {view === 'hyperfleet' && diagView !== 'create' && (
         <>
-          <RegionalExample b={b} />
-          <ArchCallout b={b} />
-          <AuthComparison b={b} />
-          <CedarPolicies b={b} />
+          {diagView === 'list' && <OcmuiImpact b={b} />}
+          {diagView === 'list' && <AuthComparison b={b} />}
+          {diagView === 'platform' && <ArchCallout b={b} />}
+          {diagView === 'platform' && <CedarPolicies b={b} />}
           <ZoaSection b={b} />
           <ApiResources b={b} />
-          <OcmuiImpact b={b} />
         </>
       )}
 
