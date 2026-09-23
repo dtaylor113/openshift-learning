@@ -514,12 +514,12 @@ function OcmuiImpact({ b }: { b: boolean }) {
           },
           {
             title: b ? '🔑 Login Changes' : '🔑 Auth Integration',
-            desc: b ? 'You\'ll still use your Red Hat login on the website — a backend "translator" handles the new API credentials' : g('Token exchange or BFF proxy. Browser session → V2-compatible credentials. Transparent to end user.'),
+            desc: b ? 'One-time setup: link your AWS account to your Red Hat org (the UI may pre-fill this from your existing ROSA setup). After that, you still log in with your Red Hat account — a backend service converts that into the new API credentials automatically.' : g('One-time account-link: RH org ↔ AWS IAM principal (rosa link account --hyperfleet). After linking, a BFF/token-exchange converts the browser RH SSO session into V2-compatible SigV4 credentials. Transparent on every subsequent request. Existing HCP Accounts & Roles info may pre-populate the link step.'),
             color: '#283593',
           },
           {
             title: b ? '➕ ROSA HCP Wizard Updates' : '➕ ROSA HCP Wizard (V2 backend)',
-            desc: b ? 'The existing ROSA HCP wizard would talk to the new regional API instead. New prerequisite: link your AWS account first. Same cluster settings (region, VPC, networking, etc.).' : g('Same HostedClusterSpec fields (release, platform, networking, FIPS). V2 backend: account linking prereq, OidcConfig as separate CRD, region = API region. Not a separate wizard — adapted existing HCP flow.'),
+            desc: b ? 'The same ROSA HCP wizard, talking to the new regional API. If your AWS account is already linked (see Login Changes above), no extra steps — same cluster settings as today (region, VPC, networking, etc.).' : g('Same HostedClusterSpec fields (release, platform, networking, FIPS). V2 backend: account-link is a prereq but may be auto-satisfied from existing HCP Accounts & Roles data. OidcConfig as separate CRD, region = API region. Not a new wizard — adapted existing HCP flow.'),
             color: '#E65100',
           },
           {
