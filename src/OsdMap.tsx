@@ -378,8 +378,6 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
         </p>
       </div>
 
-      <ApiCallChain mode={mode} variant={cloud === 'aws' ? 'osd-aws' : 'osd-gcp'} />
-
       {/* AWS credential model — the KEY difference (AWS only) */}
       {cloud === 'aws' && <div className="rosa-variant-note" style={{ borderLeft: '4px solid #FF9900' }}>
         <p><strong>🔑 {b ? 'The #1 difference on AWS: How Red Hat connects to your account' : <>{g('AWS')} Credential Model: {g('OSD')} vs {g('ROSA')}</>}</strong></p>
@@ -420,6 +418,8 @@ export function OsdMap({ mode, onModeChange }: OsdMapProps) {
           </div>
         </div>
       </div>}
+
+      <ApiCallChain mode={mode} variant={cloud === 'aws' ? 'osd-aws' : 'osd-gcp'} />
 
       <ExploreMore links={DEEP_DIVE_LINKS.osd} />
     </div>
