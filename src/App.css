@@ -519,6 +519,10 @@ body {
 }
 
 /* HTML glossary term tooltips (right panel) */
+.code-term {
+  font-family: "Courier New", Courier, monospace;
+}
+
 .glossary-term {
   color: #78909C;
   text-decoration: underline;

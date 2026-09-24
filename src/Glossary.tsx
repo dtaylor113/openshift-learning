@@ -142,7 +142,7 @@ function GlossaryTerm({ abbr }: { abbr: string }) {
   const { show, hide } = useGlossary();
   return (
     <span
-      className="glossary-term"
+      className={abbr === 'clusters_mgmt' ? 'glossary-term code-term' : 'glossary-term'}
       onMouseEnter={() => show(abbr, GLOSSARY[abbr])}
       onMouseLeave={hide}
     >

@@ -18,6 +18,7 @@ function TodayDiagram({ b }: { b: boolean }) {
   const { show, hide } = useGlossary();
   const tip = (term: string, label?: string) => (
     <tspan fill="#78909C" className="svg-glossary-term"
+      fontFamily={term === 'clusters_mgmt' ? 'Courier New, Courier, monospace' : undefined}
       onMouseEnter={() => show(term, GLOSSARY[term])}
       onMouseLeave={hide}
     >{label || term}</tspan>
@@ -98,6 +99,7 @@ function ClusterCreateDiagram({ b }: { b: boolean }) {
   const { show, hide } = useGlossary();
   const tip = (term: string, label?: string) => (
     <tspan fill="#78909C" className="svg-glossary-term"
+      fontFamily={term === 'clusters_mgmt' ? 'Courier New, Courier, monospace' : undefined}
       onMouseEnter={() => show(term, GLOSSARY[term])}
       onMouseLeave={hide}
     >{label || term}</tspan>
@@ -260,7 +262,7 @@ function ClusterCreateDiagram({ b }: { b: boolean }) {
 
       <div className="rosa-variant-note" style={{ borderLeft: '4px solid #7B1FA2', marginTop: '12px' }}>
         <p><strong>One switcher for create and for list</strong></p>
-        <p style={{ fontSize: '12px' }}>Tokyo is an example region. Red Hat has not named Tokyo or Frankfurt as regions HyperFleet will support. Create and list both follow the Region switcher. In this example, Tokyo writes and reads the ap-northeast-1 Platform API. Global reads and writes clusters_mgmt. The open question is the API that fills the switcher with the regions this user is allowed to select.</p>
+        <p style={{ fontSize: '12px' }}>Tokyo is an example region. Red Hat has not named Tokyo or Frankfurt as regions HyperFleet will support. Create and list both follow the Region switcher. In this example, Tokyo writes and reads the ap-northeast-1 Platform API. Global reads and writes <span className="code-term">clusters_mgmt</span>. The open question is the API that fills the switcher with the regions this user is allowed to select.</p>
       </div>
     </>
   );
@@ -374,10 +376,10 @@ function ClusterListMock() {
             <tr><th>Switcher</th><th>AWS region ID</th><th>What it is</th></tr>
           </thead>
           <tbody>
-            <tr><td>Global (Virginia)</td><td>us-east-1</td><td>Today's clusters_mgmt API. One list for clusters that are not on a regional platform.</td></tr>
+            <tr><td>Global (Virginia)</td><td>us-east-1</td><td>Today's <span className="code-term">clusters_mgmt</span> API. One list for clusters that are not on a regional platform.</td></tr>
             <tr><td>Frankfurt</td><td>eu-central-1</td><td>Example only. Not a region HyperFleet has announced.</td></tr>
             <tr><td>Tokyo</td><td>ap-northeast-1</td><td>Example only. Not a region HyperFleet has announced.</td></tr>
-            <tr><td>Singapore</td><td>ap-southeast-1</td><td>v1 clusters_mgmt shard already in the OCM UI. Not a HyperFleet platform.</td></tr>
+            <tr><td>Singapore</td><td>ap-southeast-1</td><td>v1 <span className="code-term">clusters_mgmt</span> shard already in the OCM UI. Not a HyperFleet platform.</td></tr>
           </tbody>
         </table>
       </div>
@@ -389,6 +391,7 @@ function OverviewDiagram({ b }: { b: boolean }) {
   const { show, hide } = useGlossary();
   const tip = (term: string, label?: string) => (
     <tspan fill="#78909C" className="svg-glossary-term"
+      fontFamily={term === 'clusters_mgmt' ? 'Courier New, Courier, monospace' : undefined}
       onMouseEnter={() => show(term, GLOSSARY[term])}
       onMouseLeave={hide}
     >{label || term}</tspan>
@@ -466,7 +469,7 @@ function OverviewDiagram({ b }: { b: boolean }) {
 
       <rect x="10" y="204" width="360" height="72" rx="7" fill="#FDE8E8" stroke="#CC0000" strokeWidth="1.2" />
       <text x="190" y="224" textAnchor="middle" fontSize="9.5" fill="#C62828" fontWeight="bold">📡 {tip('clusters_mgmt')} (V1)</text>
-      <text x="190" y="240" textAnchor="middle" fontSize="8.5" fill="#555" fontFamily="monospace">api.openshift.com/api/clusters_mgmt/v1</text>
+      <text x="190" y="240" textAnchor="middle" fontSize="8.5" fill="#555" fontFamily="Courier New, Courier, monospace">api.openshift.com/api/clusters_mgmt/v1</text>
       <text x="190" y="256" textAnchor="middle" fontSize="8.5" fill="#444">Called only when Global (Virginia) is selected</text>
       <text x="190" y="270" textAnchor="middle" fontSize="8" fill="#666" fontStyle="italic">Auth: RH {tip('SSO')} bearer · same as today</text>
 
@@ -489,6 +492,7 @@ function HyperfleetDiagram({ b }: { b: boolean }) {
   const { show, hide } = useGlossary();
   const tip = (term: string, label?: string) => (
     <tspan fill="#78909C" className="svg-glossary-term"
+      fontFamily={term === 'clusters_mgmt' ? 'Courier New, Courier, monospace' : undefined}
       onMouseEnter={() => show(term, GLOSSARY[term])}
       onMouseLeave={hide}
     >{label || term}</tspan>
@@ -773,7 +777,7 @@ function AuthComparison({ b }: { b: boolean }) {
                 </button>
               </div>
               <p style={{ fontSize: '12px', color: '#555' }}>
-                Links your AWS account to your Red Hat org — run once, before the wizard. After that, you still log in at <strong>console.redhat.com/openshift</strong> with your Red Hat account — a backend translator service (being designed) converts that into the new API credentials automatically.
+                Links your AWS account to your Red Hat org — run once, before the wizard. After that, the CLI signs requests with your AWS credentials. The website login stays a Red Hat account. <em>How that login becomes an AWS-signed call has not been determined.</em>
               </p>
               <p style={{ fontSize: '12px', color: '#555', marginTop: '6px' }}>
                 Permissions become Cedar rules (e.g. "allow clusters only in Frankfurt") instead of fixed org roles.
@@ -787,7 +791,7 @@ function AuthComparison({ b }: { b: boolean }) {
               <div style={{ background: '#1E1E1E', borderRadius: '6px', padding: '6px 10px', fontFamily: 'monospace', fontSize: '11px', color: '#CE9178', marginBottom: '8px' }}>
                 rosa link account --hyperfleet
               </div>
-              <p style={{ fontSize: '12px', color: '#555' }}>{g('Maps RH org ↔ AWS IAM principal. Likely pre-populated from existing Accounts & Roles data. BFF/token-exchange converts RH SSO session → SigV4-signed calls to the regional Platform API. Cedar policies replace AMS RBAC roles.')}</p>
+              <p style={{ fontSize: '12px', color: '#555' }}>{g('Maps RH org ↔ AWS IAM principal. Likely pre-populated from existing Accounts & Roles data. CLI then signs with the AWS credential chain (SigV4). How the browser login becomes an AWS-signed call has not been determined. Cedar policies replace AMS RBAC roles.')}</p>
               <p style={{ fontSize: '12px', color: '#555', marginTop: '6px' }}>{g('Console URL: console.redhat.com/openshift (unchanged). Backend API: regional endpoint — exact URL TBD (v1alpha1, not yet public; pattern: api.rosa.<region>.openshift.com/v2alpha1/). Action groups: ReadOnly, ClusterAdmin, NodePoolAdmin, PolicyAdmin.')}</p>
             </>
           )}
@@ -927,24 +931,17 @@ function OcmuiImpact({ b }: { b: boolean }) {
           },
           {
             title: b ? '📋 Cluster List' : '📋 Cluster List Coexistence',
-            desc: b ? 'Old and new clusters will appear together. New ones will show which region they\'re in more prominently.' : g('V1 + V2 clusters in same list during migration. Region column, platform version badge. Different available actions per API version.'),
+            desc: b ? 'The Region switcher picks one API, and the table shows only that region. Old and new clusters are not mixed into one list.' : g('One selection calls either clusters_mgmt (Global (Virginia)) or that region\'s Platform API. No documented service merges every region into one response.'),
             color: '#6A1B9A',
-            assumption: b
-              ? 'The UI\'s existing cluster API call stays the same. A backend service aggregates clusters across regions before returning the list — your browser never calls regional endpoints directly.'
-              : 'UI\'s existing clusters GET call stays the same. Backend aggregation layer fans out to global + regional endpoints before returning unified list to UI. Two likely approaches:',
-            assumptionDetail: b ? null : [
-              '① Backend translator fans out → queries each regional API, merges results, returns unified list (simpler DB, higher latency)',
-              '② DynamoDB Global Table / Aurora global read → all cluster state already aggregated; backend queries one endpoint (lower latency, more infra)',
-            ],
           },
           {
             title: b ? '🔑 Login Changes' : '🔑 Auth Integration',
-            desc: b ? 'One-time setup: link your AWS account to your Red Hat org (the UI may pre-fill this from your existing ROSA setup). After that, you still log in with your Red Hat account — a backend service converts that into the new API credentials automatically.' : g('One-time account-link: RH org ↔ AWS IAM principal (rosa link account --hyperfleet). After linking, a BFF/token-exchange converts the browser RH SSO session into V2-compatible SigV4 credentials. Transparent on every subsequent request. Existing HCP Accounts & Roles info may pre-populate the link step.'),
+            desc: b ? <>One-time setup: link your AWS account to your Red Hat org (the UI may pre-fill this from your existing ROSA setup). After that, the CLI signs with your AWS credentials. The website login stays a Red Hat account. <em>How that login becomes an AWS-signed call has not been determined.</em></> : g('One-time account-link: RH org ↔ AWS IAM principal (rosa link account --hyperfleet). CLI then signs with the AWS credential chain. How the browser login becomes an AWS-signed call has not been determined. Existing HCP Accounts & Roles info may pre-populate the link step.'),
             color: '#283593',
           },
           {
             title: b ? '➕ ROSA HCP Wizard Updates' : '➕ ROSA HCP Wizard (V2 backend)',
-            desc: b ? 'The same ROSA HCP wizard — same cluster settings (region, VPC, networking, etc.). The backend translator routes your request to the right regional API. If your AWS account is already linked (see Login Changes above), no extra steps.' : g('Same HostedClusterSpec fields (release, platform, networking, FIPS). Wizard API call shape unchanged — backend translator routes to correct regional endpoint. Account-link prereq may be auto-satisfied from existing HCP Accounts & Roles data. OidcConfig as separate CRD, region = API region. Not a new wizard — adapted existing HCP flow.'),
+            desc: b ? 'The same ROSA HCP wizard — same cluster settings (region, VPC, networking, etc.). The Region switcher picks which API receives the create. If your AWS account is already linked (see Login Changes above), no extra steps.' : g('Same HostedClusterSpec fields (release, platform, networking, FIPS). The Region switcher selects which Platform API receives the create. Account-link prereq may be auto-satisfied from existing HCP Accounts & Roles data. OidcConfig as separate CRD, region = API region. Not a new wizard — adapted existing HCP flow.'),
             color: '#E65100',
           },
           {
@@ -1003,7 +1000,7 @@ function ApiResources({ b }: { b: boolean }) {
         </thead>
         <tbody>
           {[
-            { res: 'Cluster', desc: b ? 'Your OpenShift cluster' : 'ROSA HCP cluster lifecycle', cli: 'rosa create cluster --hyperfleet', v1: 'Cluster (clusters_mgmt)' },
+            { res: 'Cluster', desc: b ? 'Your OpenShift cluster' : 'ROSA HCP cluster lifecycle', cli: 'rosa create cluster --hyperfleet', v1: <>Cluster (<span className="code-term">clusters_mgmt</span>)</> },
             { res: 'NodePool', desc: b ? 'Groups of worker machines' : 'Worker node groups per cluster', cli: 'rosa create nodepool --hyperfleet', v1: 'NodePool (HCP)' },
             { res: 'OidcConfig', desc: b ? 'Identity setup for pods' : g('OIDC issuer configuration'), cli: 'rosa create oidc-config --hyperfleet', v1: 'OidcConfig' },
             { res: b ? 'Account Link' : 'Account', desc: b ? 'Connect your AWS account to Red Hat' : 'AWS account ↔ RH org mapping', cli: 'rosa link account --hyperfleet', v1: b ? 'Not needed today' : 'N/A (implicit)' },
@@ -1105,7 +1102,7 @@ export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
     <>
       <div className="variant-toggle" style={{ marginBottom: 12, justifyContent: 'center', display: 'flex' }}>
         <button className={`variant-btn ${view === 'today' ? 'active' : ''}`} onClick={() => setView('today')}>
-          {b ? 'Today (Centralized)' : 'clusters_mgmt (V1)'}
+          {b ? 'Today (Centralized)' : <><span className="code-term">clusters_mgmt</span> (V1)</>}
         </button>
         <button className={`variant-btn ${view === 'hyperfleet' ? 'active' : ''}`} onClick={() => setView('hyperfleet')}>
           {b ? 'HyperFleet (Regional)' : 'Platform API (V2)'}
@@ -1146,10 +1143,10 @@ export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
               <path d="M12 9v5.2" stroke="#3E2723" strokeWidth="2" strokeLinecap="round" />
               <circle cx="12" cy="17.5" r="1.15" fill="#3E2723" />
             </svg>
-            <span>{b ? 'Singapore is already a second copy of today\'s clusters_mgmt (V1) API' : 'Existing v1 shard: Singapore'}</span>
+            <span>{b ? 'But isn\'t there already \'multi-cluster\'/region support in OCMUI?' : 'Existing v1 shard: Singapore'}</span>
           </strong></p>
           <p style={{ marginTop: 6 }}>{b
-            ? 'Almost every cluster is managed from Virginia. Singapore is the one exception already in the website. It is the same cluster API and the same Red Hat login. The only change is the server address: api.ap-southeast-1.openshift.com instead of api.openshift.com. The cluster list looks up which copy a cluster belongs to, calls that copy, and shows the rows together.'
+            ? <>Singapore is already a second copy of today&apos;s <span className="code-term">clusters_mgmt</span> (V1) API. Almost every cluster is managed from Virginia. Singapore is the one exception already in the website. It is the same cluster API and the same Red Hat login. The only change is the server address: api.ap-southeast-1.openshift.com instead of api.openshift.com. The cluster list looks up which copy a cluster belongs to, calls that copy, and shows the rows together.</>
             : <>{g('getClusterServiceForRegion substitutes the shard into https://api.$REGION$.openshift.com and returns the same clusters_mgmt client: same /api/clusters_mgmt/v1 paths, same RH SSO bearer token. The list groups subscriptions by rh_region_id and fetches each shard. The only non-default shard deployed is ap-southeast-1.')}</>}
           </p>
           <p style={{ marginTop: 6 }}>{b
