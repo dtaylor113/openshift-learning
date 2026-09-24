@@ -1091,7 +1091,7 @@ function ZoaSection({ b }: { b: boolean }) {
 
 /** Inner content — used when embedded inside RosaMap's 3-way toggle */
 export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
-  const [view, setView] = useState<ArchView>('today');
+  const [view, setView] = useState<ArchView>('hyperfleet');
   const [diagView, setDiagView] = useState<'list' | 'create' | 'platform'>('list');
   const b = mode === 'beginner';
   const activeView = b ? 'hyperfleet' : view;
