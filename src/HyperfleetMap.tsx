@@ -370,7 +370,7 @@ function ClusterListMock() {
       </div>
       <div className="rosa-variant-note" style={{ borderLeft: '4px solid #1565C0' }}>
         <p><strong>Region names and AWS region IDs</strong></p>
-        <p style={{ marginTop: 6 }}>The switcher uses a place name. AWS uses an ID for that same place. <strong>Global (Virginia)</strong> is today's single cluster API, which runs in Virginia. Frankfurt and Tokyo are stand-ins for a region other than Virginia. Red Hat has not indicated HyperFleet will support those regions initially, or named them at all. <em>Provider (Region) on a row is where that cluster's machines run, which can be a different cloud region from the switcher.</em></p>
+        <p style={{ marginTop: 6 }}>The switcher uses a place name. AWS uses an ID for that same place. <strong>Global (Virginia)</strong> is today's single cluster API, which runs in Virginia. Frankfurt and Tokyo are stand-ins for a region other than Virginia. Red Hat has not indicated HyperFleet will support those regions initially, or named them at all. <em>Provider (Region) on a row is where that cluster's machines run. It differs from the switcher only for Global (Virginia). A regional cluster, such as Frankfurt or Tokyo, always shows that same place.</em></p>
         <table className="hf-region-table">
           <thead>
             <tr><th>Switcher</th><th>AWS region ID</th><th>What it is</th></tr>
