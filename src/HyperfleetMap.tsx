@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Globe } from 'lucide-react';
 import type { ExplainMode } from './types';
@@ -923,7 +923,7 @@ function OcmuiImpact({ b }: { b: boolean }) {
     <div className="rosa-bridge">
       <h4>{b ? '🖥️ Possible Changes to the OCM Website' : '🖥️ Potential OCMUI Impact Areas (pending UX design)'}</h4>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
-        {[
+        {([
           {
             title: b ? '🌐 Region Picker' : '🌐 Region Selector',
             desc: b ? 'A Region dropdown under the Clusters title. Pick Global (Virginia) or one regional platform — the list and create flow call only that region. No "all regions" view. Frankfurt and Tokyo in the mock are examples, not an announced set of regions.' : g('Region switcher above the cluster-list tabs. One selection calls either clusters_mgmt (Global (Virginia)) or that region\'s Platform API. No parallel fetch. Options assumed to come from a backend regions API. Frankfurt and Tokyo are example names, not an announced launch list.'),
@@ -954,7 +954,7 @@ function OcmuiImpact({ b }: { b: boolean }) {
             desc: b ? 'A future wizard to move existing ROSA HCP clusters to the new regional system. Not designed yet.' : g('Customer migration flow. V1 to V2 API routing during transition. AWS Marketplace re-integration.'),
             color: '#C62828',
           },
-        ].map((item, i) => (
+        ] as { title: string; desc: ReactNode; color: string; assumption?: ReactNode; assumptionDetail?: string[] }[]).map((item, i) => (
           <div key={i} className="rosa-variant-note" style={{ borderLeft: `4px solid ${item.color}` }}>
             <p><strong>{item.title}</strong></p>
             <p style={{ whiteSpace: 'pre-line' }}>{item.desc}</p>
