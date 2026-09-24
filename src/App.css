@@ -1705,7 +1705,8 @@ body {
   font: inherit;
   font-size: 14px;
   height: 36px;
-  min-width: 200px;
+  min-width: 420px;
+  white-space: nowrap;
   text-align: left;
   padding: 0 32px 0 10px;
   border: 1px solid #8a8d90;
@@ -1719,7 +1720,7 @@ body {
   top: calc(100% + 4px);
   left: 0;
   z-index: 5;
-  min-width: 200px;
+  min-width: 420px;
   margin: 0;
   padding: 4px 0;
   list-style: none;
@@ -1737,6 +1738,7 @@ body {
   border: 0;
   font: inherit;
   font-size: 14px;
+  white-space: nowrap;
   padding: 8px 12px;
   cursor: pointer;
 }

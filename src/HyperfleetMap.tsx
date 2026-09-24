@@ -268,21 +268,30 @@ function ClusterCreateDiagram({ b }: { b: boolean }) {
   );
 }
 
-const MOCK_REGIONS = ['Global (Virginia)', 'Frankfurt', 'Tokyo'] as const;
+const MOCK_REGIONS = [
+  'US East, Ohio - us-east-2 (AWS)',
+  'EU, Frankfurt - eu-central-1 (AWS)',
+  'Asia Pacific, Tokyo - ap-northeast-1 (AWS)',
+  'Ashburn, Northern Virginia, USA - us-east4 (GCP)',
+  'Los Angeles, California, USA - us-west2 (GCP)',
+] as const;
 type MockRegion = (typeof MOCK_REGIONS)[number];
 
-const MOCK_CLUSTERS: { name: string; status: string; type: string; created: string; version: string; provider: string; region: MockRegion }[] = [
-  { name: 'payments-prod', status: 'Ready', type: 'OSD', created: '23 Sep 2026', version: '4.21.14', provider: 'GCP (us-east4)', region: 'Global (Virginia)' },
-  { name: 'checkout-stage', status: 'Installing', type: 'OSD', created: '23 Sep 2026', version: '4.22.14', provider: 'GCP (us-west2)', region: 'Global (Virginia)' },
-  { name: 'rosa-hcp-ohio', status: 'Ready', type: 'ROSA', created: '30 Jun 2026', version: '4.21.14', provider: 'AWS (us-east-2)', region: 'Global (Virginia)' },
-  { name: 'rosa-hcp-frankfurt-payments', status: 'Ready', type: 'ROSA', created: '12 Aug 2026', version: '4.21.14', provider: 'AWS (eu-central-1)', region: 'Frankfurt' },
-  { name: 'osd-frankfurt-dev', status: 'Ready', type: 'OSD', created: '02 Sep 2026', version: '4.20.8', provider: 'AWS (eu-central-1)', region: 'Frankfurt' },
-  { name: 'rosa-hcp-tokyo-edge', status: 'Ready', type: 'ROSA', created: '18 Jul 2026', version: '4.21.14', provider: 'AWS (ap-northeast-1)', region: 'Tokyo' },
-  { name: 'rosa-hcp-tokyo-installing', status: 'Installing', type: 'ROSA', created: '23 Sep 2026', version: '4.22.14', provider: 'AWS (ap-northeast-1)', region: 'Tokyo' },
+const MOCK_CLUSTERS: { name: string; status: string; type: string; created: string; version: string; region: MockRegion; hyperfleet: 'Yes' | 'No' }[] = [
+  { name: 'payments-prod', status: 'Ready', type: 'OSD', created: '23 Sep 2026', version: '4.21.14', region: 'Ashburn, Northern Virginia, USA - us-east4 (GCP)', hyperfleet: 'No' },
+  { name: 'checkout-stage', status: 'Installing', type: 'OSD', created: '23 Sep 2026', version: '4.22.14', region: 'Los Angeles, California, USA - us-west2 (GCP)', hyperfleet: 'No' },
+  { name: 'rosa-hcp-ohio', status: 'Ready', type: 'ROSA', created: '30 Jun 2026', version: '4.21.14', region: 'US East, Ohio - us-east-2 (AWS)', hyperfleet: 'No' },
+  { name: 'rosa-hf-ohio-payments', status: 'Ready', type: 'ROSA', created: '04 Sep 2026', version: '4.21.14', region: 'US East, Ohio - us-east-2 (AWS)', hyperfleet: 'Yes' },
+  { name: 'rosa-hf-ohio-edge', status: 'Installing', type: 'ROSA', created: '23 Sep 2026', version: '4.22.14', region: 'US East, Ohio - us-east-2 (AWS)', hyperfleet: 'Yes' },
+  { name: 'rosa-hcp-frankfurt-payments', status: 'Ready', type: 'ROSA', created: '12 Aug 2026', version: '4.21.14', region: 'EU, Frankfurt - eu-central-1 (AWS)', hyperfleet: 'No' },
+  { name: 'rosa-hf-frankfurt', status: 'Ready', type: 'ROSA', created: '19 Sep 2026', version: '4.21.14', region: 'EU, Frankfurt - eu-central-1 (AWS)', hyperfleet: 'Yes' },
+  { name: 'osd-frankfurt-dev', status: 'Ready', type: 'OSD', created: '02 Sep 2026', version: '4.20.8', region: 'EU, Frankfurt - eu-central-1 (AWS)', hyperfleet: 'No' },
+  { name: 'rosa-hcp-tokyo-edge', status: 'Ready', type: 'ROSA', created: '18 Jul 2026', version: '4.21.14', region: 'Asia Pacific, Tokyo - ap-northeast-1 (AWS)', hyperfleet: 'No' },
+  { name: 'rosa-hf-tokyo', status: 'Installing', type: 'ROSA', created: '23 Sep 2026', version: '4.22.14', region: 'Asia Pacific, Tokyo - ap-northeast-1 (AWS)', hyperfleet: 'Yes' },
 ];
 
 function ClusterListMock() {
-  const [region, setRegion] = useState<MockRegion>('Global (Virginia)');
+  const [region, setRegion] = useState<MockRegion>('US East, Ohio - us-east-2 (AWS)');
   const [menuOpen, setMenuOpen] = useState(false);
   const [nameQuery, setNameQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -296,14 +305,14 @@ function ClusterListMock() {
 
   return (
     <>
-      <p className="hf-mock-note"><em>Interactive mock — the Region dropdown/switcher, name filter, and cluster type filter all work. Frankfurt and Tokyo are examples only. Red Hat has not said HyperFleet will support those regions.</em></p>
+      <p className="hf-mock-note"><em>Interactive mock — the Region dropdown, name filter, and cluster type filter all work. Creating a cluster requires a region.</em></p>
       <div className="hf-mock">
         <div className="hf-mock-crumb">
           <span>Red Hat Hybrid Cloud Console</span><span>›</span><span>OpenShift</span><span>›</span><span>Fleet management</span><span>›</span><span>Clusters</span>
         </div>
         <h3>Clusters</h3>
         <div className="hf-region-bar">
-          <label htmlFor="hf-region-btn">Region</label>
+          <label htmlFor="hf-region-btn">Region:</label>
           <div className="hf-region-dd">
             <button id="hf-region-btn" type="button" className="hf-region-btn" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
               {region}
@@ -348,7 +357,7 @@ function ClusterListMock() {
         <table>
           <thead>
             <tr>
-              <th>Name</th><th>Status</th><th>Type</th><th>Created</th><th>Version</th><th>Provider (Region)</th><th>Region</th>
+              <th>Name</th><th>Status</th><th>Type</th><th>Created</th><th>Version</th><th>Region (Provider)</th><th>HyperFleet</th>
             </tr>
           </thead>
           <tbody>
@@ -361,25 +370,10 @@ function ClusterListMock() {
                 <td>{cluster.type}</td>
                 <td>{cluster.created}</td>
                 <td>{cluster.version}</td>
-                <td>{cluster.provider}</td>
                 <td>{cluster.region}</td>
+                <td>{cluster.hyperfleet}</td>
               </tr>
             ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="rosa-variant-note" style={{ borderLeft: '4px solid #1565C0' }}>
-        <p><strong>Region names and AWS region IDs</strong></p>
-        <p style={{ marginTop: 6 }}>The switcher uses a place name. AWS uses an ID for that same place. <strong>Global (Virginia)</strong> is today's single cluster API, which runs in Virginia. Frankfurt and Tokyo are stand-ins for a region other than Virginia. Red Hat has not indicated HyperFleet will support those regions initially, or named them at all. <em>Provider (Region) on a row is where that cluster's machines run. It differs from the switcher only for Global (Virginia). A regional cluster, such as Frankfurt or Tokyo, always shows that same place.</em></p>
-        <table className="hf-region-table">
-          <thead>
-            <tr><th>Switcher</th><th>AWS region ID</th><th>What it is</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Global (Virginia)</td><td>us-east-1</td><td>Today's <span className="code-term">clusters_mgmt</span> API. One list for clusters that are not on a regional platform.</td></tr>
-            <tr><td>Frankfurt</td><td>eu-central-1</td><td>Example only. Not a region HyperFleet has announced.</td></tr>
-            <tr><td>Tokyo</td><td>ap-northeast-1</td><td>Example only. Not a region HyperFleet has announced.</td></tr>
-            <tr><td>Singapore</td><td>ap-southeast-1</td><td>v1 <span className="code-term">clusters_mgmt</span> shard already in the OCM UI. Not a HyperFleet platform.</td></tr>
           </tbody>
         </table>
       </div>
@@ -399,7 +393,7 @@ function OverviewDiagram({ b }: { b: boolean }) {
 
   if (b) {
     return (
-      <svg viewBox="0 0 660 356" className="rosa-svg">
+      <svg viewBox="0 0 660 408" className="rosa-svg">
         <rect x="10" y="10" width="640" height="40" rx="8" fill="#F5F5F5" stroke="#9E9E9E" strokeWidth="1.5" />
         <text x="330" y="28" textAnchor="middle" fontSize="11" fill="#333" fontWeight="bold">🌐 Your Browser</text>
         <text x="330" y="43" textAnchor="middle" fontSize="9" fill="#666">Same website as today: console.redhat.com/openshift</text>
@@ -407,83 +401,87 @@ function OverviewDiagram({ b }: { b: boolean }) {
         <line x1="330" y1="50" x2="330" y2="64" stroke="#E65100" strokeWidth="1.8" />
         <polygon points="325,60 330,68 335,60" fill="#E65100" />
 
-        <rect x="10" y="72" width="640" height="40" rx="8" fill="#FFF8E1" stroke="#F9A825" strokeWidth="1.5" />
+        <rect x="10" y="72" width="640" height="56" rx="8" fill="#FFF8E1" stroke="#F9A825" strokeWidth="1.5" />
         <text x="330" y="88" textAnchor="middle" fontSize="10" fill="#CC0000" fontWeight="700">Assumption — where the menu options come from</text>
         <text x="330" y="104" textAnchor="middle" fontSize="9" fill="#444">A backend API returns the regions this user can select. Not described in the architecture blog.</text>
+        <text x="330" y="118" textAnchor="middle" fontSize="9" fill="#444">Frontend will query v1 and existing multi-region clusters, then HyperFleet regions available to the user.</text>
 
-        <line x1="330" y1="112" x2="330" y2="126" stroke="#1565C0" strokeWidth="1.8" />
-        <polygon points="325,122 330,130 335,122" fill="#1565C0" />
+        <line x1="330" y1="128" x2="330" y2="142" stroke="#1565C0" strokeWidth="1.8" />
+        <polygon points="325,138 330,146 335,138" fill="#1565C0" />
 
-        <rect x="10" y="134" width="640" height="72" rx="8" fill="#E8EAF6" stroke="#3949AB" strokeWidth="1.5" />
-        <text x="330" y="154" textAnchor="middle" fontSize="11" fill="#283593" fontWeight="bold">🖥️ Clusters page — Region switcher</text>
-        <text x="330" y="170" textAnchor="middle" fontSize="9" fill="#444">Frankfurt and Tokyo are example names. You pick one region; the table shows only that region's clusters.</text>
-        <rect x="78" y="178" width="148" height="18" rx="4" fill="#fff" stroke="#90A4AE" strokeWidth="1" />
-        <text x="152" y="191" textAnchor="middle" fontSize="9" fill="#546E7A">Global (Virginia)</text>
-        <rect x="236" y="178" width="110" height="18" rx="4" fill="#fff" stroke="#90A4AE" strokeWidth="1" />
-        <text x="291" y="191" textAnchor="middle" fontSize="9" fill="#546E7A">Frankfurt</text>
-        <rect x="356" y="178" width="110" height="18" rx="4" fill="#283593" stroke="#283593" strokeWidth="1" />
-        <text x="411" y="191" textAnchor="middle" fontSize="9" fill="#fff" fontWeight="bold">Tokyo</text>
+        <rect x="10" y="150" width="640" height="108" rx="8" fill="#E8EAF6" stroke="#3949AB" strokeWidth="1.5" />
+        <text x="330" y="168" textAnchor="middle" fontSize="11" fill="#283593" fontWeight="bold">🖥️ Clusters page — Region</text>
+        <text x="330" y="184" textAnchor="middle" fontSize="9" fill="#444">You pick one Region. The table shows clusters there. Creating a cluster requires a region.</text>
+        <rect x="24" y="192" width="612" height="16" rx="4" fill="#283593" stroke="#283593" strokeWidth="1" />
+        <text x="330" y="203" textAnchor="middle" fontSize="8" fill="#fff" fontWeight="bold">US East, Ohio - us-east-2 (AWS)</text>
+        <rect x="24" y="210" width="612" height="16" rx="4" fill="#fff" stroke="#90A4AE" strokeWidth="1" />
+        <text x="330" y="221" textAnchor="middle" fontSize="8" fill="#546E7A">EU, Frankfurt - eu-central-1 (AWS)</text>
+        <rect x="24" y="228" width="612" height="16" rx="4" fill="#fff" stroke="#90A4AE" strokeWidth="1" />
+        <text x="330" y="239" textAnchor="middle" fontSize="8" fill="#546E7A">Asia Pacific, Tokyo - ap-northeast-1 (AWS)</text>
 
-        <line x1="330" y1="206" x2="330" y2="222" stroke="#283593" strokeWidth="1.8" />
-        <polygon points="325,218 330,226 335,218" fill="#283593" />
-        <text x="348" y="220" fontSize="8.5" fill="#283593">list clusters in Tokyo</text>
+        <line x1="330" y1="258" x2="330" y2="274" stroke="#283593" strokeWidth="1.8" />
+        <polygon points="325,270 330,278 335,270" fill="#283593" />
+        <text x="348" y="272" fontSize="8.5" fill="#283593">list clusters in Ohio</text>
 
-        <rect x="10" y="230" width="640" height="78" rx="8" fill="#E8EAF6" stroke="#283593" strokeWidth="1.5" />
-        <text x="330" y="252" textAnchor="middle" fontSize="11" fill="#283593" fontWeight="bold">⚙️ Tokyo Platform API</text>
-        <text x="330" y="270" textAnchor="middle" fontSize="9" fill="#333">The website calls only this region's API. It does not call the others.</text>
-        <text x="330" y="286" textAnchor="middle" fontSize="9" fill="#333">Choosing Global (Virginia) calls today's cluster API instead.</text>
-        <text x="330" y="300" textAnchor="middle" fontSize="8" fill="#777" fontStyle="italic">One region at a time — the table is not a mix of every region</text>
+        <rect x="10" y="282" width="640" height="78" rx="8" fill="#E8EAF6" stroke="#283593" strokeWidth="1.5" />
+        <text x="330" y="304" textAnchor="middle" fontSize="11" fill="#283593" fontWeight="bold">⚙️ Ohio clusters — v1 and HyperFleet</text>
+        <text x="330" y="322" textAnchor="middle" fontSize="9" fill="#333">HyperFleet clusters are listed in the same region as v1 clusters.</text>
+        <text x="330" y="338" textAnchor="middle" fontSize="9" fill="#333">The HyperFleet column says which rows are which.</text>
+        <text x="330" y="352" textAnchor="middle" fontSize="8" fill="#777" fontStyle="italic">One region at a time — the table is not a mix of every region</text>
 
-        <rect x="130" y="322" width="400" height="26" rx="7" fill="#E8F5E9" stroke="#2E7D32" strokeWidth="1.5" />
-        <text x="330" y="339" textAnchor="middle" fontSize="10" fill="#1B5E20" fontWeight="bold">✅ Cluster table shows Tokyo clusters only</text>
+        <rect x="130" y="374" width="400" height="26" rx="7" fill="#E8F5E9" stroke="#2E7D32" strokeWidth="1.5" />
+        <text x="330" y="391" textAnchor="middle" fontSize="10" fill="#1B5E20" fontWeight="bold">✅ Ohio table shows v1 and HyperFleet clusters together</text>
       </svg>
     );
   }
 
   /* Expert */
   return (
-    <svg viewBox="0 0 720 360" className="rosa-svg">
+    <svg viewBox="0 0 720 396" className="rosa-svg">
       <rect x="10" y="10" width="700" height="36" rx="7" fill="#F5F5F5" stroke="#9E9E9E" strokeWidth="1.2" />
       <text x="360" y="32" textAnchor="middle" fontSize="10" fill="#333" fontWeight="bold">🌐 Browser — console.redhat.com/openshift · RH {tip('SSO')} session via consoledot chrome</text>
 
       <line x1="360" y1="46" x2="360" y2="58" stroke="#E65100" strokeWidth="1.5" />
       <polygon points="355,54 360,62 365,54" fill="#E65100" />
 
-      <rect x="10" y="66" width="700" height="36" rx="7" fill="#FFF8E1" stroke="#F9A825" strokeWidth="1.5" />
+      <rect x="10" y="66" width="700" height="50" rx="7" fill="#FFF8E1" stroke="#F9A825" strokeWidth="1.5" />
       <text x="360" y="82" textAnchor="middle" fontSize="9.5" fill="#CC0000" fontWeight="700">Assumption — where the menu options come from</text>
       <text x="360" y="96" textAnchor="middle" fontSize="8.5" fill="#444">UI calls a backend API for the regions this user may select. Endpoint not in the architecture blog or the Platform API spec.</text>
+      <text x="360" y="110" textAnchor="middle" fontSize="8.5" fill="#444">Frontend will query v1 and existing multi-region clusters, then HyperFleet regions available to the user.</text>
 
-      <line x1="360" y1="102" x2="360" y2="114" stroke="#1565C0" strokeWidth="1.5" />
-      <polygon points="355,110 360,118 365,110" fill="#1565C0" />
+      <line x1="360" y1="116" x2="360" y2="128" stroke="#1565C0" strokeWidth="1.5" />
+      <polygon points="355,124 360,132 365,124" fill="#1565C0" />
 
-      <rect x="10" y="122" width="700" height="52" rx="7" fill="#E8EAF6" stroke="#3949AB" strokeWidth="1.5" />
-      <text x="360" y="142" textAnchor="middle" fontSize="10" fill="#283593" fontWeight="bold">Region switcher — one selection, one list</text>
-      <text x="360" y="160" textAnchor="middle" fontSize="9" fill="#444">Global (Virginia) → GET {tip('clusters_mgmt')} /clusters · an example region (Frankfurt or Tokyo) → GET that region's Platform API /clusters</text>
+      <rect x="10" y="136" width="700" height="68" rx="7" fill="#E8EAF6" stroke="#3949AB" strokeWidth="1.5" />
+      <text x="360" y="154" textAnchor="middle" fontSize="10" fill="#283593" fontWeight="bold">Region — one selection, one list</text>
+      <text x="360" y="170" textAnchor="middle" fontSize="8.5" fill="#444">US East, Ohio - us-east-2 (AWS) → GET {tip('clusters_mgmt')} /clusters and that region&apos;s Platform API /clusters</text>
+      <text x="360" y="186" textAnchor="middle" fontSize="8.5" fill="#444">One region list. HyperFleet Yes/No marks which rows came from which API.</text>
 
-      <line x1="200" y1="178" x2="200" y2="196" stroke="#757575" strokeWidth="1.2" />
-      <polygon points="195,192 200,200 205,192" fill="#757575" />
-      <text x="210" y="192" fontSize="8" fill="#757575">switcher = Global (Virginia)</text>
-      <line x1="520" y1="178" x2="520" y2="196" stroke="#283593" strokeWidth="1.2" />
-      <polygon points="515,192 520,200 525,192" fill="#283593" />
-      <text x="530" y="192" fontSize="8" fill="#283593">switcher = Tokyo</text>
+      <text x="190" y="206" textAnchor="middle" fontSize="7.5" fill="#757575">v1 rows in Ohio</text>
+      <line x1="190" y1="210" x2="190" y2="226" stroke="#757575" strokeWidth="1.2" />
+      <polygon points="185,222 190,230 195,222" fill="#757575" />
+      <text x="545" y="206" textAnchor="middle" fontSize="7.5" fill="#283593">HyperFleet rows in Ohio</text>
+      <line x1="545" y1="210" x2="545" y2="226" stroke="#283593" strokeWidth="1.2" />
+      <polygon points="540,222 545,230 550,222" fill="#283593" />
 
-      <rect x="10" y="204" width="360" height="72" rx="7" fill="#FDE8E8" stroke="#CC0000" strokeWidth="1.2" />
-      <text x="190" y="224" textAnchor="middle" fontSize="9.5" fill="#C62828" fontWeight="bold">📡 {tip('clusters_mgmt')} (V1)</text>
-      <text x="190" y="240" textAnchor="middle" fontSize="8.5" fill="#555" fontFamily="Courier New, Courier, monospace">api.openshift.com/api/clusters_mgmt/v1</text>
-      <text x="190" y="256" textAnchor="middle" fontSize="8.5" fill="#444">Called only when Global (Virginia) is selected</text>
-      <text x="190" y="270" textAnchor="middle" fontSize="8" fill="#666" fontStyle="italic">Auth: RH {tip('SSO')} bearer · same as today</text>
+      <rect x="10" y="234" width="360" height="72" rx="7" fill="#FDE8E8" stroke="#CC0000" strokeWidth="1.2" />
+      <text x="190" y="254" textAnchor="middle" fontSize="9.5" fill="#C62828" fontWeight="bold">📡 {tip('clusters_mgmt')} (V1)</text>
+      <text x="190" y="270" textAnchor="middle" fontSize="8.5" fill="#555" fontFamily="Courier New, Courier, monospace">api.openshift.com/api/clusters_mgmt/v1</text>
+      <text x="190" y="286" textAnchor="middle" fontSize="8" fill="#444">HyperFleet = No in the Ohio list</text>
+      <text x="190" y="300" textAnchor="middle" fontSize="8" fill="#666" fontStyle="italic">Auth: RH {tip('SSO')} bearer · same as today</text>
 
-      <rect x="380" y="204" width="330" height="72" rx="7" fill="#E8EAF6" stroke="#283593" strokeWidth="1.2" />
-      <text x="545" y="224" textAnchor="middle" fontSize="9.5" fill="#283593" fontWeight="bold">⚙️ Platform API — ap-northeast-1</text>
-      <text x="545" y="240" textAnchor="middle" fontSize="8.5" fill="#555" fontStyle="italic">URL not public (v1alpha1)</text>
-      <text x="545" y="256" textAnchor="middle" fontSize="8.5" fill="#444">Called only when Tokyo is selected</text>
-      <text x="545" y="270" textAnchor="middle" fontSize="8" fill="#666" fontStyle="italic">Auth: {tip('SigV4')} · Authz: {tip('Cedar')}</text>
+      <rect x="380" y="234" width="330" height="80" rx="7" fill="#E8EAF6" stroke="#283593" strokeWidth="1.2" />
+      <text x="545" y="252" textAnchor="middle" fontSize="9.5" fill="#283593" fontWeight="bold">⚙️ Platform API — us-east-2</text>
+      <text x="545" y="268" textAnchor="middle" fontSize="8.5" fill="#555" fontStyle="italic">URL not public (v1alpha1)</text>
+      <text x="545" y="284" textAnchor="middle" fontSize="7.5" fill="#444">Same region selection as the v1 call</text>
+      <text x="545" y="296" textAnchor="middle" fontSize="7.5" fill="#444">HyperFleet = Yes in the Ohio list</text>
+      <text x="545" y="308" textAnchor="middle" fontSize="8" fill="#666" fontStyle="italic">Auth: {tip('SigV4')} · Authz: {tip('Cedar')}</text>
 
-      <rect x="110" y="290" width="500" height="22" rx="6" fill="#E8F5E9" stroke="#2E7D32" strokeWidth="1.2" />
-      <text x="360" y="305" textAnchor="middle" fontSize="9" fill="#1B5E20" fontWeight="bold">No fan-out. The other region's API is not called.</text>
+      <rect x="110" y="328" width="500" height="22" rx="6" fill="#E8F5E9" stroke="#2E7D32" strokeWidth="1.2" />
+      <text x="360" y="343" textAnchor="middle" fontSize="9" fill="#1B5E20" fontWeight="bold">Both results are one Ohio table. Other regions are not called.</text>
 
-      <rect x="10" y="324" width="700" height="22" rx="6" fill="#E3F2FD" stroke="#90CAF9" strokeWidth="1" />
-      <text x="360" y="339" textAnchor="middle" fontSize="8.5" fill="#1565C0">rosa CLI is separate: rosactl login --url stores one Platform API URL and lists that region only.</text>
+      <rect x="10" y="362" width="700" height="22" rx="6" fill="#E3F2FD" stroke="#90CAF9" strokeWidth="1" />
+      <text x="360" y="377" textAnchor="middle" fontSize="8.5" fill="#1565C0">rosa CLI is separate: rosactl login --url stores one Platform API URL and lists that region only.</text>
     </svg>
   );
 }
@@ -926,12 +924,12 @@ function OcmuiImpact({ b }: { b: boolean }) {
         {([
           {
             title: b ? '🌐 Region Picker' : '🌐 Region Selector',
-            desc: b ? 'A Region dropdown under the Clusters title. Pick Global (Virginia) or one regional platform — the list and create flow call only that region. No "all regions" view. Frankfurt and Tokyo in the mock are examples, not an announced set of regions.' : g('Region switcher above the cluster-list tabs. One selection calls either clusters_mgmt (Global (Virginia)) or that region\'s Platform API. No parallel fetch. Options assumed to come from a backend regions API. Frankfurt and Tokyo are example names, not an announced launch list.'),
+            desc: b ? 'A Region dropdown under the Clusters title. Values match the Region (Provider) column, such as Asia Pacific, Tokyo - ap-northeast-1 (AWS). The list shows that region. Creating a cluster requires a region.' : g('Region dropdown above the cluster-list tabs. Values match the Region (Provider) column: name, id, and provider, such as Asia Pacific, Tokyo - ap-northeast-1 (AWS). No Global entry. One selection, one region. Creating a cluster requires a region. Options assumed to come from a backend regions API.'),
             color: '#1565C0',
           },
           {
             title: b ? '📋 Cluster List' : '📋 Cluster List Coexistence',
-            desc: b ? 'The Region switcher picks one API, and the table shows only that region. Old and new clusters are not mixed into one list.' : g('One selection calls either clusters_mgmt (Global (Virginia)) or that region\'s Platform API. No documented service merges every region into one response.'),
+            desc: b ? 'The list is filtered by Region. It shows clusters in the region you picked.' : g('The list is filtered by Region. One selection shows clusters in that cloud region. No documented service merges every region into one response.'),
             color: '#6A1B9A',
           },
           {
@@ -1096,46 +1094,44 @@ export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
   const [view, setView] = useState<ArchView>('today');
   const [diagView, setDiagView] = useState<'list' | 'create' | 'platform'>('list');
   const b = mode === 'beginner';
+  const activeView = b ? 'hyperfleet' : view;
   const g = createGlossarizer();
 
   return (
     <>
+      {!b && (
       <div className="variant-toggle" style={{ marginBottom: 12, justifyContent: 'center', display: 'flex' }}>
         <button className={`variant-btn ${view === 'today' ? 'active' : ''}`} onClick={() => setView('today')}>
-          {b ? 'Today (Centralized)' : <><span className="code-term">clusters_mgmt</span> (V1)</>}
+          Today (<span className="code-term">clusters_mgmt</span> v1)
         </button>
         <button className={`variant-btn ${view === 'hyperfleet' ? 'active' : ''}`} onClick={() => setView('hyperfleet')}>
-          {b ? 'HyperFleet (Regional)' : 'Platform API (V2)'}
+          HyperFleet (Platform API v2)
         </button>
       </div>
+      )}
 
       <h3 className="dd-page-title" style={{ fontSize: '1.1rem', marginBottom: 8 }}>
         <Globe size={18} className="dd-title-icon" style={{ color: '#0D47A1' }} />
-        {b ? 'HyperFleet — ROSA Goes Regional' : 'HyperFleet — ROSA Regional Platform (RRP)'}
+        {b ? 'HyperFleet — ROSA in the AWS Region you select' : 'HyperFleet — ROSA Regional Platform (RRP)'}
       </h3>
 
       <div className="rosa-variant-note" style={{ borderLeft: '4px solid #F57F17', background: '#FFFDE7' }}>
         <p><strong>⚠️ {b ? 'Note' : 'Disclaimer'}</strong></p>
         <p>{b
-          ? 'HyperFleet is under active development and not yet available to customers. An internal preview is targeted for Q1 2027. The information below is based on publicly available open-source code. Features and designs may change before release.'
-          : <>{g('Based on publicly available source code (openshift-online/rosa-hyperfleet-*). v1alpha1 — under active development, not GA. Internal preview targeted Q1 2027. Architecture, API surface, and auth model are subject to change.')}</>}
+          ? 'HyperFleet is under active development and not yet available to customers. The information below is based on publicly available open-source code. Features and designs may change before release.'
+          : <>{g('Based on publicly available source code (openshift-online/rosa-hyperfleet-*). v1alpha1 — under active development, not GA. Architecture, API surface, and auth model are subject to change.')}</>}
         </p>
       </div>
 
       <div className="rosa-variant-note" style={{ borderLeft: '4px solid #0D47A1' }}>
-        <p><strong>{b
-          ? (view === 'today' ? 'Today' : 'What is HyperFleet?')
-          : 'HyperFleet Overview'}
-        </strong></p>
-        <p>{b
-          ? (view === 'today'
-              ? 'Today, all ROSA cluster management runs from a single location in the USA (Virginia).'
-              : 'Today, all ROSA cluster management runs from a single location in the USA (Virginia). HyperFleet changes this — Red Hat will run management services in every major AWS region. This means your cluster data stays in your country, your API calls are faster, and if one region has problems, others keep running.')
-          : <>{g('ROSA Regional Platform (RRP) distributes ROSA HCP management to per-region EKS Regional Clusters (RC), each backed by Aurora PostgreSQL (via hyperfleet-db) and driving one or more Management Clusters (MC) via DynamoDB fan-out and kube-applier agents. New Platform API (v1alpha1) with AWS IAM SigV4 auth and Cedar-based authorization. ROSA HCP only, AWS only.')}</>}
+        <p><strong>{activeView === 'today' ? 'Today' : 'What is HyperFleet?'}</strong></p>
+        <p>{activeView === 'today'
+          ? 'Today, ROSA runs management from Virginia, so the cluster and its management stay together only when the cluster is there too.'
+          : 'The cluster list is filtered by Region, the same region required when you create a cluster. HyperFleet runs management in that region, so the cluster and its management stay together.'}
         </p>
       </div>
 
-      {view === 'today' && (
+      {activeView === 'today' && (
         <div className="rosa-variant-note" style={{ borderLeft: '4px solid #6A1B9A' }}>
           <p><strong style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style={{ flexShrink: 0, marginTop: 2 }}>
@@ -1143,11 +1139,9 @@ export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
               <path d="M12 9v5.2" stroke="#3E2723" strokeWidth="2" strokeLinecap="round" />
               <circle cx="12" cy="17.5" r="1.15" fill="#3E2723" />
             </svg>
-            <span>{b ? 'What about the multi-region support already in OCMUI?' : 'Existing v1 shard: Singapore'}</span>
+            <span>What about the multi-region support already in OCMUI?</span>
           </strong></p>
-          <p style={{ marginTop: 6 }}>{b
-            ? <>Singapore is already a second copy of today&apos;s <span className="code-term">clusters_mgmt</span> (V1) API. Almost every cluster is managed from Virginia. Singapore is the one exception already in the website. It is the same cluster API and the same Red Hat login. The only change is the server address: <span className="code-term">api.ap-southeast-1.openshift.com</span> instead of <span className="code-term">api.openshift.com</span>. The cluster list looks up which copy a cluster belongs to, calls that copy, and shows the rows together.</>
-            : <>{g('getClusterServiceForRegion substitutes the shard into https://')}<span className="code-term">api.$REGION$.openshift.com</span>{g(' and returns the same clusters_mgmt client: same /api/clusters_mgmt/v1 paths, same RH SSO bearer token. The list groups subscriptions by rh_region_id and fetches each shard. The only non-default shard deployed is ap-southeast-1.')}</>}
+          <p style={{ marginTop: 6 }}>{<>Singapore is already a second copy of today&apos;s <span className="code-term">clusters_mgmt</span> (V1) API. Almost every cluster is managed from Virginia. Singapore is the one exception already in the website. It is the same cluster API and the same Red Hat login. The only change is the server address: <span className="code-term">api.ap-southeast-1.openshift.com</span> instead of <span className="code-term">api.openshift.com</span>. The cluster list looks up which copy a cluster belongs to, calls that copy, and shows the rows together.</>}
           </p>
           <p style={{ marginTop: 6 }}>{b
             ? <>For a deep dive into possible OCMUI code changes, click on the &apos;Expert&apos; button above.</>
@@ -1157,7 +1151,7 @@ export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
       )}
 
       {/* Cluster List / Cluster Create / Regional Platform — single row, HyperFleet tab only */}
-      {view === 'hyperfleet' && (
+      {activeView === 'hyperfleet' && (
         <div className="variant-toggle" style={{ marginBottom: 8, justifyContent: 'center', display: 'flex' }}>
           <button className={`variant-btn ${diagView === 'list' ? 'active' : ''}`} onClick={() => setDiagView('list')}>Cluster List</button>
           <button className={`variant-btn ${diagView === 'create' ? 'active' : ''}`} onClick={() => setDiagView('create')}>Cluster Create</button>
@@ -1167,26 +1161,26 @@ export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={view + diagView}
+          key={activeView + diagView}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
-          {view === 'today'
+          {activeView === 'today'
             ? <TodayDiagram b={b} />
             : diagView === 'list'
-              ? <><ClusterListMock /><OverviewDiagram b={b} /></>
+              ? <>{b && <ClusterListMock />}{!b && <OverviewDiagram b={b} />}</>
               : diagView === 'create'
                 ? <ClusterCreateDiagram b={b} />
                 : <HyperfleetDiagram b={b} />}
         </motion.div>
       </AnimatePresence>
 
-      {view === 'hyperfleet' && diagView === 'create' && (
+      {activeView === 'hyperfleet' && diagView === 'create' && (
         <RegionalExample b={b} />
       )}
-      {view === 'hyperfleet' && diagView !== 'create' && (
+      {activeView === 'hyperfleet' && diagView !== 'create' && (
         <>
           {diagView === 'list' && <OcmuiImpact b={b} />}
           {diagView === 'list' && <AuthComparison b={b} />}
