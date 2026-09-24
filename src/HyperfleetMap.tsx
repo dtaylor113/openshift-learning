@@ -1143,15 +1143,15 @@ export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
               <path d="M12 9v5.2" stroke="#3E2723" strokeWidth="2" strokeLinecap="round" />
               <circle cx="12" cy="17.5" r="1.15" fill="#3E2723" />
             </svg>
-            <span>{b ? 'But isn\'t there already \'multi-cluster\'/region support in OCMUI?' : 'Existing v1 shard: Singapore'}</span>
+            <span>{b ? 'What about the multi-region support already in OCMUI?' : 'Existing v1 shard: Singapore'}</span>
           </strong></p>
           <p style={{ marginTop: 6 }}>{b
             ? <>Singapore is already a second copy of today&apos;s <span className="code-term">clusters_mgmt</span> (V1) API. Almost every cluster is managed from Virginia. Singapore is the one exception already in the website. It is the same cluster API and the same Red Hat login. The only change is the server address: <span className="code-term">api.ap-southeast-1.openshift.com</span> instead of <span className="code-term">api.openshift.com</span>. The cluster list looks up which copy a cluster belongs to, calls that copy, and shows the rows together.</>
             : <>{g('getClusterServiceForRegion substitutes the shard into https://')}<span className="code-term">api.$REGION$.openshift.com</span>{g(' and returns the same clusters_mgmt client: same /api/clusters_mgmt/v1 paths, same RH SSO bearer token. The list groups subscriptions by rh_region_id and fetches each shard. The only non-default shard deployed is ap-southeast-1.')}</>}
           </p>
           <p style={{ marginTop: 6 }}>{b
-            ? <>That does not grow into HyperFleet. HyperFleet is a different API, with AWS login instead of the Red Hat login, and addresses that are not <span className="code-term">api.&lt;region&gt;.openshift.com</span>. The Singapore code only knows how to call today&apos;s API at a different host. Reusing it would send the wrong requests. What can be reused is the habit of calling one region at a time. The client that makes the call has to be new.</>
-            : <>{g('Platform API paths are /clusters, not /api/clusters_mgmt/v1, and auth is SigV4 rather than the console bearer token. The CLI stores one full Platform API URL; it does not use the $REGION$ template. Pointing getClusterServiceForRegion at that API 404s and cannot sign the request. The per-region query loop in useFetchClusters can call a new client. The v1 client cannot be that client.')}</>}
+            ? <>For a deep dive into possible OCMUI code changes, click on the &apos;Expert&apos; button above.</>
+            : <>The Singapore code only swaps the server address. After that, every call is still today&apos;s cluster API, sent with the Red Hat login. The one-time AWS account link does not change that. The link lets HyperFleet accept an AWS-signed call. This client still sends the Red Hat session. HyperFleet&apos;s list call is a different path, <span className="code-term">GET /clusters</span>, signed with AWS. No public hostname is defined. The closest example in the platform docs is an AWS API Gateway address, such as <span className="code-term">https://abc123.execute-api.ap-northeast-1.amazonaws.com</span>. Putting that address into the Singapore helper still sends today&apos;s requests. The reusable piece is calling one address at a time. The client that builds the request will probably need to be new.</>}
           </p>
         </div>
       )}
