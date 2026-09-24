@@ -41,7 +41,7 @@ function TodayDiagram({ b }: { b: boolean }) {
       {/* Clusters Service API */}
       <rect x="400" y="55" width="230" height="55" rx="8" fill="#fff" stroke="#EF5350" strokeWidth="1.5" />
       <text x="415" y="75" fontSize="10" fill="#C62828" fontWeight="bold">{b ? '⚙️ Cluster Management API' : <>{tip('clusters_mgmt')} API</>}</text>
-      <text x="415" y="90" fontSize="7" fill="#777" fontFamily="monospace">api.openshift.com</text>
+      <text x="415" y="90" fontSize="7" fill="#777" fontFamily="Courier New, Courier, monospace">api.openshift.com</text>
       <text x="415" y="100" fontSize="7" fill="#777">{b ? 'One API for everything' : 'V1 — single regional instance'}</text>
 
       {/* Auth */}
@@ -399,7 +399,7 @@ function OverviewDiagram({ b }: { b: boolean }) {
 
   if (b) {
     return (
-      <svg viewBox="0 0 660 400" className="rosa-svg">
+      <svg viewBox="0 0 660 356" className="rosa-svg">
         <rect x="10" y="10" width="640" height="40" rx="8" fill="#F5F5F5" stroke="#9E9E9E" strokeWidth="1.5" />
         <text x="330" y="28" textAnchor="middle" fontSize="11" fill="#333" fontWeight="bold">🌐 Your Browser</text>
         <text x="330" y="43" textAnchor="middle" fontSize="9" fill="#666">Same website as today: console.redhat.com/openshift</text>
@@ -792,7 +792,7 @@ function AuthComparison({ b }: { b: boolean }) {
                 rosa link account --hyperfleet
               </div>
               <p style={{ fontSize: '12px', color: '#555' }}>{g('Maps RH org ↔ AWS IAM principal. Likely pre-populated from existing Accounts & Roles data. CLI then signs with the AWS credential chain (SigV4). How the browser login becomes an AWS-signed call has not been determined. Cedar policies replace AMS RBAC roles.')}</p>
-              <p style={{ fontSize: '12px', color: '#555', marginTop: '6px' }}>{g('Console URL: console.redhat.com/openshift (unchanged). Backend API: regional endpoint — exact URL TBD (v1alpha1, not yet public; pattern: api.rosa.<region>.openshift.com/v2alpha1/). Action groups: ReadOnly, ClusterAdmin, NodePoolAdmin, PolicyAdmin.')}</p>
+              <p style={{ fontSize: '12px', color: '#555', marginTop: '6px' }}>{g('Console URL: console.redhat.com/openshift (unchanged). Backend API: regional endpoint — exact URL TBD (v1alpha1, not yet public; pattern: ')}<span className="code-term">api.rosa.&lt;region&gt;.openshift.com/v2alpha1/</span>{g('). Action groups: ReadOnly, ClusterAdmin, NodePoolAdmin, PolicyAdmin.')}</p>
             </>
           )}
         </div>
@@ -858,7 +858,7 @@ function RegionalExample({ b }: { b: boolean }) {
         '⚠️ Cluster metadata stored outside Japan',
       ]
     : [
-        'POST api.openshift.com/clusters (us-east-1)',
+        <>POST <span className="code-term">api.openshift.com</span>/clusters (us-east-1)</>,
         'Cluster metadata persisted in us-east-1',
         'HyperShift reconciles on us-east-1 MC',
         'Cross-region latency for all API operations',
@@ -894,7 +894,7 @@ function RegionalExample({ b }: { b: boolean }) {
           <div className="rosa-variant-note" style={{ borderLeft: '4px solid #CC0000' }}>
             <ol style={olStyle}>
               {todayItems.map((item, i) => (
-                <li key={i} style={liStyle}>{b ? item : g(item)}</li>
+                <li key={i} style={liStyle}>{typeof item === 'string' ? (b ? item : g(item)) : item}</li>
               ))}
             </ol>
           </div>
@@ -1146,11 +1146,11 @@ export function HyperfleetContent({ mode }: { mode: ExplainMode }) {
             <span>{b ? 'But isn\'t there already \'multi-cluster\'/region support in OCMUI?' : 'Existing v1 shard: Singapore'}</span>
           </strong></p>
           <p style={{ marginTop: 6 }}>{b
-            ? <>Singapore is already a second copy of today&apos;s <span className="code-term">clusters_mgmt</span> (V1) API. Almost every cluster is managed from Virginia. Singapore is the one exception already in the website. It is the same cluster API and the same Red Hat login. The only change is the server address: api.ap-southeast-1.openshift.com instead of api.openshift.com. The cluster list looks up which copy a cluster belongs to, calls that copy, and shows the rows together.</>
-            : <>{g('getClusterServiceForRegion substitutes the shard into https://api.$REGION$.openshift.com and returns the same clusters_mgmt client: same /api/clusters_mgmt/v1 paths, same RH SSO bearer token. The list groups subscriptions by rh_region_id and fetches each shard. The only non-default shard deployed is ap-southeast-1.')}</>}
+            ? <>Singapore is already a second copy of today&apos;s <span className="code-term">clusters_mgmt</span> (V1) API. Almost every cluster is managed from Virginia. Singapore is the one exception already in the website. It is the same cluster API and the same Red Hat login. The only change is the server address: <span className="code-term">api.ap-southeast-1.openshift.com</span> instead of <span className="code-term">api.openshift.com</span>. The cluster list looks up which copy a cluster belongs to, calls that copy, and shows the rows together.</>
+            : <>{g('getClusterServiceForRegion substitutes the shard into https://')}<span className="code-term">api.$REGION$.openshift.com</span>{g(' and returns the same clusters_mgmt client: same /api/clusters_mgmt/v1 paths, same RH SSO bearer token. The list groups subscriptions by rh_region_id and fetches each shard. The only non-default shard deployed is ap-southeast-1.')}</>}
           </p>
           <p style={{ marginTop: 6 }}>{b
-            ? <>That does not grow into HyperFleet. HyperFleet is a different API, with AWS login instead of the Red Hat login, and addresses that are not <span style={{ fontFamily: '"Courier New", Courier, monospace' }}>{'api.<region>.openshift.com'}</span>. The Singapore code only knows how to call today&apos;s API at a different host. Reusing it would send the wrong requests. What can be reused is the habit of calling one region at a time. The client that makes the call has to be new.</>
+            ? <>That does not grow into HyperFleet. HyperFleet is a different API, with AWS login instead of the Red Hat login, and addresses that are not <span className="code-term">api.&lt;region&gt;.openshift.com</span>. The Singapore code only knows how to call today&apos;s API at a different host. Reusing it would send the wrong requests. What can be reused is the habit of calling one region at a time. The client that makes the call has to be new.</>
             : <>{g('Platform API paths are /clusters, not /api/clusters_mgmt/v1, and auth is SigV4 rather than the console bearer token. The CLI stores one full Platform API URL; it does not use the $REGION$ template. Pointing getClusterServiceForRegion at that API 404s and cannot sign the request. The per-region query loop in useFetchClusters can call a new client. The v1 client cannot be that client.')}</>}
           </p>
         </div>
