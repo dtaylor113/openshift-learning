@@ -20,7 +20,7 @@ type RosaVariant = 'classic' | 'hcp' | 'hyperfleet';
 function parseHash(): { view: View; levelId?: string; tab?: DeepDiveTab; rosaVariant?: RosaVariant } {
   const hash = window.location.hash.replace('#', '');
   if (!hash) return { view: 'explorer' };
-  if (hash === 'hyperfleet') return { view: 'deep-dive', tab: 'rosa', rosaVariant: 'hyperfleet' };
+  if (hash === 'hyperfleet') return { view: 'deep-dive', tab: 'rosa' };
   if (DEEP_DIVE_TABS.includes(hash as DeepDiveTab)) return { view: 'deep-dive', tab: hash as DeepDiveTab };
   if (hash === 'deep-dive') return { view: 'deep-dive', tab: 'overview' };
   if (EXPLORER_LEVELS.includes(hash)) return { view: 'explorer', levelId: hash };

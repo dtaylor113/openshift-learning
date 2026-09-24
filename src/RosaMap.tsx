@@ -305,7 +305,9 @@ function IamRbacBridge({ b }: { b: boolean }) {
 }
 
 export function RosaMap({ mode, onModeChange, initialVariant }: RosaMapProps) {
-  const [variant, setVariant] = useState<RosaVariant>(initialVariant || 'classic');
+  const [variant, setVariant] = useState<RosaVariant>(
+    initialVariant && initialVariant !== 'hyperfleet' ? initialVariant : 'classic',
+  );
   const b = mode === 'beginner';
   const g = createGlossarizer();
 
@@ -324,11 +326,7 @@ export function RosaMap({ mode, onModeChange, initialVariant }: RosaMapProps) {
           <button className={`variant-btn ${variant === 'hcp' ? 'active' : ''}`} onClick={() => changeVariant('hcp')}>
             ROSA HCP
           </button>
-          <button className={`variant-btn ${variant === 'hyperfleet' ? 'active' : ''}`} onClick={() => changeVariant('hyperfleet')}
-            style={variant === 'hyperfleet' ? { borderColor: '#0D47A1', color: '#0D47A1' } : undefined}
-          >
-            HyperFleet
-          </button>
+          {/* HyperFleet tab hidden while the page is shown outside the team. */}
         </div>
         <ModeToggle mode={mode} onModeChange={onModeChange} />
       </div>
